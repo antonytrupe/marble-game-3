@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://hwslegxxru8h"]
+
+[ext_resource type="Script" uid="uid://bod6lvq43qjsc" path="res://world.gd" id="1_f3sb7"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_gv5m4"]
+resource_local_to_scene = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_gv5m4"]
+size = Vector2(300, 300)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f3sb7"]
+albedo_color = Color(0.1882353, 0.34117648, 0.11372549, 1)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f3sb7"]
+
+[node name="World" type="Node3D"]
+script = ExtResource("1_f3sb7")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("WorldBoundaryShape3D_gv5m4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_gv5m4")
+surface_material_override/0 = SubResource("StandardMaterial3D_f3sb7")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.82418555, -0.56632, 0, 0.2730086, 0.39731908, 0.87613016, -0.49616995, -0.72209364, 0.4820748, 0.04335594, 11.259811, 0)
+
+[node name="Characters" type="Node" parent="."]
+unique_name_in_owner = true
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="Characters"]
+_spawnable_scenes = PackedStringArray("uid://b4f3nuk5vp4rc")
+spawn_path = NodePath("..")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_f3sb7")

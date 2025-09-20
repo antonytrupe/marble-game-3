@@ -1,0 +1,92 @@
+[gd_scene load_steps=7 format=3 uid="uid://cqgu8ge77h70t"]
+
+[ext_resource type="PackedScene" uid="uid://cdpdpwwn5voyq" path="res://server.tscn" id="1_e2o6t"]
+[ext_resource type="Script" uid="uid://n01r8f0drw7s" path="res://game.gd" id="1_ryrav"]
+[ext_resource type="PackedScene" uid="uid://c70a50dqd5dfx" path="res://client.tscn" id="2_feb5d"]
+[ext_resource type="Script" uid="uid://cx8p4ymd2lt8g" path="res://debug_ui.gd" id="3_fc0e3"]
+[ext_resource type="Script" uid="uid://c78dyt2pcfr7c" path="res://ui.gd" id="3_feb5d"]
+[ext_resource type="PackedScene" uid="uid://hwslegxxru8h" path="res://world.tscn" id="5_7jktm"]
+
+[node name="Game" type="Node"]
+script = ExtResource("1_ryrav")
+
+[node name="UI" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_feb5d")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="UI/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/CenterContainer"]
+layout_mode = 2
+
+[node name="NewGameButton" type="Button" parent="UI/MarginContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Start Server"
+
+[node name="JoinGameButton" type="Button" parent="UI/MarginContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Join Server"
+
+[node name="LoadGameButton" type="Button" parent="UI/MarginContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Load Game"
+
+[node name="QuitButton" type="Button" parent="UI/MarginContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Quit"
+
+[node name="Debug" type="Node" parent="."]
+script = ExtResource("3_fc0e3")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Debug"]
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 382.0
+grow_vertical = 2
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Debug/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "debug"
+fit_content = true
+scroll_active = false
+scroll_following = true
+scroll_following_visible_characters = true
+context_menu_enabled = true
+
+[node name="Server" parent="." instance=ExtResource("1_e2o6t")]
+unique_name_in_owner = true
+visible = false
+
+[node name="Client" parent="." instance=ExtResource("2_feb5d")]
+unique_name_in_owner = true
+visible = false
+
+[node name="World" parent="." instance=ExtResource("5_7jktm")]
+
+[connection signal="pressed" from="UI/MarginContainer/CenterContainer/VBoxContainer/NewGameButton" to="UI" method="_on_new_game_button_pressed"]
+[connection signal="pressed" from="UI/MarginContainer/CenterContainer/VBoxContainer/JoinGameButton" to="UI" method="_on_join_game_button_pressed"]
+[connection signal="pressed" from="UI/MarginContainer/CenterContainer/VBoxContainer/LoadGameButton" to="UI" method="_on_load_game_button_pressed"]
+[connection signal="pressed" from="UI/MarginContainer/CenterContainer/VBoxContainer/QuitButton" to="UI" method="_on_quit_button_pressed"]
