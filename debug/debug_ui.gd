@@ -4,7 +4,8 @@ extends Node
 
 
 func _ready():
-	debug.debug.connect(_debug)
+	Debug.debug.connect(_debug)
+	Debug.info.connect(_debug)
 
 
 func _debug(_message):

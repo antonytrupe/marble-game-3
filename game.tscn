@@ -1,17 +1,24 @@
-[gd_scene load_steps=7 format=3 uid="uid://cqgu8ge77h70t"]
+[gd_scene load_steps=9 format=3 uid="uid://cqgu8ge77h70t"]
 
-[ext_resource type="PackedScene" uid="uid://cdpdpwwn5voyq" path="res://server.tscn" id="1_e2o6t"]
+[ext_resource type="PackedScene" uid="uid://cdpdpwwn5voyq" path="res://server/server.tscn" id="1_e2o6t"]
 [ext_resource type="Script" uid="uid://n01r8f0drw7s" path="res://game.gd" id="1_ryrav"]
-[ext_resource type="PackedScene" uid="uid://c70a50dqd5dfx" path="res://client.tscn" id="2_feb5d"]
-[ext_resource type="Script" uid="uid://cx8p4ymd2lt8g" path="res://debug_ui.gd" id="3_fc0e3"]
+[ext_resource type="PackedScene" uid="uid://c70a50dqd5dfx" path="res://client/client.tscn" id="2_feb5d"]
+[ext_resource type="Script" uid="uid://cx8p4ymd2lt8g" path="res://debug/debug_ui.gd" id="3_fc0e3"]
 [ext_resource type="Script" uid="uid://c78dyt2pcfr7c" path="res://ui.gd" id="3_feb5d"]
-[ext_resource type="PackedScene" uid="uid://hwslegxxru8h" path="res://world.tscn" id="5_7jktm"]
+[ext_resource type="PackedScene" uid="uid://hwslegxxru8h" path="res://world/world.tscn" id="5_7jktm"]
+[ext_resource type="Script" uid="uid://be7j8l5plw3xc" path="res://players.gd" id="5_eow3j"]
+
+[sub_resource type="Resource" id="Resource_eow3j"]
+resource_local_to_scene = true
+script = ExtResource("5_eow3j")
+metadata/_custom_type_script = "uid://be7j8l5plw3xc"
 
 [node name="Game" type="Node"]
 script = ExtResource("1_ryrav")
 
 [node name="UI" type="Control" parent="."]
 unique_name_in_owner = true
+z_index = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -54,24 +61,27 @@ text = "Load Game"
 layout_mode = 2
 text = "Quit"
 
-[node name="Debug" type="Node" parent="."]
-script = ExtResource("3_fc0e3")
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Debug"]
-anchors_preset = 9
-anchor_bottom = 1.0
-offset_right = 382.0
-grow_vertical = 2
-size_flags_vertical = 3
-
-[node name="RichTextLabel" type="RichTextLabel" parent="Debug/ScrollContainer"]
-unique_name_in_owner = true
-layout_mode = 2
+[node name="Debug" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 285.0
+offset_bottom = 137.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-text = "debug"
-fit_content = true
-scroll_active = false
+script = ExtResource("3_fc0e3")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Debug"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "debug
+"
 scroll_following = true
 scroll_following_visible_characters = true
 context_menu_enabled = true
@@ -79,10 +89,13 @@ context_menu_enabled = true
 [node name="Server" parent="." instance=ExtResource("1_e2o6t")]
 unique_name_in_owner = true
 visible = false
+mouse_filter = 1
+players = SubResource("Resource_eow3j")
 
 [node name="Client" parent="." instance=ExtResource("2_feb5d")]
 unique_name_in_owner = true
 visible = false
+mouse_filter = 1
 
 [node name="World" parent="." instance=ExtResource("5_7jktm")]
 

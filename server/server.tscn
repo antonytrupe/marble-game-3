@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://cdpdpwwn5voyq"]
+[gd_scene load_steps=2 format=3 uid="uid://cdpdpwwn5voyq"]
 
-[ext_resource type="Script" uid="uid://bm31urffujefa" path="res://server.gd" id="1_ob30c"]
-[ext_resource type="Script" uid="uid://fy8lsujorw5y" path="res://persistance.gd" id="2_h8t3n"]
+[ext_resource type="Script" uid="uid://bm31urffujefa" path="res://server/server.gd" id="1_ob30c"]
 
 [node name="Server" type="Control"]
 layout_mode = 3
@@ -22,6 +21,3 @@ transform = Transform3D(1, 0, 0, 0, 0.5985204, -0.8011076, 0, 0.8011076, 0.59852
 [node name="Camera3D" type="Camera3D" parent="Node3D"]
 transform = Transform3D(1, 0, 0, 0, -0.4549699, 0.89050686, 0, -0.89050686, -0.4549699, 0, 122.80051, 45.043297)
 current = true
-
-[node name="Persistance" type="Node" parent="."]
-script = ExtResource("2_h8t3n")

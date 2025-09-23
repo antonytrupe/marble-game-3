@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://hwslegxxru8h"]
 
-[ext_resource type="Script" uid="uid://bod6lvq43qjsc" path="res://world.gd" id="1_f3sb7"]
+[ext_resource type="Script" uid="uid://bod6lvq43qjsc" path="res://world/world.gd" id="1_f3sb7"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_gv5m4"]
 resource_local_to_scene = true
@@ -26,7 +26,7 @@ mesh = SubResource("PlaneMesh_gv5m4")
 surface_material_override/0 = SubResource("StandardMaterial3D_f3sb7")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.82418555, -0.56632, 0, 0.2730086, 0.39731908, 0.87613016, -0.49616995, -0.72209364, 0.4820748, 0.04335594, 11.259811, 0)
+transform = Transform3D(0.82418555, -0.56631994, 1.5076616e-09, 0.2730086, 0.3973191, 0.8761301, -0.49616995, -0.7220937, 0.4820749, 0.04335594, 50.957367, 0)
 
 [node name="Characters" type="Node" parent="."]
 unique_name_in_owner = true

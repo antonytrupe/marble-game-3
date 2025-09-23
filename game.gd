@@ -1,21 +1,27 @@
+class_name Game
 extends Node
 
 func d(...args: Array):
-	debug.debug.emit(args)
+	Debug.debug.emit(args)
+
+func _notification(what):
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		print('game quit')
+		get_tree().quit() # default behavior
 
 
 func _ready():
 
 	if Steam.isSteamRunning():
-		debug.debug.emit("steam is running")
+		Debug.debug.emit("steam is running")
 	else:
-		debug.debug.emit("steam is not running")
+		Debug.debug.emit("steam is not running")
 
-	var steam_id = Steam.getSteamID()
-	d("steam_id:", steam_id)
-	var steam_persona_name = Steam.getFriendPersonaName(steam_id)
-	d("steam_persona_name:", steam_persona_name)
+	#var steam_id = Steam.getSteamID()
+	#d("steam_id:", steam_id)
+	#var steam_persona_name = Steam.getFriendPersonaName(steam_id)
+	#d("steam_persona_name:", steam_persona_name)
 
 	Steam.setRichPresence("steam_display", "steam_display value")
 	Steam.setRichPresence("status", "status value")
-	var args=Steam.getLaunchCommandLine()
+	var _args=Steam.getLaunchCommandLine()

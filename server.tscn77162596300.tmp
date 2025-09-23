@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://cdpdpwwn5voyq"]
+
+[ext_resource type="Script" uid="uid://bm31urffujefa" path="res://server.gd" id="1_ob30c"]
+
+[node name="Server" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ob30c")
+
+[node name="UI" type="Control" parent="."]
+unique_name_in_owner = true
+anchors_preset = 0
+
+[node name="Node3D" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.5985204, -0.8011076, 0, 0.8011076, 0.5985204, 0, 104.11303, 0.27034378)
+
+[node name="Camera3D" type="Camera3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, -0.4549699, 0.89050686, 0, -0.89050686, -0.4549699, 0, 122.80051, 45.043297)
+current = true
+
+[node name="Players" type="Node" parent="."]
+unique_name_in_owner = true

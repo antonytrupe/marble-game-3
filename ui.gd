@@ -10,6 +10,9 @@ func _on_new_game_button_pressed() -> void:
 	#debug.debug.emit('_on_new_game_button_pressed')
 	if not server.start(PORT):
 		ui.visible=false
+	#server.set_player_id("")
+	client._on_connected_to_server()
+	#client.start("localhost",PORT)
 
 func _on_join_game_button_pressed() -> void:
 	#debug.debug.emit('_on_join_game_button_pressed')
@@ -18,7 +21,7 @@ func _on_join_game_button_pressed() -> void:
 
 
 func _on_load_game_button_pressed() -> void:
-	debug.debug.emit('_on_load_game_button_pressed')
+	Debug.debug.emit('_on_load_game_button_pressed')
 	#TODO
 
 func _on_quit_button_pressed() -> void:
