@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://bod6lvq43qjsc" path="res://world/world.gd" id="1_f3sb7"]
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f3sb7"]
+
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_gv5m4"]
 resource_local_to_scene = true
 
@@ -11,10 +13,11 @@ size = Vector2(300, 300)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f3sb7"]
 albedo_color = Color(0.1882353, 0.34117648, 0.11372549, 1)
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f3sb7"]
-
 [node name="World" type="Node3D"]
 script = ExtResource("1_f3sb7")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_f3sb7")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
@@ -34,6 +37,3 @@ unique_name_in_owner = true
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="Characters"]
 _spawnable_scenes = PackedStringArray("uid://b4f3nuk5vp4rc")
 spawn_path = NodePath("..")
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_f3sb7")

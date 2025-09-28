@@ -1,7 +1,8 @@
 extends Node
 
 signal persist(o_name,o)
-signal start(o)
+signal load()
+signal new()
 signal load_character(name,data)
 signal load_player(name,data)
 
@@ -14,7 +15,8 @@ var _db:SQLite
 
 
 func _ready():
-	start.connect(_start)
+	load.connect(_load)
+	new.connect(_new)
 
 
 func _load_characters():
@@ -41,7 +43,20 @@ func _load_players():
 		return true
 	)
 
-func _start():
+func _new():
+	_db=SQLite.new()
+	_db.path="res://server.db"
+	_db.open_db()
+
+	persist.connect(_persist)
+	_db.drop_table("Player")
+	_db.drop_table("MarbleCharacter")
+	_create_character_table()
+	_create_player_table()
+	_load_players()
+	_load_characters()
+
+func _load():
 	_db=SQLite.new()
 	_db.path="res://server.db"
 	_db.open_db()

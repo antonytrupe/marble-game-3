@@ -1,7 +1,8 @@
+class_name MainMenu
 extends Node
 @onready var server:Server=%Server
 @onready var client:Client=%Client
-@onready var ui:Control=%UI
+@onready var main_menu:Control=%MainMenu
 
 const PORT=9999
 
@@ -9,16 +10,18 @@ const PORT=9999
 func _on_new_game_button_pressed() -> void:
 	#debug.debug.emit('_on_new_game_button_pressed')
 	if not server.start(PORT):
-		ui.visible=false
-	#server.set_player_id("")
-	client._on_connected_to_server()
-	#client.start("localhost",PORT)
+		main_menu.visible=false
+		var steam_id = Steam.getSteamID()
+		#return "steam:"+str(steam_id)
+		server.set_client_player_id("server:steam:"+str(steam_id))
+		client.visible=true
+
 
 func _on_join_game_button_pressed() -> void:
 	#debug.debug.emit('_on_join_game_button_pressed')
 	if not client.start("localhost",PORT):
-		ui.visible=false
-
+		main_menu.visible=false
+		client.visible=true
 
 func _on_load_game_button_pressed() -> void:
 	Debug.debug.emit('_on_load_game_button_pressed')

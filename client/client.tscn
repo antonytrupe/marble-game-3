@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dl0mmfrncxlbo" path="res://time_warp_ui.tscn" id="3_mgmel"]
 
 [node name="Client" type="Control"]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,16 +32,34 @@ offset_right = -439.0
 offset_bottom = 51.0
 grow_vertical = 1
 
-[node name="ChatInput" type="TextEdit" parent="UI"]
-unique_name_in_owner = true
+[node name="VBoxContainer" type="VBoxContainer" parent="UI"]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -109.0
+offset_top = -107.0
 grow_horizontal = 2
 grow_vertical = 0
+
+[node name="Control" type="Control" parent="UI/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SystemMessages" type="RichTextLabel" parent="UI/VBoxContainer/Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 2
+
+[node name="ChatInput" type="TextEdit" parent="UI/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("2_1drpi")

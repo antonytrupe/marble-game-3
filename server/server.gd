@@ -30,9 +30,11 @@ func hide():
 
 
 func start(port):
-	Persistance.start.emit()
+	Persistance.load.emit()
 	var peer = ENetMultiplayerPeer.new()
 	var r=peer.create_server(port)
+	#var new_multiplayer_api=SceneMultiplayer.new()
+	#get_tree().set_multiplayer(new_multiplayer_api, NodePath(self.get_path()))
 	multiplayer.multiplayer_peer = peer
 	get_viewport().get_window().title += " - " + "SERVER"
 	#get_tree().set_multiplayer(peer,self.get_path())
@@ -95,10 +97,11 @@ func _create_player(peer_id,player_id)->Player:
 	c.player_id=player_id
 	p.characters.append(c.name)
 	p.current_character_id=c.name
+	c.set_multiplayer_authority(peer_id)
 	Persistance.persist.emit("Player",p)
 	return p
 
-@rpc("call_local")
+@rpc("any_peer")
 func set_client_player_id(player_id):
 	var peer_id:int = multiplayer.get_remote_sender_id()
 	peer_id=peer_id if peer_id!=0 else 1
@@ -112,7 +115,12 @@ func set_client_player_id(player_id):
 		players.players[player_id]=p
 
 	players.connectedPlayers[peer_id]=p
-	client.set_current_character.rpc_id(1,p.current_character_id)
+	#var c=world.characters.find_child(p.current_character_id)
+	#c.set_multiplayer_authority(peer_id)
+	if peer_id==1:
+		client.set_current_character(p.current_character_id)
+	else:
+		client.set_current_character.rpc_id(peer_id,p.current_character_id)
 
 
 func _on_peer_connected(peer_id):

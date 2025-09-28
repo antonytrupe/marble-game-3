@@ -1,5 +1,5 @@
 class_name Client
-extends Node
+extends Control
 
 @onready var server:Server = $/root/Game/Server
 @onready var world:World = $/root/Game/World
@@ -7,7 +7,7 @@ extends Node
 @onready var ui=%UI
 @onready var chat_text_edit: TextEdit = %ChatInput
 
-var current_character:MarbleCharacter
+@export var current_character:MarbleCharacter
 
 func d(...args: Array):
 	Debug.debug.emit(args)
@@ -17,31 +17,33 @@ func _ready() -> void:
 	multiplayer.server_disconnected.connect(_server_disconnected)
 
 
-func _unhandled_input(event: InputEvent) -> void:
+func is_server() -> bool:
+	return multiplayer.is_server()
 
+func _input(event: InputEvent) -> void:
 	if current_character:
-		if event is InputEventMouseButton:
-			#print("2")
-			#if(event.button_mask == MOUSE_BUTTON_WHEEL_UP):
-			if(Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP )):
-				var scroll_amount = -event.factor if event.factor else -1.0
-				#print(scroll_amount)
-				#print('scroll up')
-				var direction=current_character.camera_pivot.transform.basis.z
-				current_character.camera_pivot.position += direction * scroll_amount * .1
-			if(Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN )):
-				var scroll_amount = event.factor if event.factor else 1.0
-				#print(scroll_amount)
-				#print('scroll down')
-				var direction=current_character.camera_pivot.transform.basis.z
-				current_character.camera_pivot.position += direction * scroll_amount * .1
-
+		#print("_input")
+		#print(event)
 		if event is InputEventMouseMotion:
+			#print(2)
+			#print(event)
+			if event is InputEventMouseMotion:
+				if (
+					Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
+					or Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE)
+				):
+					Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+					if is_server():
+						current_character.turn(event.relative)
+					else:
+						current_character.turn.rpc_id(1, event.relative)
+				else:
+					Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			if (
 				Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
 				or Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE)
 			):
-				#print("camera move")
+				print("camera move")
 				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 				current_character.rotate_y(-event.relative.x * .005)
@@ -52,6 +54,26 @@ func _unhandled_input(event: InputEvent) -> void:
 
 			else:
 				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+
+func _unhandled_input(event) -> void:
+	#print("_unhandled_input")
+	#print(event)
+	if current_character:
+		#print(1)
+		#print(event)
+		if event is InputEventMouseButton:
+			if(Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP )):
+				var scroll_amount = -event.factor if event.factor else -1.0
+				var direction=current_character.camera_pivot.transform.basis.z
+				current_character.camera_pivot.position += direction * scroll_amount * .1
+
+			if(Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN )):
+				var scroll_amount = event.factor if event.factor else 1.0
+				var direction=current_character.camera_pivot.transform.basis.z
+				current_character.camera_pivot.position += direction * scroll_amount * .1
+
+
 
 	if Input.is_action_just_pressed("command"):
 		chat_text_edit.visible = !chat_text_edit.visible
@@ -80,7 +102,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				#server.chat.rpc_id(1, chat_text_edit.text)
 			chat_text_edit.text = ""
 
-@rpc("call_local")
+@rpc()
 func set_current_character(character_id):
 	print('set_current_character',character_id)
 	current_character=world.characters.get_node(character_id)
