@@ -90,6 +90,11 @@ func server_warp(value: int):
 	warp_speed=value
 
 
+func _set_warp_speed(w):
+	warp_speed = w
+	_update_label()
+
+
 @rpc("any_peer")
 func server_turn(value: Vector2):
 	if !is_server():
@@ -140,9 +145,3 @@ func _update_label():
 	if label:
 		label.text = "warp speed:" + str(warp_speed)+'\n'+\
 		"name:"+name
-
-
-func _set_warp_speed(w):
-	warp_speed = w
-
-	_update_label()
