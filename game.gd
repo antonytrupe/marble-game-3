@@ -1,6 +1,12 @@
 class_name Game
 extends Node
 
+#PlayTest app id: 4041750
+
+#live app id: 4041660
+
+#global test app id: 480
+
 func d(...args: Array):
 	Debug.debug.emit(args)
 
@@ -25,3 +31,7 @@ func _ready():
 	Steam.setRichPresence("steam_display", "steam_display value")
 	Steam.setRichPresence("status", "status value")
 	var _args=Steam.getLaunchCommandLine()
+
+
+func _process(_delta: float):
+	Steam.run_callbacks()

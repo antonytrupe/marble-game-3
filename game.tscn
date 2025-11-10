@@ -16,31 +16,6 @@ metadata/_custom_type_script = "uid://be7j8l5plw3xc"
 [node name="Game" type="Node"]
 script = ExtResource("1_ryrav")
 
-[node name="Debug" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 285.0
-offset_bottom = 137.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("3_fc0e3")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="Debug"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-text = "debug
-"
-scroll_following = true
-scroll_following_visible_characters = true
-context_menu_enabled = true
-
 [node name="World" parent="." instance=ExtResource("5_7jktm")]
 
 [node name="Server" parent="." instance=ExtResource("1_e2o6t")]
@@ -96,6 +71,31 @@ text = "Quit"
 [node name="Client" parent="." instance=ExtResource("2_feb5d")]
 unique_name_in_owner = true
 mouse_filter = 1
+
+[node name="Debug" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 285.0
+offset_bottom = 137.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("3_fc0e3")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Debug"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "debug
+"
+scroll_following = true
+scroll_following_visible_characters = true
+context_menu_enabled = true
 
 [connection signal="pressed" from="MainMenu/MarginContainer/CenterContainer/VBoxContainer/NewGameButton" to="MainMenu" method="_on_new_game_button_pressed"]
 [connection signal="pressed" from="MainMenu/MarginContainer/CenterContainer/VBoxContainer/JoinGameButton" to="MainMenu" method="_on_join_game_button_pressed"]

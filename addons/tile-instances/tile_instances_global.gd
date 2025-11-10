@@ -28,6 +28,7 @@ func _on_tile_instances(message:String, data:Array) -> bool:
 
 
 func tile_window(i:int, total:int) -> void:
+	print('tile_window')
 	var window = get_window()
 	var screen = window.current_screen
 	var screen_rect = DisplayServer.screen_get_usable_rect(screen)

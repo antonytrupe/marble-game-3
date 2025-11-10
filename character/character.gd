@@ -29,7 +29,7 @@ const SPEED_MULTIPLIER = 1.0 / 24.0
 
 @export var speed = 30.0
 
-var warp_speed = 1:
+@export var warp_speed = 1:
 	set = _set_warp_speed
 
 var player_id: String
@@ -83,18 +83,18 @@ func server_move(d: Vector2):
 	#play_animation.rpc("RESET")
 
 
-func _unhandled_input(event) -> void:
-	print("_unhandled_input")
-	print(event)
+@rpc("any_peer")
+func server_warp(value: int):
+	if !is_server():
+		return
+	warp_speed=value
 
 
 @rpc("any_peer")
-func turn(value: Vector2):
+func server_turn(value: Vector2):
 	if !is_server():
 		return
-	#print(value)
 	rotate_y(-value.x * .005)
-	#print(value.x)
 	_rotate_camera(value)
 
 
@@ -104,7 +104,9 @@ func _rotate_camera(value: Vector2):
 
 
 func _ready():
-	label.text = "warp speed:" + str(warp_speed)
+	_update_label()
+	#if client.current_character and client.current_character.name==self.name:
+		#TimeWarp.warp_change.connect(_set_warp_speed)
 
 
 func serialize_transform3d() -> Dictionary:
@@ -134,8 +136,13 @@ func get_data() -> Dictionary:
 		#"transform":serialize_transform3d(),
 	}
 
+func _update_label():
+	if label:
+		label.text = "warp speed:" + str(warp_speed)+'\n'+\
+		"name:"+name
+
 
 func _set_warp_speed(w):
 	warp_speed = w
-	if label:
-		label.text = "warp speed:" + str(warp_speed)
+
+	_update_label()

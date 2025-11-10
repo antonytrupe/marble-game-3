@@ -21,6 +21,10 @@ Debug="*res://debug/debug.gd"
 Persistance="*res://persistance.gd"
 TimeWarp="*res://time_warp.gd"
 
+[debug]
+
+file_logging/enable_file_logging=true
+
 [dotnet]
 
 project/assembly_name="Marble Game 3"
@@ -68,5 +72,6 @@ right={
 
 [steam]
 
-initialization/app_id=4041660
+initialization/app_id=4041750
 initialization/initialize_on_startup=true
+initialization/embed_callbacks=true

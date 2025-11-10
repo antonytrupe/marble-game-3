@@ -22,46 +22,22 @@ func is_server() -> bool:
 
 func _input(event: InputEvent) -> void:
 	if current_character:
-		#print("_input")
-		#print(event)
 		if event is InputEventMouseMotion:
-			#print(2)
-			#print(event)
-			if event is InputEventMouseMotion:
-				if (
-					Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
-					or Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE)
-				):
-					Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-					if is_server():
-						current_character.turn(event.relative)
-					else:
-						current_character.turn.rpc_id(1, event.relative)
-				else:
-					Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			if (
 				Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
 				or Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE)
 			):
-				print("camera move")
 				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
-				current_character.rotate_y(-event.relative.x * .005)
-				#print(value.x)
-				#rotate_camera(event.relative.x* .005)
-				current_character.camera_pivot.rotate_x(-event.relative.y * .005)
-				current_character.camera_pivot.rotation.x = clamp(current_character.camera_pivot.rotation.x, -PI / 2, PI / 2)
-
+				if is_server():
+					current_character.server_turn(event.relative)
+				else:
+					current_character.server_turn.rpc_id(1, event.relative)
 			else:
 				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 
 func _unhandled_input(event) -> void:
-	#print("_unhandled_input")
-	#print(event)
 	if current_character:
-		#print(1)
-		#print(event)
 		if event is InputEventMouseButton:
 			if(Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP )):
 				var scroll_amount = -event.factor if event.factor else -1.0
@@ -104,9 +80,21 @@ func _unhandled_input(event) -> void:
 
 @rpc()
 func set_current_character(character_id):
-	print('set_current_character',character_id)
+	d('set_current_character:',character_id)
 	current_character=world.characters.get_node(character_id)
+	#to get the warp ui to update
+	TimeWarp.warp_change.emit(current_character.warp_speed)
+	#TimeWarp.warp_change.connect(foo)
 	current_character.camera.current=true
+
+
+func foo(value):
+	pass
+	current_character.server_set_warp(value)
+	if is_server():
+		current_character.server_set_warp(value)
+	else:
+		current_character.server_set_warp.rpc_id(1, value)
 
 
 func start(address, port):

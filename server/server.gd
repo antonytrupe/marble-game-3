@@ -11,7 +11,17 @@ const PLAYER_SCENE = preload("res://player/player.gd")
 @onready var client: Client = $/root/Game/Client
 
 
+#var lobby_data
+var lobby_id: int = 0
+#var lobby_members: Array = []
+#var lobby_members_max: int = 10
+#var lobby_vote_kick: bool = false
+#var steam_id: int = 0
+#var steam_username: String = ""
+
 func _ready():
+	Steam.lobby_created.connect(_on_lobby_created)
+
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	Persistance.load_player.connect(_load_player)
@@ -32,6 +42,25 @@ func hide():
 	ui.visible = false
 
 
+func _on_lobby_created(result: int, this_lobby_id: int) -> void:
+	print("_on_lobby_created:", result)
+	if result == Steam.RESULT_OK:
+		# Set the lobby ID
+		lobby_id = this_lobby_id
+		print("Created a lobby: %s" % lobby_id)
+
+		# Set this lobby as joinable, just in case, though this should be done by default
+		Steam.setLobbyJoinable(lobby_id, true)
+
+		# Set some lobby data
+		Steam.setLobbyData(lobby_id, "name", "Gramps' Lobby")
+		Steam.setLobbyData(lobby_id, "mode", "GodotSteam test")
+
+		# Allow P2P connections to fallback to being relayed through Steam if needed
+		var set_relay: bool = Steam.allowP2PPacketRelay(true)
+		print("Allowing Steam to be relay backup: %s" % set_relay)
+
+
 func start(port):
 	Persistance.load.emit()
 	var peer = ENetMultiplayerPeer.new()
@@ -42,6 +71,10 @@ func start(port):
 	get_viewport().get_window().title += " - " + "SERVER"
 	#get_tree().set_multiplayer(peer,self.get_path())
 	Steam.setRichPresence("connect", "steam://connect/" + str(19216811) + ":" + str(port))
+
+	print('createLobby...')
+	Steam.createLobby(Steam.LobbyType.LOBBY_TYPE_PUBLIC,2)
+	print('...createLobby')
 
 	match r:
 		OK:
