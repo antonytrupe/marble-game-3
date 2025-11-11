@@ -51,6 +51,7 @@ func update_neighbors_warp():
 func get_max_warp(other:MarbleCharacter)->int:
 	var d=global_transform.origin.distance_to(other.global_transform.origin)
 	print(d)
+
 	return 1
 
 func _physics_process(_delta: float) -> void:
