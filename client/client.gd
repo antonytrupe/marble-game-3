@@ -89,7 +89,7 @@ func set_current_character(character_id):
 
 
 func set_current_character_warp_speed(value):
-	current_character.warp_speed=value
+	#current_character.warp_speed=value
 	if is_server():
 		current_character.server_warp(value)
 	else:

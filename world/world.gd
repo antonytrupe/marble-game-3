@@ -21,6 +21,7 @@ func _notification(what):
 func _load_character(character_name, data: Dictionary):
 	var c: MarbleCharacter = CHARACTER_SCENE.instantiate()
 	c.name = character_name
+	characters.add_child(c, true)
 	if data.has("player_id"):
 		c.player_id = data.player_id
 	if data.has("warp_speed"):
@@ -31,4 +32,3 @@ func _load_character(character_name, data: Dictionary):
 		c.transform = c.deserialize_transform3d(data.transform)
 	if data.has("rotation"):
 		c.rotation = Vector3(data.rotation.x, data.rotation.y, data.rotation.z)
-	characters.add_child(c, true)

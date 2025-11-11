@@ -31,7 +31,12 @@ project/assembly_name="Marble Game 3"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot-sqlite/plugin.cfg", "res://addons/tile-instances/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot-sqlite/plugin.cfg", "res://addons/tile-instances/plugin.cfg", "res://addons/gdUnit4/plugin.cfg")
+
+[gdunit4]
+
+settings/test/test_lookup_folder=""
+settings/test/test_discovery=true
 
 [global_group]
 
@@ -70,8 +75,26 @@ right={
 ]
 }
 
+[layer_names]
+
+3d_physics/layer_1="environment"
+3d_navigation/layer_1="environment"
+3d_physics/layer_2="players"
+3d_navigation/layer_2="players"
+3d_physics/layer_3="flora"
+3d_navigation/layer_3="flora"
+3d_physics/layer_4="fauna"
+3d_navigation/layer_4="fauna"
+3d_physics/layer_5="terra"
+3d_navigation/layer_5="terra"
+avoidance/layer_1="environment"
+avoidance/layer_2="players"
+avoidance/layer_3="flora"
+avoidance/layer_4="fauna"
+avoidance/layer_5="terra"
+
 [steam]
 
 initialization/app_id=4041750
 initialization/initialize_on_startup=true
-initialization/embed_callbacks=true
+initialization/embed_callbacks=false

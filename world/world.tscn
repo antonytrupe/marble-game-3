@@ -23,6 +23,7 @@ replication_config = SubResource("SceneReplicationConfig_f3sb7")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("WorldBoundaryShape3D_gv5m4")
+debug_fill = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_gv5m4")

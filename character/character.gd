@@ -38,11 +38,20 @@ var player_id: String
 @onready var camera_pivot = %CameraPivot
 @onready var camera = %Camera3D
 @onready var client = $/root/Game/Client
-
+@onready var warp_detector=%WarpDetectorCollisionShape3D
 
 func is_server() -> bool:
 	return multiplayer.is_server()
 
+
+func update_neighbors_warp():
+	pass
+
+
+func get_max_warp(other:MarbleCharacter)->int:
+	var d=global_transform.origin.distance_to(other.global_transform.origin)
+	print(d)
+	return 1
 
 func _physics_process(_delta: float) -> void:
 	var input_dir: Vector2 = Input.get_vector("left", "right", "forward", "backward")
@@ -53,6 +62,7 @@ func _physics_process(_delta: float) -> void:
 			server_move.rpc_id(1, input_dir)
 
 	move_and_slide()
+	update_neighbors_warp()
 
 
 @rpc("any_peer")
@@ -94,6 +104,9 @@ func _set_warp_speed(w):
 	warp_speed = w
 	_update_label()
 
+	if warp_detector:
+		(warp_detector.shape as SphereShape3D).radius=w*30
+
 
 @rpc("any_peer")
 func server_turn(value: Vector2):
@@ -110,8 +123,7 @@ func _rotate_camera(value: Vector2):
 
 func _ready():
 	_update_label()
-	#if client.current_character and client.current_character.name==self.name:
-		#TimeWarp.warp_change.connect(_set_warp_speed)
+	(warp_detector.shape as SphereShape3D).radius=warp_speed*30
 
 
 func serialize_transform3d() -> Dictionary:
