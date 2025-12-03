@@ -2,3 +2,4 @@
 .godot/
 /android/
 *.db
+.build/godot/exports/*
