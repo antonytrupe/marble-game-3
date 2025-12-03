@@ -1,9 +1,13 @@
+scoop bucket add extras  
+scoop install godot-mono
+
+
 # building
 
 ## setup
 in godot ui, make sure the export templates are downloaded
 in godot  
-make sure the environment variable GODOT points to the godot executable  
+make sure the command godot-mono is in path  
 use a bash terminal(git bash or similiar)
 
 ## running
