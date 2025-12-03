@@ -1,1 +1,0 @@
-builder\steamcmd.exe +login tynoan +run_app_build ..\scripts\app_build_4041750.vdf +quit
