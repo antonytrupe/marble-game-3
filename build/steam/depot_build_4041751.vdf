@@ -6,4 +6,10 @@
 	"steamid"		"76561197993500508"
 	"manifest"		"1304167463992001547"
 	"baselinemanifest"		"7568250978847306948"
+	"FileMapping"
+		{
+			"LocalPath" "*" // all files from contentroot folder
+			"DepotPath" "." // mapped into the root of the depot
+			"recursive" "1" // include all subfolders
+		}
 }
