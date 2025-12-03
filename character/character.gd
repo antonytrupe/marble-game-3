@@ -29,8 +29,15 @@ const SPEED_MULTIPLIER = 1.0 / 24.0
 
 @export var speed = 30.0
 
+## current actual warp speed
 @export var warp_speed = 1:
 	set = _set_warp_speed
+##target warp speed
+@export var target_warp_speed=1
+##allowed maximum warp speed
+@export var max_warp_speed=5000
+##allowed minimum warp speed
+@export var min_warp_speed=1
 
 var player_id: String
 
