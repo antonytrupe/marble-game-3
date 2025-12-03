@@ -2,12 +2,12 @@
 {
 	"AppID" "4041750" // Your AppID
 	"Desc" "new description" // internal description for this build
-	"Preview" "0" // make this a preview build only, nothing is uploaded
-	"Local" "" // put content on local content server instead of uploading to Steam
+	"Preview" "1" // make this a preview build only, nothing is uploaded
+	"Local" "./preview/" // put content on local content server instead of uploading to Steam
 	"SetLive" "unstable" // set this build live on beta branch AlphaTest
 	"ContentRoot" "../godot/exports/win-64/" // content root folder relative to this script file
 	"BuildOutput" "./logs" // put build cache and log files on different drive for better performance
-	"verbose" "0" // spew more build details in console
+	"verbose" "1" // spew more build details in console
 	"Depots"
 	{
 		// file mapping instructions for each depot are in separate script files
