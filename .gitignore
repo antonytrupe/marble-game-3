@@ -3,4 +3,4 @@
 /android/
 *.db
 .build/godot/exports/*.*
-.build/steam/*.log
+*.log
