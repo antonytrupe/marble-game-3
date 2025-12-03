@@ -37,6 +37,7 @@ enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg", "res://addons/godot
 
 settings/test/test_lookup_folder=""
 settings/test/test_discovery=true
+ui/toolbar/run_overall=true
 
 [global_group]
 
