@@ -98,7 +98,7 @@ func set_current_character_warp_speed(value):
 
 func start(address, port):
 	Debug.debug.emit("Attempting to connect to: %s:%s" % [address, port])
-	var peer = ENetMultiplayerPeer.new()
+	var peer = SteamMultiplayerPeer.new()
 	var r=peer.create_client(address, port)
 	multiplayer.multiplayer_peer=peer
 	#get_tree().set_multiplayer(peer,get_path())

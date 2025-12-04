@@ -63,8 +63,8 @@ func _on_lobby_created(result: int, this_lobby_id: int) -> void:
 
 func start(port):
 	Persistance.load.emit()
-	var peer = ENetMultiplayerPeer.new()
-	var r = peer.create_server(port)
+	var peer = SteamMultiplayerPeer.new()
+	var r = peer.create_host(0)
 	#var new_multiplayer_api=SceneMultiplayer.new()
 	#get_tree().set_multiplayer(new_multiplayer_api, NodePath(self.get_path()))
 	multiplayer.multiplayer_peer = peer
