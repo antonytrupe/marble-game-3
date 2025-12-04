@@ -20,7 +20,7 @@ EXPORT_NAME="Windows Desktop"
 # Make sure the directory exists (mkdir -p works in bash/mingw)
 mkdir -p ./godot/exports/win-64
 
-OUTPUT_PATH=$(realpath "./godot/exports/win-64/marble-game.exe")
+OUTPUT_PATH=$(realpath "./godot/exports/win-64/marblegame.exe")
 echo "Output path: $OUTPUT_PATH"
 
 echo "Starting Godot export..."
