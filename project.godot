@@ -94,6 +94,11 @@ avoidance/layer_3="flora"
 avoidance/layer_4="fauna"
 avoidance/layer_5="terra"
 
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+
 [steam]
 
 initialization/app_id=4041750
