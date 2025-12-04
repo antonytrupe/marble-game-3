@@ -10,14 +10,14 @@ extends Node
 func d(...args: Array):
 	Debug.debug.emit(args)
 
+
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		print('game quit')
-		get_tree().quit() # default behavior
+		print("game quit")
+		get_tree().quit()  # default behavior
 
 
 func _ready():
-
 	if Steam.isSteamRunning():
 		Debug.debug.emit("steam is running")
 	else:
@@ -31,7 +31,7 @@ func _ready():
 	Steam.setRichPresence("steam_display", "#steam_display_test")
 	Steam.setRichPresence("status", "#status_test")
 	#Steam.setRichPresence("connect", "#connect_test")
-	var _args=Steam.getLaunchCommandLine()
+	var args = Steam.getLaunchCommandLine()
 
 
 func _process(_delta: float):
