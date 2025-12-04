@@ -4,3 +4,5 @@
 *.db
 build/godot/exports/
 *.log
+build/steam/logs/*
+**/*.TMP
