@@ -1,0 +1,13 @@
+"lang"
+{
+	"Language"	"english"
+	"Tokens"
+	{
+		"#Status_AtMainMenu"	"At the main menu"
+		"#Status_Hosting"	"Hosting a world"
+		"#Status_Joined"	"Joined a world"
+		"#steam_display_test"	"steam_display value"
+		"#status_test"	"status value"
+		"#connect_test"	"connect value"
+	}
+}
