@@ -28,8 +28,9 @@ func _ready():
 	#var steam_persona_name = Steam.getFriendPersonaName(steam_id)
 	#d("steam_persona_name:", steam_persona_name)
 
-	Steam.setRichPresence("steam_display", "steam_display value")
-	Steam.setRichPresence("status", "status value")
+	Steam.setRichPresence("steam_display", "#steam_display_test")
+	Steam.setRichPresence("status", "#status_test")
+	#Steam.setRichPresence("connect", "#connect_test")
 	var _args=Steam.getLaunchCommandLine()
 
 
