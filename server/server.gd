@@ -3,21 +3,21 @@ extends Node
 
 const CHARACTER_SCENE = preload("res://character/character.tscn")
 const PLAYER_SCENE = preload("res://player/player.gd")
-
 @export var players: Players
+
+var lobby_id: int = 0
 
 @onready var ui = %UI
 @onready var world: World = $/root/Game/World
 @onready var client: Client = $/root/Game/Client
 
-
 #var lobby_data
-var lobby_id: int = 0
 #var lobby_members: Array = []
 #var lobby_members_max: int = 10
 #var lobby_vote_kick: bool = false
 #var steam_id: int = 0
 #var steam_username: String = ""
+
 
 func _ready():
 	Steam.lobby_created.connect(_on_lobby_created)
@@ -72,9 +72,9 @@ func start(port):
 	#get_tree().set_multiplayer(peer,self.get_path())
 	Steam.setRichPresence("connect", "steam://connect/" + str(19216811) + ":" + str(port))
 
-	print('createLobby...')
-	Steam.createLobby(Steam.LobbyType.LOBBY_TYPE_PUBLIC,2)
-	print('...createLobby')
+	print("createLobby...")
+	Steam.createLobby(Steam.LobbyType.LOBBY_TYPE_PUBLIC, 2)
+	print("...createLobby")
 
 	match r:
 		OK:
