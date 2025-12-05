@@ -22,7 +22,7 @@ OUTPUT_PATH=$(realpath "./godot/exports/win-64/marblegame.exe")
 echo "Starting Godot Windows export..."
 
 # Execute the command using the environment variable
-godot-mono --path ../ --quiet --headless --export-release "$EXPORT_NAME" "$OUTPUT_PATH"
+godot-mono --path ../ --headless --export-release "$EXPORT_NAME" "$OUTPUT_PATH"
 
 # Immediately check the exit status stored in $?
 if [ $? -eq 0 ]; then
@@ -48,7 +48,7 @@ OUTPUT_PATH=$(realpath "./godot/exports/linux-x64/marblegame.x86_64")
 echo "Starting Godot Linux export..."
 
 # Execute the command using the environment variable
-godot-mono --path ../ --quiet --headless --export-release "$EXPORT_NAME" "$OUTPUT_PATH"
+godot-mono --path ../ --headless --export-release "$EXPORT_NAME" "$OUTPUT_PATH"
 
 # Immediately check the exit status stored in $?
 if [ $? -eq 0 ]; then
@@ -74,7 +74,7 @@ OUTPUT_PATH=$(realpath "./godot/exports/macOS/marblegame.app")
 echo "Starting Godot macOS export..."
 
 # Execute the command using the environment variable
-godot-mono --path ../ --quiet --headless --export-release "$EXPORT_NAME" "$OUTPUT_PATH"
+godot-mono --path ../ --headless --export-release "$EXPORT_NAME" "$OUTPUT_PATH"
 
 # Immediately check the exit status stored in $?
 if [ $? -eq 0 ]; then
