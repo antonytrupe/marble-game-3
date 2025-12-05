@@ -61,11 +61,39 @@ else
 fi
 
 echo "Godot Linux Build complete."
+
+##################
+
+EXPORT_NAME="macOS"
+
+# Make sure the directory exists (mkdir -p works in bash/mingw)
+mkdir -p ./godot/exports/macOS
+
+OUTPUT_PATH=$(realpath "./godot/exports/macOS/marblegame")
+
+echo "Starting Godot macOS export..."
+
+# Execute the command using the environment variable
+godot-mono --path ../ --headless --export-release "$EXPORT_NAME" "$OUTPUT_PATH"
+
+# Immediately check the exit status stored in $?
+if [ $? -eq 0 ]; then
+    echo "✅ Godot macOS build SUCCEEDED!"
+    # Continue with deployment steps (e.g., upload to SteamCMD)
+else
+    echo "❌ Godot macOS build FAILED!"
+    # Stop the script or handle the error
+    echo $?
+    exit 1
+fi
+
+echo "Godot Linux Build complete."
+
 ##################
 
 echo "Starting Steam build..."
 
-APP_VDF=$(realpath "./steam/app_build_4041750.vdf")
+APP_VDF=$(realpath "./steam/playtest_app.vdf")
 
 echo "Using Steam app build VDF at: $APP_VDF"
 pwd

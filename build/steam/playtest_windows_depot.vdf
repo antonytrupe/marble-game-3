@@ -1,0 +1,20 @@
+"depotbuild"
+{
+	"appid"		"4041750"
+	"depotid"		"4041752"
+	"ContentRoot" "../godot/exports/win-64/" // content root folder relative to this script file
+	"flags"		"0"
+	"steamid"		"76561197993500508"
+	"FileMapping"
+		{
+			"LocalPath" "*.dll" // all files from contentroot folder
+			"DepotPath" "." // mapped into the root of the depot
+			"recursive" "1" // include all subfolders
+		}
+	"FileMapping"
+		{
+			"LocalPath" "*.exe" // all files from contentroot folder
+			"DepotPath" "." // mapped into the root of the depot
+			"recursive" "1" // include all subfolders
+		}
+}
