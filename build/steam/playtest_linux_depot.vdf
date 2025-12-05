@@ -23,4 +23,10 @@
 			"DepotPath" "." // mapped into the root of the depot
 			"recursive" "1" // include all subfolders
 		}
+	"FileMapping"
+		{
+			"LocalPath" "data_Marble Game 3_linuxbsd_x86_64/*" // all files from contentroot folder
+			"DepotPath" "." // mapped into the root of the depot
+			"recursive" "1" // include all subfolders
+		}
 }

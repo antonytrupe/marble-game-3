@@ -7,8 +7,13 @@
 	"steamid"		"76561197993500508"
 	"FileMapping"
 		{
-			"LocalPath" "*" // all files from contentroot folder
+			"LocalPath" "marblegame.app/*" // all files from contentroot folder
 			"DepotPath" "." // mapped into the root of the depot
 			"recursive" "1" // include all subfolders
+		}
+	"FileMapping"
+		{
+			"LocalPath" "marblegame.command" // all files from contentroot folder
+			"DepotPath" "." // mapped into the root of the depot
 		}
 }
