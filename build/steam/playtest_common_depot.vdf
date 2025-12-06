@@ -7,8 +7,12 @@
 	"steamid"		"76561197993500508"
 	"FileMapping"
 		{
-			"LocalPath" "*.pck" // all files from contentroot folder
+			"LocalPath" "*.pck"
 			"DepotPath" "." // mapped into the root of the depot
-			"recursive" "1" // include all subfolders
+		}
+	"FileMapping"
+		{
+			"LocalPath" "../../../../build_number.txt"
+			"DepotPath" "." // mapped into the root of the depot
 		}
 }
