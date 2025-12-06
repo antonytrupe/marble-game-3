@@ -15,6 +15,27 @@ func d(...args: Array):
 func _ready() -> void:
 	multiplayer.connected_to_server.connect(_on_connected_to_server)
 	multiplayer.server_disconnected.connect(_server_disconnected)
+	Steam.join_requested.connect(_on_lobby_join_requested)
+
+
+func join_lobby(this_lobby_id: int) -> void:
+	print("Attempting to join lobby %s" % this_lobby_id)
+
+	# Clear any previous lobby members lists, if you were in a previous lobby
+	#lobby_members.clear()
+
+	# Make the lobby join request to Steam
+	Steam.joinLobby(this_lobby_id)
+
+
+func _on_lobby_join_requested(this_lobby_id: int, friend_id: int) -> void:
+	# Get the lobby owner's name
+	var owner_name: String = Steam.getFriendPersonaName(friend_id)
+
+	print("Joining %s's lobby..." % owner_name)
+
+	# Attempt to join the lobby
+	join_lobby(this_lobby_id)
 
 
 func is_server() -> bool:

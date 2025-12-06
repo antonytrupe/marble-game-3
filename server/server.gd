@@ -12,7 +12,7 @@ var lobby_id: int = 0
 @onready var client: Client = $/root/Game/Client
 
 #var lobby_data
-#var lobby_members: Array = []
+# var lobby_members: Array = []
 #var lobby_members_max: int = 10
 #var lobby_vote_kick: bool = false
 #var steam_id: int = 0
@@ -20,12 +20,22 @@ var lobby_id: int = 0
 
 
 func _ready():
-	Steam.lobby_created.connect(_on_lobby_created)
 
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	Persistance.load_player.connect(_load_player)
 	#Persistance.load_character.connect(_load_character)
+
+
+	# Steam.lobby_chat_update.connect(_on_lobby_chat_update)
+	Steam.lobby_created.connect(_on_lobby_created)
+	# Steam.lobby_data_update.connect(_on_lobby_data_update)
+	# Steam.lobby_invite.connect(_on_lobby_invite)
+	# Steam.lobby_joined.connect(_on_lobby_joined)
+	# Steam.lobby_match_list.connect(_on_lobby_match_list)
+	# Steam.lobby_message.connect(_on_lobby_message)
+	# Steam.persona_state_change.connect(_on_persona_change)
+	# Steam.setRichPresence("connect", "#connect_test")
 
 
 func _notification(what):
@@ -42,12 +52,15 @@ func hide():
 	ui.visible = false
 
 
+func d(...args: Array):
+	Debug.debug.emit(args)
+
 func _on_lobby_created(result: int, this_lobby_id: int) -> void:
 	print("_on_lobby_created:", result)
 	if result == Steam.RESULT_OK:
 		# Set the lobby ID
 		lobby_id = this_lobby_id
-		print("Created a lobby: %s" % lobby_id)
+		d("Created a lobby: %s" % lobby_id)
 
 		# Set this lobby as joinable, just in case, though this should be done by default
 		Steam.setLobbyJoinable(lobby_id, true)
@@ -60,8 +73,11 @@ func _on_lobby_created(result: int, this_lobby_id: int) -> void:
 		var set_relay: bool = Steam.allowP2PPacketRelay(true)
 		print("Allowing Steam to be relay backup: %s" % set_relay)
 
+		#Steam.setRichPresence("connect", "steam://connect/" + str(19216811) + ":" + str(port))
+		Steam.setRichPresence("connect", str(lobby_id))
 
-func start(port):
+
+func start():
 	Persistance.load.emit()
 	var peer = SteamMultiplayerPeer.new()
 	var r = peer.create_host(0)
@@ -70,11 +86,12 @@ func start(port):
 	multiplayer.multiplayer_peer = peer
 	get_viewport().get_window().title += " - " + "SERVER"
 	#get_tree().set_multiplayer(peer,self.get_path())
-	Steam.setRichPresence("connect", "steam://connect/" + str(19216811) + ":" + str(port))
 
 	print("createLobby...")
-	Steam.createLobby(Steam.LobbyType.LOBBY_TYPE_PUBLIC, 2)
+	var lobby_members_max: int = 4
+	Steam.createLobby(Steam.LobbyType.LOBBY_TYPE_PUBLIC, lobby_members_max)
 	print("...createLobby")
+
 
 	match r:
 		OK:
@@ -84,7 +101,7 @@ func start(port):
 		ERR_CANT_CREATE:
 			Debug.debug.emit("ERR_CANT_CREATE")
 
-	Debug.debug.emit("Hosting on port: %s" % port)
+	Debug.debug.emit("Hosting on port: %s" % 0)
 
 	#_spawn_character(multiplayer.get_unique_id())
 	_on_peer_connected(multiplayer.get_unique_id())
