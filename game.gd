@@ -63,7 +63,7 @@ func _ready():
 
 	var command_args: Array = OS.get_cmdline_args()
 	d('command_args',command_args)
-	if(command_args.size()>=2 && command_args[0]=='+connect'):
+	if(command_args.size()>=2 && command_args[0]=='+connect_lobby'):
 		var lobby_id=int(command_args[1])
 		# d('key',command_args[0])
 		# d('value',command_args[1])
