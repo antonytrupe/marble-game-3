@@ -5,7 +5,8 @@ extends Node
 
 #live app id: 4041660
 
-#global test app id: 480
+@onready var client:Client=%Client
+
 
 func d(...args: Array):
 	Debug.debug.emit(args)
@@ -48,9 +49,9 @@ func _ready():
 	var command_args: Array = OS.get_cmdline_args()
 	d('command_args',command_args)
 	if(command_args.size()>=2 && command_args[0]=='+connect'):
-		d('key',command_args[0])
-		d('value',command_args[1])
-		Steam.joinLobby(int(command_args[1]))
+		# d('key',command_args[0])
+		# d('value',command_args[1])
+		client.join_lobby(int(command_args[1]))
 
 
 	# There are arguments to process
