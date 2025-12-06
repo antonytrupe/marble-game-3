@@ -81,6 +81,9 @@ func join_lobby(this_lobby_id: int) -> void:
 	peer.create_client(id)
 	multiplayer.multiplayer_peer=peer
 
+	#main_menu.visible = false
+	#client.visible = true
+
 
 func _on_lobby_join_requested(this_lobby_id: int, friend_id: int) -> void:
 	# Get the lobby owner's name

@@ -6,7 +6,7 @@ extends Node
 #live app id: 4041660
 
 @onready var client:Client=%Client
-
+@onready var main_menu=%MainMenu
 
 func _steam_signals():
 	pass
@@ -68,6 +68,8 @@ func _ready():
 		# d('key',command_args[0])
 		# d('value',command_args[1])
 		client.join_lobby(lobby_id)
+		main_menu.visible = false
+		client.visible = true
 
 
 func _process(_delta: float):
