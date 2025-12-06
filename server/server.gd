@@ -19,6 +19,18 @@ var lobby_id: int = 0
 #var steam_username: String = ""
 
 
+func _steam_signals():
+	# Steam.lobby_chat_update.connect(_on_lobby_chat_update)
+	Steam.lobby_created.connect(_on_lobby_created)
+	#Steam.lobby_data_update.connect(_on_lobby_data_update)
+	#Steam.lobby_invite.connect(_on_lobby_invite)
+	#Steam.lobby_joined.connect(_on_lobby_joined)
+	# Steam.lobby_match_list.connect(_on_lobby_match_list)
+	# Steam.lobby_message.connect(_on_lobby_message)
+	# Steam.persona_state_change.connect(_on_persona_change)
+	# Steam.setRichPresence("connect", "#connect_test")
+
+
 func _ready():
 
 	multiplayer.peer_connected.connect(_on_peer_connected)
@@ -26,16 +38,7 @@ func _ready():
 	Persistance.load_player.connect(_load_player)
 	#Persistance.load_character.connect(_load_character)
 
-
-	# Steam.lobby_chat_update.connect(_on_lobby_chat_update)
-	Steam.lobby_created.connect(_on_lobby_created)
-	# Steam.lobby_data_update.connect(_on_lobby_data_update)
-	# Steam.lobby_invite.connect(_on_lobby_invite)
-	# Steam.lobby_joined.connect(_on_lobby_joined)
-	# Steam.lobby_match_list.connect(_on_lobby_match_list)
-	# Steam.lobby_message.connect(_on_lobby_message)
-	# Steam.persona_state_change.connect(_on_persona_change)
-	# Steam.setRichPresence("connect", "#connect_test")
+	_steam_signals()
 
 
 func _notification(what):
@@ -55,6 +58,7 @@ func hide():
 func d(...args: Array):
 	Debug.debug.emit(args)
 
+
 func _on_lobby_created(result: int, this_lobby_id: int) -> void:
 	print("_on_lobby_created:", result)
 	if result == Steam.RESULT_OK:
@@ -73,7 +77,6 @@ func _on_lobby_created(result: int, this_lobby_id: int) -> void:
 		var set_relay: bool = Steam.allowP2PPacketRelay(true)
 		print("Allowing Steam to be relay backup: %s" % set_relay)
 
-		#Steam.setRichPresence("connect", "steam://connect/" + str(19216811) + ":" + str(port))
 		Steam.setRichPresence("connect", str(lobby_id))
 
 
@@ -89,6 +92,7 @@ func start():
 
 	print("createLobby...")
 	var lobby_members_max: int = 4
+	#fires _on_lobby_created
 	Steam.createLobby(Steam.LobbyType.LOBBY_TYPE_PUBLIC, lobby_members_max)
 	print("...createLobby")
 
