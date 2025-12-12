@@ -34,7 +34,7 @@ else
     exit 1
 fi
 
-echo "Godot Windows Build complete."
+# echo "Godot Windows Build complete."
 ##################
 
 ##################
@@ -60,7 +60,7 @@ else
     exit 1
 fi
 
-echo "Godot Linux Build complete."
+# echo "Godot Linux Build complete."
 
 ##################
 
@@ -86,7 +86,7 @@ else
     exit 1
 fi
 
-echo "Godot macOS Build complete."
+# echo "Godot macOS Build complete."
 
 ##################
 
@@ -111,4 +111,4 @@ else
     exit 1
 fi
 
-echo "Steam build complete."
+# echo "Steam build complete."

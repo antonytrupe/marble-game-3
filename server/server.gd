@@ -45,8 +45,8 @@ func _on_lobby_join_requested(this_lobby_id: int, friend_id: int) -> void:
 
 func _ready():
 
-	#multiplayer.peer_connected.connect(_on_peer_connected)
-	#multiplayer.peer_disconnected.connect(_on_peer_disconnected)
+	multiplayer.peer_connected.connect(_on_peer_connected)
+	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	Persistance.load_player.connect(_load_player)
 	#Persistance.load_character.connect(_load_character)
 
@@ -165,6 +165,7 @@ func _create_player(peer_id, player_id) -> Player:
 
 @rpc("any_peer")
 func set_client_player_id(player_id):
+	d('set_client_player_id')
 	var peer_id: int = multiplayer.get_remote_sender_id()
 	peer_id = peer_id if peer_id != 0 else 1
 	var p: Player
@@ -185,18 +186,18 @@ func set_client_player_id(player_id):
 		client.set_current_character.rpc_id(peer_id, p.current_character_id)
 
 
-#func _on_peer_connected(peer_id):
-	#Debug.debug.emit("Peer connected with ID: %s" % peer_id)
-#
-	##if multiplayer.is_server():
-	###client.get_id.rpc_id(peer_id)
-	###debug.debug.emit(client_id)
-	##var p=players.get_child(peer_id)
-	##if not p:
-	##p=PLAYER_SCENE.new()
-	##p.peer_id=peer_id
-#
-	##_spawn_character(id)
+func _on_peer_connected(peer_id):
+	Debug.debug.emit("Peer connected with ID: %s" % peer_id)
+
+	#if multiplayer.is_server():
+	##client.get_id.rpc_id(peer_id)
+	##debug.debug.emit(client_id)
+	#var p=players.get_child(peer_id)
+	#if not p:
+	#p=PLAYER_SCENE.new()
+	#p.peer_id=peer_id
+
+	#_spawn_character(id)
 
 
 func _on_peer_disconnected(id):
