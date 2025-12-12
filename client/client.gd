@@ -14,7 +14,7 @@ func d(...args: Array):
 
 
 func _steam_signals():
-	Steam.join_requested.connect(_on_lobby_join_requested)
+	Steam.lobby_joined.connect(_on_lobby_joined)
 
 
 func _ready() -> void:
@@ -22,7 +22,7 @@ func _ready() -> void:
 	multiplayer.server_disconnected.connect(_server_disconnected)
 	_steam_signals()
 
-var lobby_id: int = 0
+#var lobby_id: int = 0
 
 
 func make_p2p_handshake() -> void:
@@ -32,67 +32,32 @@ func make_p2p_handshake() -> void:
 	#send_p2p_packet(0, {"message": "handshake", "from": steam_id})
 
 
-func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, response: int) -> void:
-	# If joining was successful
-	if response == Steam.CHAT_ROOM_ENTER_RESPONSE_SUCCESS:
-		# Set this lobby ID as your lobby ID
-		lobby_id = this_lobby_id
-
-		# Get the lobby members
-		#get_lobby_members()
-
-		# Make the initial handshake
-		make_p2p_handshake()
-
-	# Else it failed for some reason
-	else:
-		# Get the failure reason
-		var fail_reason: String
-
-		match response:
-			Steam.CHAT_ROOM_ENTER_RESPONSE_DOESNT_EXIST: fail_reason = "This lobby no longer exists."
-			Steam.CHAT_ROOM_ENTER_RESPONSE_NOT_ALLOWED: fail_reason = "You don't have permission to join this lobby."
-			Steam.CHAT_ROOM_ENTER_RESPONSE_FULL: fail_reason = "The lobby is now full."
-			Steam.CHAT_ROOM_ENTER_RESPONSE_ERROR: fail_reason = "Uh... something unexpected happened!"
-			Steam.CHAT_ROOM_ENTER_RESPONSE_BANNED: fail_reason = "You are banned from this lobby."
-			Steam.CHAT_ROOM_ENTER_RESPONSE_LIMITED: fail_reason = "You cannot join due to having a limited account."
-			Steam.CHAT_ROOM_ENTER_RESPONSE_CLAN_DISABLED: fail_reason = "This lobby is locked or disabled."
-			Steam.CHAT_ROOM_ENTER_RESPONSE_COMMUNITY_BAN: fail_reason = "This lobby is community locked."
-			Steam.CHAT_ROOM_ENTER_RESPONSE_MEMBER_BLOCKED_YOU: fail_reason = "A user in the lobby has blocked you from joining."
-			Steam.CHAT_ROOM_ENTER_RESPONSE_YOU_BLOCKED_MEMBER: fail_reason = "A user you have blocked is in the lobby."
-
-		print("Failed to join this chat room: %s" % fail_reason)
-
-		#Reopen the lobby list
-		#_on_open_lobby_list_pressed()
-
 func join_lobby(this_lobby_id: int) -> void:
 	d("Attempting to join lobby %s" % this_lobby_id)
-
-	# Clear any previous lobby members lists, if you were in a previous lobby
-	#lobby_members.clear()
-	var id := Steam.getLobbyOwner(this_lobby_id)
-	d("lobby owner %s" % id)
 
 	# Make the lobby join request to Steam
 	Steam.joinLobby(this_lobby_id)
 
-	var peer = SteamMultiplayerPeer.new()
-	peer.create_client(id)
-	multiplayer.multiplayer_peer=peer
+
+
 
 	#main_menu.visible = false
 	#client.visible = true
+	ui.visible=true
 
 
-func _on_lobby_join_requested(this_lobby_id: int, friend_id: int) -> void:
-	# Get the lobby owner's name
-	var owner_name: String = Steam.getFriendPersonaName(friend_id)
+func _on_lobby_joined(lobby_id: int, _permissions: int, _locked: bool, _response: int) -> void:
+	d("_on_lobby_joined")
+	if Steam.getLobbyOwner(lobby_id) == Steam.getSteamID():
+		# We're probably hosting so we can ignore this
+		d('this is us')
+		return
 
-	d("Joining %s's lobby..." % owner_name)
-
-	# Attempt to join the lobby
-	join_lobby(this_lobby_id)
+	# But if we're joining
+	var peer := SteamMultiplayerPeer.new()
+	peer.debug_level = SteamMultiplayerPeer.DEBUG_LEVEL_PEER # <- optional, adds info to log
+	peer.connect_to_lobby(lobby_id)
+	multiplayer.multiplayer_peer = peer
 
 
 func is_server() -> bool:

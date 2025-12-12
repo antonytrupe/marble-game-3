@@ -5,7 +5,7 @@ const CHARACTER_SCENE = preload("res://character/character.tscn")
 const PLAYER_SCENE = preload("res://player/player.gd")
 @export var players: Players
 
-var lobby_id: int = 0
+#var lobby_id: int = 0
 
 @onready var ui = %UI
 @onready var world: World = $/root/Game/World
@@ -22,6 +22,8 @@ var lobby_id: int = 0
 func _steam_signals():
 	# Steam.lobby_chat_update.connect(_on_lobby_chat_update)
 	Steam.lobby_created.connect(_on_lobby_created)
+	Steam.join_requested.connect(_on_lobby_join_requested)
+
 	#Steam.lobby_data_update.connect(_on_lobby_data_update)
 	#Steam.lobby_invite.connect(_on_lobby_invite)
 	#Steam.lobby_joined.connect(_on_lobby_joined)
@@ -31,10 +33,20 @@ func _steam_signals():
 	# Steam.setRichPresence("connect", "#connect_test")
 
 
+func _on_lobby_join_requested(this_lobby_id: int, friend_id: int) -> void:
+	d("_on_lobby_join_requested")
+	# Get the lobby owner's name
+	var friend_name: String = Steam.getFriendPersonaName(friend_id)
+
+	d("%s joined lobby %s..." % friend_name,this_lobby_id)
+	var id := Steam.getLobbyOwner(this_lobby_id)
+	d("lobby owner %s" % id)
+
+
 func _ready():
 
-	multiplayer.peer_connected.connect(_on_peer_connected)
-	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
+	#multiplayer.peer_connected.connect(_on_peer_connected)
+	#multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	Persistance.load_player.connect(_load_player)
 	#Persistance.load_character.connect(_load_character)
 
@@ -59,11 +71,16 @@ func d(...args: Array):
 	Debug.debug.emit(args)
 
 
-func _on_lobby_created(result: int, this_lobby_id: int) -> void:
+func _on_lobby_created(result: int, lobby_id: int) -> void:
 	print("_on_lobby_created:", result)
 	if result == Steam.RESULT_OK:
+
+		var peer :SteamMultiplayerPeer = SteamMultiplayerPeer.new()
+		peer.host_with_lobby(lobby_id)
+
+		multiplayer.multiplayer_peer = peer
 		# Set the lobby ID
-		lobby_id = this_lobby_id
+		#lobby_id = this_lobby_id
 		d("Created a lobby: %s" % lobby_id)
 
 		# Set this lobby as joinable, just in case, though this should be done by default
@@ -78,15 +95,12 @@ func _on_lobby_created(result: int, this_lobby_id: int) -> void:
 		print("Allowing Steam to be relay backup: %s" % set_relay)
 
 		Steam.setRichPresence("connect", str(lobby_id))
+		d('set connect richpresence')
 
 
 func start():
 	Persistance.load.emit()
-	var peer = SteamMultiplayerPeer.new()
-	var r = peer.create_host(0)
-	#var new_multiplayer_api=SceneMultiplayer.new()
-	#get_tree().set_multiplayer(new_multiplayer_api, NodePath(self.get_path()))
-	multiplayer.multiplayer_peer = peer
+
 	get_viewport().get_window().title += " - " + "SERVER"
 	#get_tree().set_multiplayer(peer,self.get_path())
 
@@ -96,21 +110,10 @@ func start():
 	Steam.createLobby(Steam.LobbyType.LOBBY_TYPE_PUBLIC, lobby_members_max)
 	print("...createLobby")
 
-
-	match r:
-		OK:
-			Debug.debug.emit("OK")
-		ERR_ALREADY_IN_USE:
-			Debug.debug.emit("ERR_ALREADY_IN_USE")
-		ERR_CANT_CREATE:
-			Debug.debug.emit("ERR_CANT_CREATE")
-
-	Debug.debug.emit("Hosting on port: %s" % 0)
-
 	#_spawn_character(multiplayer.get_unique_id())
-	_on_peer_connected(multiplayer.get_unique_id())
+	#_on_peer_connected(multiplayer.get_unique_id())
 	#set_player_id(multiplayer.get_unique_id())
-	return r
+	#return r
 
 
 @rpc("any_peer", "call_local")
@@ -182,18 +185,18 @@ func set_client_player_id(player_id):
 		client.set_current_character.rpc_id(peer_id, p.current_character_id)
 
 
-func _on_peer_connected(peer_id):
-	Debug.debug.emit("Peer connected with ID: %s" % peer_id)
-
-	#if multiplayer.is_server():
-	##client.get_id.rpc_id(peer_id)
-	##debug.debug.emit(client_id)
-	#var p=players.get_child(peer_id)
-	#if not p:
-	#p=PLAYER_SCENE.new()
-	#p.peer_id=peer_id
-
-	#_spawn_character(id)
+#func _on_peer_connected(peer_id):
+	#Debug.debug.emit("Peer connected with ID: %s" % peer_id)
+#
+	##if multiplayer.is_server():
+	###client.get_id.rpc_id(peer_id)
+	###debug.debug.emit(client_id)
+	##var p=players.get_child(peer_id)
+	##if not p:
+	##p=PLAYER_SCENE.new()
+	##p.peer_id=peer_id
+#
+	##_spawn_character(id)
 
 
 func _on_peer_disconnected(id):
