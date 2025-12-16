@@ -9,7 +9,7 @@ extends Control
 
 @export var current_character:MarbleCharacter
 
-func d(...args: Array):
+func debug(...args: Array):
 	Debug.debug.emit(args)
 
 
@@ -22,35 +22,20 @@ func _ready() -> void:
 	multiplayer.server_disconnected.connect(_server_disconnected)
 	_steam_signals()
 
-#var lobby_id: int = 0
 
-
-func make_p2p_handshake() -> void:
-	pass
-	#print("Sending P2P handshake to the lobby")
-
-	#send_p2p_packet(0, {"message": "handshake", "from": steam_id})
-
-
-func join_lobby(this_lobby_id: int) -> void:
-	d("Attempting to join lobby %s" % this_lobby_id)
+func join_lobby(lobby_id: int) -> void:
+	debug("Attempting to join lobby %s" % lobby_id)
 
 	# Make the lobby join request to Steam
-	Steam.joinLobby(this_lobby_id)
-
-
-
-
-	#main_menu.visible = false
-	#client.visible = true
+	Steam.joinLobby(lobby_id)
 	ui.visible=true
 
 
 func _on_lobby_joined(lobby_id: int, _permissions: int, _locked: bool, _response: int) -> void:
-	d("_on_lobby_joined")
+	#debug("_on_lobby_joined")
 	if Steam.getLobbyOwner(lobby_id) == Steam.getSteamID():
 		# We're probably hosting so we can ignore this
-		d('this is us')
+		#debug('this is us')
 		return
 
 	# But if we're joining
@@ -93,7 +78,6 @@ func _unhandled_input(event) -> void:
 				current_character.camera_pivot.position += direction * scroll_amount * .1
 
 
-
 	if Input.is_action_just_pressed("command"):
 		chat_text_edit.visible = !chat_text_edit.visible
 		#chat_mode = !chat_mode
@@ -125,7 +109,7 @@ func _unhandled_input(event) -> void:
 #this is for the server to tell this client who it's character is
 @rpc()
 func set_current_character(character_id):
-	d('set_current_character:',character_id)
+	debug('set_current_character:',character_id)
 	current_character=world.characters.get_node(character_id)
 	#to get the warp ui to update
 	TimeWarp.warp_change.emit(current_character.warp_speed)
@@ -142,7 +126,7 @@ func set_current_character_warp_speed(value):
 
 
 func start(address, port):
-	Debug.debug.emit("Attempting to connect to: %s:%s" % [address, port])
+	debug("Attempting to connect to: %s:%s" % [address, port])
 	var peer = SteamMultiplayerPeer.new()
 	var r=peer.create_client(address, port)
 	multiplayer.multiplayer_peer=peer
@@ -150,23 +134,22 @@ func start(address, port):
 
 	match r:
 		OK:
-			Debug.debug.emit('OK')
+			debug('OK')
 		ERR_ALREADY_IN_USE:
-			Debug.debug.emit('ERR_ALREADY_IN_USE')
+			debug('ERR_ALREADY_IN_USE')
 		ERR_CANT_CREATE:
-			Debug.debug.emit('ERR_CANT_CREATE')
-
+			debug('ERR_CANT_CREATE')
 
 	ui.visible=true
 
 
 func _on_connected_to_server():
-	Debug.debug.emit("_on_connected_to_server")
+	debug("_on_connected_to_server")
 	# var steam_id = Steam.getSteamID()
 	#return "steam:"+str(steam_id)
 	#server.set_client_player_id.rpc_id(1,"steam:"+str(steam_id))
 
 
 func _server_disconnected():
-	d("_server_disconnected")
+	debug("_server_disconnected")
 	ui.visible=true

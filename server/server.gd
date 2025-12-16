@@ -18,31 +18,21 @@ const PLAYER_SCENE = preload("res://player/player.gd")
 
 
 func _steam_signals():
-	# Steam.lobby_chat_update.connect(_on_lobby_chat_update)
 	Steam.lobby_created.connect(_on_lobby_created)
+	# just for information
 	Steam.join_requested.connect(_on_lobby_join_requested)
 
-	#Steam.lobby_data_update.connect(_on_lobby_data_update)
-	#Steam.lobby_invite.connect(_on_lobby_invite)
-	#Steam.lobby_joined.connect(_on_lobby_joined)
-	# Steam.lobby_match_list.connect(_on_lobby_match_list)
-	# Steam.lobby_message.connect(_on_lobby_message)
-	# Steam.persona_state_change.connect(_on_persona_change)
-	# Steam.setRichPresence("connect", "#connect_test")
-
-
+#just for info
 func _on_lobby_join_requested(this_lobby_id: int, friend_steam_id: int) -> void:
-	d("_on_lobby_join_requested")
 	# Get the lobby owner's name
 	var friend_name: String = Steam.getFriendPersonaName(friend_steam_id)
 
-	d("%s joined lobby %s..." % friend_name,this_lobby_id)
+	debug("%s joined lobby %s..." % friend_name,this_lobby_id)
 	var id := Steam.getLobbyOwner(this_lobby_id)
-	d("lobby owner %s" % id)
+	debug("lobby owner %s" % id)
 
 
 func _ready():
-
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	Persistance.load_player.connect(_load_player)
@@ -65,12 +55,11 @@ func hide():
 	ui.visible = false
 
 
-func d(...args: Array):
+func debug(...args: Array):
 	Debug.debug.emit(args)
 
 
 func _on_lobby_created(result: int, lobby_id: int) -> void:
-	print("_on_lobby_created:", result)
 	if result == Steam.RESULT_OK:
 
 		var peer :SteamMultiplayerPeer = SteamMultiplayerPeer.new()
@@ -78,23 +67,18 @@ func _on_lobby_created(result: int, lobby_id: int) -> void:
 
 		multiplayer.multiplayer_peer = peer
 		# Set the lobby ID
-		#lobby_id = this_lobby_id
-		d("Created a lobby: %s" % lobby_id)
+		debug("Created a lobby: %s" % lobby_id)
 
 		# Set this lobby as joinable, just in case, though this should be done by default
 		Steam.setLobbyJoinable(lobby_id, true)
-
-		# Set some lobby data
-		Steam.setLobbyData(lobby_id, "name", "Gramps' Lobby")
-		Steam.setLobbyData(lobby_id, "mode", "GodotSteam test")
 
 		# Allow P2P connections to fallback to being relayed through Steam if needed
 		var set_relay: bool = Steam.allowP2PPacketRelay(true)
 		print("Allowing Steam to be relay backup: %s" % set_relay)
 
 		Steam.setRichPresence("connect", str(lobby_id))
-		d('set connect richpresence')
 
+		#set up the host player
 		_on_peer_connected(multiplayer.get_unique_id())
 
 
@@ -102,32 +86,24 @@ func start():
 	Persistance.load.emit()
 
 	get_viewport().get_window().title += " - " + "SERVER"
-	#get_tree().set_multiplayer(peer,self.get_path())
 
-	print("createLobby...")
 	var lobby_members_max: int = 4
 	#fires _on_lobby_created
 	Steam.createLobby(Steam.LobbyType.LOBBY_TYPE_PUBLIC, lobby_members_max)
-	print("...createLobby")
-
-	#_spawn_character(multiplayer.get_unique_id())
-	#_on_peer_connected(multiplayer.get_unique_id())
-	#set_player_id(multiplayer.get_unique_id())
-	#return r
 
 
 @rpc("any_peer", "call_local")
 func chat(message):
-	Debug.debug.emit(message)
+	debug(message)
 
 
 @rpc("any_peer")
 func command(message):
-	Debug.debug.emit(message)
+	debug(message)
 
 
 func _load_character(character_id, data: Dictionary):
-	Debug.debug.emit("_load_character:" + character_id)
+	debug("_load_character:" + character_id)
 	var c: MarbleCharacter = CHARACTER_SCENE.instantiate()
 	c.name = character_id
 	if data.has("player_id"):
@@ -196,15 +172,14 @@ func _create_player(peer_id, player_id) -> Player:
 
 ## peer_id from multiplayer_pee, 1 for host
 func _on_peer_connected(peer_id=1):
-	Debug.debug.emit("Peer connected with ID: %s" % peer_id)
+	debug("Peer connected with ID: %s" % peer_id)
 
 	var steam_id
 	if multiplayer.has_multiplayer_peer():
-		var s=(multiplayer.multiplayer_peer)
 		steam_id=(multiplayer.multiplayer_peer as SteamMultiplayerPeer).get_steam_id_for_peer_id(peer_id)
-		d("steam id: %s" % steam_id)
+		debug("steam id: %s" % steam_id)
 		var friend_name: String = Steam.getFriendPersonaName(steam_id)
-		d("friend_name: %s" % friend_name)
+		debug("friend_name: %s" % friend_name)
 
 	var player_id="Steam:"+str(steam_id)
 	# see if the player exists already
@@ -226,7 +201,7 @@ func _on_peer_connected(peer_id=1):
 		client.set_current_character.rpc_id(peer_id, p.current_character_id)
 	#if multiplayer.is_server():
 		##client.get_id.rpc_id(peer_id)
-		##debug.debug.emit(client_id)
+		##debug(client_id)
 		#var p=connected_players[peer_id]
 		#if not p:
 			#p=PLAYER_SCENE.new()
@@ -236,14 +211,14 @@ func _on_peer_connected(peer_id=1):
 
 
 func _on_peer_disconnected(id):
-	Debug.debug.emit("Peer disconnected with ID: %s" % id)
+	debug("Peer disconnected with ID: %s" % id)
 	#var player_node = players.get_node(str(id))
 	#if player_node:
 	#player_node.queue_free()
 
 
 func _create_character(peer_id=null):
-	Debug.debug.emit("_create_character")
+	debug("_create_character")
 
 	#var players_node = get_node("Players")
 	var c: MarbleCharacter = CHARACTER_SCENE.instantiate()
