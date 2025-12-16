@@ -3,20 +3,18 @@ extends Node
 
 const CHARACTER_SCENE = preload("res://character/character.tscn")
 const PLAYER_SCENE = preload("res://player/player.gd")
-@export var players: Players
 
-#var lobby_id: int = 0
+## key is unique id
+## e.g. Steam:steam_id.
+## Any player that has logged in will have an entry here
+@export var players: Dictionary = {}
+## key is peer_id from @MultiplayerPeer. only currently connected players are in this dictionary
+@export var connected_players: Dictionary = {}
 
 @onready var ui = %UI
 @onready var world: World = $/root/Game/World
 @onready var client: Client = $/root/Game/Client
 
-#var lobby_data
-# var lobby_members: Array = []
-#var lobby_members_max: int = 10
-#var lobby_vote_kick: bool = false
-#var steam_id: int = 0
-#var steam_username: String = ""
 
 
 func _steam_signals():
@@ -33,10 +31,10 @@ func _steam_signals():
 	# Steam.setRichPresence("connect", "#connect_test")
 
 
-func _on_lobby_join_requested(this_lobby_id: int, friend_id: int) -> void:
+func _on_lobby_join_requested(this_lobby_id: int, friend_steam_id: int) -> void:
 	d("_on_lobby_join_requested")
 	# Get the lobby owner's name
-	var friend_name: String = Steam.getFriendPersonaName(friend_id)
+	var friend_name: String = Steam.getFriendPersonaName(friend_steam_id)
 
 	d("%s joined lobby %s..." % friend_name,this_lobby_id)
 	var id := Steam.getLobbyOwner(this_lobby_id)
@@ -56,9 +54,9 @@ func _ready():
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		print("server quit")
-		players.players.keys().all(
+		players.keys().all(
 			func(player_id):
-				Persistance.persist.emit("Player", players.players[player_id])
+				Persistance.persist.emit("Player", players[player_id])
 				return true
 		)
 
@@ -96,6 +94,8 @@ func _on_lobby_created(result: int, lobby_id: int) -> void:
 
 		Steam.setRichPresence("connect", str(lobby_id))
 		d('set connect richpresence')
+
+		_on_peer_connected(multiplayer.get_unique_id())
 
 
 func start():
@@ -147,9 +147,10 @@ func _load_player(player_name, data: Dictionary):
 		p.current_character_id = data.current_character_id
 	if data.has("characters"):
 		p.characters = data.characters
-	players.players[player_name] = p
+	players[player_name] = p
 
-
+## peer_id from multiplayer_peer
+## player_id Steam:steam_id
 func _create_player(peer_id, player_id) -> Player:
 	var p = PLAYER_SCENE.new()
 	p.peer_id = peer_id
@@ -160,44 +161,78 @@ func _create_player(peer_id, player_id) -> Player:
 	p.current_character_id = c.name
 	c.set_multiplayer_authority(peer_id)
 	Persistance.persist.emit("Player", p)
+
+	players[player_id] = p
+	connected_players[peer_id]=p
+
 	return p
 
 
-@rpc("any_peer")
-func set_client_player_id(player_id):
-	d('set_client_player_id')
-	var peer_id: int = multiplayer.get_remote_sender_id()
-	peer_id = peer_id if peer_id != 0 else 1
+#@rpc("any_peer")
+#func set_client_player_id(player_id):
+	#d('set_client_player_id')
+	#var peer_id: int = multiplayer.get_remote_sender_id()
+	#peer_id = peer_id if peer_id != 0 else 1
+#
+	#var steam_id=(multiplayer.multiplayer_peer as SteamMultiplayerPeer).get_steam_id_for_peer_id(peer_id)
+#
+#
+	#var p: Player
+	#if players.has(player_id):
+		##Debug.info.emit("found player")
+		#p = players[player_id]
+#
+	#else:
+		##Debug.info.emit("did not find player")
+		#p = _create_player(peer_id, player_id)
+#
+	#connected_players[peer_id] = p
+	##var c=world.characters.find_child(p.current_character_id)
+	##c.set_multiplayer_authority(peer_id)
+	#if peer_id == 1:
+		#client.set_current_character(p.current_character_id)
+	#else:
+		#client.set_current_character.rpc_id(peer_id, p.current_character_id)
+
+## peer_id from multiplayer_pee, 1 for host
+func _on_peer_connected(peer_id=1):
+	Debug.debug.emit("Peer connected with ID: %s" % peer_id)
+
+	var steam_id
+	if multiplayer.has_multiplayer_peer():
+		var s=(multiplayer.multiplayer_peer)
+		steam_id=(multiplayer.multiplayer_peer as SteamMultiplayerPeer).get_steam_id_for_peer_id(peer_id)
+		d("steam id: %s" % steam_id)
+		var friend_name: String = Steam.getFriendPersonaName(steam_id)
+		d("friend_name: %s" % friend_name)
+
+	var player_id="Steam:"+str(steam_id)
+	# see if the player exists already
 	var p: Player
-	if players.players.has(player_id):
+	if players.has(player_id):
 		#Debug.info.emit("found player")
-		p = players.players[player_id]
+		p = players[player_id]
 	else:
 		#Debug.info.emit("did not find player")
 		p = _create_player(peer_id, player_id)
-		players.players[player_id] = p
+		players[player_id] = p
 
-	players.connected_players[peer_id] = p
+	connected_players[peer_id] = p
 	#var c=world.characters.find_child(p.current_character_id)
 	#c.set_multiplayer_authority(peer_id)
 	if peer_id == 1:
 		client.set_current_character(p.current_character_id)
 	else:
 		client.set_current_character.rpc_id(peer_id, p.current_character_id)
-
-
-func _on_peer_connected(peer_id):
-	Debug.debug.emit("Peer connected with ID: %s" % peer_id)
-
 	#if multiplayer.is_server():
-	##client.get_id.rpc_id(peer_id)
-	##debug.debug.emit(client_id)
-	#var p=players.get_child(peer_id)
-	#if not p:
-	#p=PLAYER_SCENE.new()
-	#p.peer_id=peer_id
-
-	#_spawn_character(id)
+		##client.get_id.rpc_id(peer_id)
+		##debug.debug.emit(client_id)
+		#var p=connected_players[peer_id]
+		#if not p:
+			#p=PLAYER_SCENE.new()
+			##p.peer_id=peer_id
+#
+		#_create_character(peer_id)
 
 
 func _on_peer_disconnected(id):
@@ -207,7 +242,7 @@ func _on_peer_disconnected(id):
 	#player_node.queue_free()
 
 
-func _create_character():
+func _create_character(peer_id=null):
 	Debug.debug.emit("_create_character")
 
 	#var players_node = get_node("Players")

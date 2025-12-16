@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bm31urffujefa" path="res://server/server.gd" id="1_ob30c"]
 
-[node name="Server" type="Control"]
+[node name="Server" type="Control" groups=["persist"]]
 visible = false
 layout_mode = 3
 anchors_preset = 15

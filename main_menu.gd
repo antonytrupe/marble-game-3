@@ -14,7 +14,7 @@ func _on_new_game_button_pressed() -> void:
 		main_menu.visible = false
 		var steam_id = Steam.getSteamID()
 		#return "steam:"+str(steam_id)
-		server.set_client_player_id("server:steam:" + str(steam_id))
+		#server.set_client_player_id("server:steam:" + str(steam_id))
 
 		client.visible = true
 

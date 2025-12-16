@@ -121,6 +121,8 @@ func _unhandled_input(event) -> void:
 				#server.chat.rpc_id(1, chat_text_edit.text)
 			chat_text_edit.text = ""
 
+
+#this is for the server to tell this client who it's character is
 @rpc()
 func set_current_character(character_id):
 	d('set_current_character:',character_id)
@@ -160,11 +162,11 @@ func start(address, port):
 
 func _on_connected_to_server():
 	Debug.debug.emit("_on_connected_to_server")
-	var steam_id = Steam.getSteamID()
+	# var steam_id = Steam.getSteamID()
 	#return "steam:"+str(steam_id)
-	server.set_client_player_id.rpc_id(1,"steam:"+str(steam_id))
+	#server.set_client_player_id.rpc_id(1,"steam:"+str(steam_id))
 
 
 func _server_disconnected():
-	Debug.debug.emit("_server_disconnected")
+	d("_server_disconnected")
 	ui.visible=true

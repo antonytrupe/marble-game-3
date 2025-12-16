@@ -1,5 +1,7 @@
 class_name Players
 extends Resource
 
-@export var players: Dictionary = {}
-@export var connected_players: Dictionary = {}
+#key is node name
+#@export var players: Dictionary = {}
+#key is peer_id
+#@export var connected_players: Dictionary = {}
