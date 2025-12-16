@@ -144,32 +144,6 @@ func _create_player(peer_id, player_id) -> Player:
 	return p
 
 
-#@rpc("any_peer")
-#func set_client_player_id(player_id):
-	#d('set_client_player_id')
-	#var peer_id: int = multiplayer.get_remote_sender_id()
-	#peer_id = peer_id if peer_id != 0 else 1
-#
-	#var steam_id=(multiplayer.multiplayer_peer as SteamMultiplayerPeer).get_steam_id_for_peer_id(peer_id)
-#
-#
-	#var p: Player
-	#if players.has(player_id):
-		##Debug.info.emit("found player")
-		#p = players[player_id]
-#
-	#else:
-		##Debug.info.emit("did not find player")
-		#p = _create_player(peer_id, player_id)
-#
-	#connected_players[peer_id] = p
-	##var c=world.characters.find_child(p.current_character_id)
-	##c.set_multiplayer_authority(peer_id)
-	#if peer_id == 1:
-		#client.set_current_character(p.current_character_id)
-	#else:
-		#client.set_current_character.rpc_id(peer_id, p.current_character_id)
-
 ## peer_id from multiplayer_pee, 1 for host
 func _on_peer_connected(peer_id=1):
 	debug("Peer connected with ID: %s" % peer_id)
@@ -193,34 +167,20 @@ func _on_peer_connected(peer_id=1):
 		players[player_id] = p
 
 	connected_players[peer_id] = p
-	#var c=world.characters.find_child(p.current_character_id)
-	#c.set_multiplayer_authority(peer_id)
 	if peer_id == 1:
 		client.set_current_character(p.current_character_id)
 	else:
 		client.set_current_character.rpc_id(peer_id, p.current_character_id)
-	#if multiplayer.is_server():
-		##client.get_id.rpc_id(peer_id)
-		##debug(client_id)
-		#var p=connected_players[peer_id]
-		#if not p:
-			#p=PLAYER_SCENE.new()
-			##p.peer_id=peer_id
-#
-		#_create_character(peer_id)
 
 
-func _on_peer_disconnected(id):
-	debug("Peer disconnected with ID: %s" % id)
-	#var player_node = players.get_node(str(id))
-	#if player_node:
-	#player_node.queue_free()
+func _on_peer_disconnected(peer_id):
+	debug("Peer disconnected with ID: %s" % peer_id)
+	connected_players.erase(peer_id)
 
 
-func _create_character(peer_id=null):
+func _create_character():
 	debug("_create_character")
 
-	#var players_node = get_node("Players")
 	var c: MarbleCharacter = CHARACTER_SCENE.instantiate()
 	c.name = str(randi())
 	c.position = Vector3(randf_range(-100, 100), 0, randf_range(-100, 100))

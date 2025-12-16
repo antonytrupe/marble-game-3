@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cqgu8ge77h70t"]
+[gd_scene load_steps=7 format=3 uid="uid://cqgu8ge77h70t"]
 
 [ext_resource type="PackedScene" uid="uid://cdpdpwwn5voyq" path="res://server/server.tscn" id="1_e2o6t"]
 [ext_resource type="Script" uid="uid://n01r8f0drw7s" path="res://game.gd" id="1_ryrav"]
@@ -6,12 +6,6 @@
 [ext_resource type="Script" uid="uid://cx8p4ymd2lt8g" path="res://debug/debug_ui.gd" id="3_fc0e3"]
 [ext_resource type="Script" uid="uid://c78dyt2pcfr7c" path="res://main_menu.gd" id="3_feb5d"]
 [ext_resource type="PackedScene" uid="uid://hwslegxxru8h" path="res://world/world.tscn" id="5_7jktm"]
-[ext_resource type="Script" uid="uid://be7j8l5plw3xc" path="res://players.gd" id="5_eow3j"]
-
-[sub_resource type="Resource" id="Resource_eow3j"]
-resource_local_to_scene = true
-script = ExtResource("5_eow3j")
-metadata/_custom_type_script = "uid://be7j8l5plw3xc"
 
 [node name="Game" type="Node"]
 script = ExtResource("1_ryrav")
@@ -21,7 +15,6 @@ script = ExtResource("1_ryrav")
 [node name="Server" parent="." instance=ExtResource("1_e2o6t")]
 unique_name_in_owner = true
 mouse_filter = 1
-players = SubResource("Resource_eow3j")
 
 [node name="MainMenu" type="Control" parent="."]
 unique_name_in_owner = true
@@ -57,10 +50,12 @@ layout_mode = 2
 text = "Start Server"
 
 [node name="JoinGameButton" type="Button" parent="MainMenu/MarginContainer/CenterContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 text = "Join Server"
 
 [node name="LoadGameButton" type="Button" parent="MainMenu/MarginContainer/CenterContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 text = "Load Game"
 

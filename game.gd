@@ -2,14 +2,13 @@ class_name Game
 extends Node
 
 #PlayTest app id: 4041750
-
 #live app id: 4041660
 
 @onready var client:Client=%Client
 @onready var main_menu=%MainMenu
 
 
-func d(...args: Array):
+func debug(...args: Array):
 	Debug.debug.emit(args)
 
 
@@ -25,19 +24,15 @@ func _ready():
 	else:
 		Debug.debug.emit("steam is not running")
 
-
 	var file_path = "res://build_number.txt" # The path to your file in the Godot project
 	var file_content = read_text_file(file_path)
 
 	if file_content != "":
-		d( "Build Version: " + file_content)
+		debug( "Build Version: " + file_content)
 
 	var command_args: Array = OS.get_cmdline_args()
-	#d('command_args',command_args)
 	if(command_args.size()>=2 && command_args[0]=='+connect_lobby'):
 		var lobby_id=int(command_args[1])
-		# d('key',command_args[0])
-		# d('value',command_args[1])
 		client.join_lobby(lobby_id)
 		main_menu.visible = false
 		client.visible = true
