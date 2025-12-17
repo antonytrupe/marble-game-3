@@ -6,3 +6,4 @@ build/godot/exports/
 *.log
 build/steam/logs/*
 **/*.TMP
+reports/
