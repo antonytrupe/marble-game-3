@@ -16,39 +16,74 @@ const PLAYER_SCENE = preload("res://player/player.gd")
 @onready var client: Client = $/root/Game/Client
 
 
-
 func _steam_signals():
 	Steam.lobby_created.connect(_on_lobby_created)
 	# just for information
 	Steam.join_requested.connect(_on_lobby_join_requested)
+
 
 #just for info
 func _on_lobby_join_requested(this_lobby_id: int, friend_steam_id: int) -> void:
 	# Get the lobby owner's name
 	var friend_name: String = Steam.getFriendPersonaName(friend_steam_id)
 
-	debug("%s joined lobby %s..." % friend_name,this_lobby_id)
+	debug("%s joined lobby %s..." % friend_name, this_lobby_id)
 	var id := Steam.getLobbyOwner(this_lobby_id)
 	debug("lobby owner %s" % id)
 
 
-func _ready():
+func _multiplayer_signals():
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
-	Persistance.load_player.connect(_load_player)
-	#Persistance.load_character.connect(_load_character)
 
+
+func _persistance_signals():
+	Persistance.load_player.connect(_load_player)
+	Persistance.load_character.connect(_load_character)
+
+
+func _load_character(character_name, data: Dictionary):
+	var c: MarbleCharacter = CHARACTER_SCENE.instantiate()
+	c.name = character_name
+	world.characters.add_child(c, true)
+	if data.has("player_id"):
+		c.player_id = data.player_id
+	if data.has("player_name"):
+		c.player_id = data.player_name
+	if data.has("warp_speed"):
+		c.warp_speed = data.warp_speed
+	if data.has("position"):
+		c.position = str_to_var(data.position)
+	if data.has("transform"):
+		c.transform =  str_to_var(data.transform)
+	if data.has("rotation"):
+		c.rotation = str_to_var(data.rotation)
+
+
+func _ready():
+	_multiplayer_signals()
+	_persistance_signals()
 	_steam_signals()
+
+
+func quit():
+	print("server quit")
+	players.keys().all(
+		func(player_id):
+			Persistance.persist.emit("Player", players[player_id])
+			return true
+	)
+
+	world.characters.get_children().all(
+		func(character):
+			Persistance.persist.emit("MarbleCharacter", character)
+			return true
+	)
 
 
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		print("server quit")
-		players.keys().all(
-			func(player_id):
-				Persistance.persist.emit("Player", players[player_id])
-				return true
-		)
+		quit()
 
 
 func hide():
@@ -61,8 +96,7 @@ func debug(...args: Array):
 
 func _on_lobby_created(result: int, lobby_id: int) -> void:
 	if result == Steam.RESULT_OK:
-
-		var peer :SteamMultiplayerPeer = SteamMultiplayerPeer.new()
+		var peer: SteamMultiplayerPeer = SteamMultiplayerPeer.new()
 		peer.host_with_lobby(lobby_id)
 
 		multiplayer.multiplayer_peer = peer
@@ -83,6 +117,7 @@ func _on_lobby_created(result: int, lobby_id: int) -> void:
 
 
 func start():
+	# load everything from persistance
 	Persistance.load.emit()
 
 	get_viewport().get_window().title += " - " + "SERVER"
@@ -102,19 +137,6 @@ func command(message):
 	debug(message)
 
 
-func _load_character(character_id, data: Dictionary):
-	debug("_load_character:" + character_id)
-	var c: MarbleCharacter = CHARACTER_SCENE.instantiate()
-	c.name = character_id
-	if data.has("player_id"):
-		c.player_id = data.player_id
-
-	if data.has("position"):
-		c.position = Vector3(data.position.x, data.position.y, data.position.z)
-
-	world.characters.add_child(c)
-
-
 func _load_player(player_name, data: Dictionary):
 	var p = PLAYER_SCENE.new()
 	p.name = player_name
@@ -123,6 +145,7 @@ func _load_player(player_name, data: Dictionary):
 		p.current_character_id = data.current_character_id
 	if data.has("characters"):
 		p.characters = data.characters
+
 	players[player_name] = p
 
 ## peer_id from multiplayer_peer
@@ -139,23 +162,23 @@ func _create_player(peer_id, player_id) -> Player:
 	Persistance.persist.emit("Player", p)
 
 	players[player_id] = p
-	connected_players[peer_id]=p
+	connected_players[peer_id] = p
 
 	return p
 
 
 ## peer_id from multiplayer_pee, 1 for host
-func _on_peer_connected(peer_id=1):
+func _on_peer_connected(peer_id = 1):
 	debug("Peer connected with ID: %s" % peer_id)
 
 	var steam_id
 	if multiplayer.has_multiplayer_peer():
-		steam_id=(multiplayer.multiplayer_peer as SteamMultiplayerPeer).get_steam_id_for_peer_id(peer_id)
+		steam_id = (multiplayer.multiplayer_peer as SteamMultiplayerPeer).get_steam_id_for_peer_id(peer_id)
 		debug("steam id: %s" % steam_id)
 		var friend_name: String = Steam.getFriendPersonaName(steam_id)
 		debug("friend_name: %s" % friend_name)
 
-	var player_id="Steam:"+str(steam_id)
+	var player_id = "Steam:" + str(steam_id)
 	# see if the player exists already
 	var p: Player
 	if players.has(player_id):
