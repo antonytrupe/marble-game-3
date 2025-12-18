@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://hwslegxxru8h"]
 
-[ext_resource type="Script" uid="uid://bod6lvq43qjsc" path="res://world/world.gd" id="1_f3sb7"]
+[ext_resource type="Script" uid="uid://bod6lvq43qjsc" path="res://src/world/world.gd" id="1_f3sb7"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f3sb7"]
 
@@ -54,7 +54,7 @@ shadow_enabled = true
 unique_name_in_owner = true
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://b4f3nuk5vp4rc")
+_spawnable_scenes = PackedStringArray("res://character/character.tscn")
 spawn_path = NodePath("../Characters")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]

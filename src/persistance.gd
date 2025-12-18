@@ -6,8 +6,8 @@ signal new
 signal load_character(name, data)
 signal load_player(name, data)
 
-const CHARACTER_SCENE = preload("res://character/character.tscn")
-const PLAYER_SCENE = preload("res://player/player.gd")
+const CHARACTER_SCENE = preload("res://src/character/character.tscn")
+const PLAYER_SCENE = preload("res://src/player/player.gd")
 
 var _db: SQLite
 

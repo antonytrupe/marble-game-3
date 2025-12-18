@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dl0mmfrncxlbo"]
 
-[ext_resource type="Script" uid="uid://bajcpmi8haugt" path="res://time_warp_ui.gd" id="1_a85ko"]
+[ext_resource type="Script" uid="uid://bajcpmi8haugt" path="res://src/time_warp_ui.gd" id="1_a85ko"]
 
 [node name="TimeWarpUI" type="Control"]
 layout_mode = 3

@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://b4f3nuk5vp4rc"]
 
-[ext_resource type="Script" uid="uid://chjly557ici3u" path="res://character/character.gd" id="1_glpr6"]
-[ext_resource type="Script" uid="uid://uvvavg0qjb8x" path="res://character/warp_detector.gd" id="2_1l1n4"]
+[ext_resource type="Script" uid="uid://chjly557ici3u" path="res://src/character/character.gd" id="1_glpr6"]
+[ext_resource type="Script" uid="uid://uvvavg0qjb8x" path="res://src/character/warp_detector.gd" id="2_1l1n4"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vu45j"]
 

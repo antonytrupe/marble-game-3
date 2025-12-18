@@ -1,8 +1,8 @@
 class_name Server
 extends Node
 
-const CHARACTER_SCENE = preload("res://character/character.tscn")
-const PLAYER_SCENE = preload("res://player/player.gd")
+const CHARACTER_SCENE = preload("res://src/character/character.tscn")
+const PLAYER_SCENE = preload("res://src/player/player.gd")
 
 ## key is unique id
 ## e.g. Steam:steam_id.
