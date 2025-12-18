@@ -53,9 +53,9 @@ shadow_enabled = true
 [node name="Characters" type="Node" parent="."]
 unique_name_in_owner = true
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="Characters"]
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://b4f3nuk5vp4rc")
-spawn_path = NodePath("..")
+spawn_path = NodePath("../Characters")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_h5o24")
