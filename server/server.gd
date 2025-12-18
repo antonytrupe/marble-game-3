@@ -171,11 +171,12 @@ func _create_player(peer_id, player_id) -> Player:
 func _on_peer_connected(peer_id = 1):
 	debug("Peer connected with ID: %s" % peer_id)
 
-	var steam_id
+	var steam_id:int
+	var friend_name:String
 	if multiplayer.has_multiplayer_peer():
 		steam_id = (multiplayer.multiplayer_peer as SteamMultiplayerPeer).get_steam_id_for_peer_id(peer_id)
 		debug("steam id: %s" % steam_id)
-		var friend_name: String = Steam.getFriendPersonaName(steam_id)
+		friend_name = Steam.getFriendPersonaName(steam_id)
 		debug("friend_name: %s" % friend_name)
 
 	var player_id = "Steam:" + str(steam_id)
@@ -195,10 +196,18 @@ func _on_peer_connected(peer_id = 1):
 	else:
 		client.set_current_character.rpc_id(peer_id, p.current_character_id)
 
+	#set the player_name of the character
+	var c:MarbleCharacter=world.characters.get_node(p.current_character_id)
+	c.player_name=friend_name
+	c._update_label()
 
 func _on_peer_disconnected(peer_id):
 	debug("Peer disconnected with ID: %s" % peer_id)
 	connected_players.erase(peer_id)
+
+	#TODO clear the player_name of the character
+	#var c:MarbleCharacter=world.characters.get_node(p.current_character_id)
+	#c.player_name=""
 
 
 func _create_character():
