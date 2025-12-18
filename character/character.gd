@@ -30,7 +30,7 @@ var mode: MODE = MODE.WALK  #:
 var speed = 30.0
 
 ## current actual warp speed
-var warp_speed = 1:
+@export var warp_speed = 1:
 	set = _set_warp_speed
 ##target warp speed
 var target_warp_speed=1
@@ -40,7 +40,7 @@ var max_warp_speed=5000
 var min_warp_speed=1
 
 var player_id: String
-var player_name:String
+@export var player_name:String
 
 @onready var label: Label3D = $Label3D
 @onready var camera_pivot = %CameraPivot
