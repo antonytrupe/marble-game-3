@@ -19,3 +19,10 @@ func before_test() -> void:
 func after_test() -> void:
 	instance.queue_free()
 	other.queue_free()
+
+
+func test_vector_to_array():
+	var v=Vector3(1,2,3)
+	var s=var_to_str(v)
+	assert_str(s).is_equal('"(1.0, 2.0, 3.0)"')
+	pass
