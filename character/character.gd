@@ -24,22 +24,23 @@ const STRINGS = {
 
 const SPEED_MULTIPLIER = 1.0 / 24.0
 
-@export var mode: MODE = MODE.WALK  #:
+var mode: MODE = MODE.WALK  #:
 #set = _set_mode
 
-@export var speed = 30.0
+var speed = 30.0
 
 ## current actual warp speed
-@export var warp_speed = 1:
+var warp_speed = 1:
 	set = _set_warp_speed
 ##target warp speed
-@export var target_warp_speed=1
+var target_warp_speed=1
 ##allowed maximum warp speed
-@export var max_warp_speed=5000
+var max_warp_speed=5000
 ##allowed minimum warp speed
-@export var min_warp_speed=1
+var min_warp_speed=1
 
 var player_id: String
+var player_name:String
 
 @onready var label: Label3D = $Label3D
 @onready var camera_pivot = %CameraPivot
@@ -143,25 +144,18 @@ func serialize_transform3d() -> Dictionary:
 	return data
 
 
-func deserialize_transform3d(data: Dictionary) -> Transform3D:
-	var origin = Vector3(data["origin"][0], data["origin"][1], data["origin"][2])
-	var basis_x = Vector3(data["basis_x"][0], data["basis_x"][1], data["basis_x"][2])
-	var basis_y = Vector3(data["basis_y"][0], data["basis_y"][1], data["basis_y"][2])
-	var basis_z = Vector3(data["basis_z"][0], data["basis_z"][1], data["basis_z"][2])
-	var b = Basis(basis_x, basis_y, basis_z)
-	return Transform3D(b, origin)
-
-
 func get_data() -> Dictionary:
 	return {
 		"name": name,
 		"player_id": player_id,
+		"player_name":player_name,
 		"warp_speed": warp_speed,
-		"position": {"x": position.x, "y": position.y, "z": position.z},
-		#"transform":serialize_transform3d(),
+		"position": var_to_str(position),
+		"transform":var_to_str(transform),
 	}
 
 func _update_label():
 	if label:
 		label.text = "warp speed:" + str(warp_speed)+'\n'+\
-		"name:"+name
+		"name:"+name+'\n'+\
+		"player:"+player_name
