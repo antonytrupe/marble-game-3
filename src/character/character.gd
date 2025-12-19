@@ -23,6 +23,9 @@ const STRINGS = {
 }
 
 const SPEED_MULTIPLIER = 1.0 / 24.0
+const JUMP_VELOCITY = 5.0
+
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 var mode: MODE = MODE.WALK  #:
 #set = _set_mode
@@ -62,13 +65,35 @@ func get_max_warp(other:MarbleCharacter)->int:
 
 	return 1
 
-func _physics_process(_delta: float) -> void:
+
+@rpc("any_peer")
+func server_jump():
+	if !is_server():
+		return
+	velocity.y = JUMP_VELOCITY * warp_speed
+
+
+func _physics_process(delta: float) -> void:
+
+	# Add the gravity.
+	if not is_on_floor():
+		velocity.y -= gravity * delta * warp_speed * warp_speed
+
 	var input_dir: Vector2 = Input.get_vector("left", "right", "forward", "backward")
 	if client.current_character and client.current_character.name == name:
+		# Jump
+		if Input.is_action_just_pressed("jump") and is_on_floor():
+			if is_server():
+				server_jump()
+			else:
+				server_jump.rpc_id(1)
+				server_jump()
+
 		if is_server():
 			server_move(input_dir)
 		else:
 			server_move.rpc_id(1, input_dir)
+			server_move(input_dir)
 
 	move_and_slide()
 	update_neighbors_warp()
