@@ -1,18 +1,18 @@
 [gd_scene load_steps=7 format=3 uid="uid://cqgu8ge77h70t"]
 
-[ext_resource type="Script" uid="uid://n01r8f0drw7s" path="res://src/game.gd" id="1_pk08u"]
-[ext_resource type="PackedScene" uid="uid://hwslegxxru8h" path="res://src/world/world.tscn" id="2_wqvko"]
-[ext_resource type="PackedScene" uid="uid://cdpdpwwn5voyq" path="res://src/server/server.tscn" id="3_cdx1q"]
-[ext_resource type="Script" uid="uid://c78dyt2pcfr7c" path="res://src/main_menu.gd" id="4_4bcji"]
-[ext_resource type="PackedScene" uid="uid://c70a50dqd5dfx" path="res://src/client/client.tscn" id="5_uktfx"]
-[ext_resource type="Script" uid="uid://cx8p4ymd2lt8g" path="res://debug/debug_ui.gd" id="6_y2hwx"]
+[ext_resource type="Script" uid="uid://n01r8f0drw7s" path="res://src/game/game.gd" id="1_yarin"]
+[ext_resource type="PackedScene" uid="uid://hwslegxxru8h" path="res://src/world/world.tscn" id="2_jhw8o"]
+[ext_resource type="PackedScene" uid="uid://cdpdpwwn5voyq" path="res://src/server/server.tscn" id="3_n7s5x"]
+[ext_resource type="Script" uid="uid://c78dyt2pcfr7c" path="res://src/game/main_menu.gd" id="4_6kr85"]
+[ext_resource type="PackedScene" uid="uid://c70a50dqd5dfx" path="res://src/client/client.tscn" id="5_clwl7"]
+[ext_resource type="Script" uid="uid://cx8p4ymd2lt8g" path="res://debug/debug_ui.gd" id="6_7r0dx"]
 
 [node name="Game" type="Node"]
-script = ExtResource("1_pk08u")
+script = ExtResource("1_yarin")
 
-[node name="World" parent="." instance=ExtResource("2_wqvko")]
+[node name="World" parent="." instance=ExtResource("2_jhw8o")]
 
-[node name="Server" parent="." instance=ExtResource("3_cdx1q")]
+[node name="Server" parent="." instance=ExtResource("3_n7s5x")]
 unique_name_in_owner = true
 mouse_filter = 1
 
@@ -25,7 +25,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("4_4bcji")
+script = ExtResource("4_6kr85")
 
 [node name="MarginContainer" type="MarginContainer" parent="MainMenu"]
 layout_mode = 1
@@ -63,7 +63,7 @@ text = "Load Game"
 layout_mode = 2
 text = "Quit"
 
-[node name="Client" parent="." instance=ExtResource("5_uktfx")]
+[node name="Client" parent="." instance=ExtResource("5_clwl7")]
 unique_name_in_owner = true
 mouse_filter = 1
 
@@ -74,7 +74,7 @@ offset_right = 285.0
 offset_bottom = 137.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("6_y2hwx")
+script = ExtResource("6_7r0dx")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Debug"]
 unique_name_in_owner = true

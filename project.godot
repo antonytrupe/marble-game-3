@@ -18,8 +18,8 @@ config/icon="res://icon.svg"
 [autoload]
 
 Debug="*res://debug/debug.gd"
-Persistance="*res://src/persistance.gd"
-TimeWarp="*res://src/time_warp.gd"
+Persistance="*res://src/server/persistance.gd"
+TimeWarp="*res://src/time_warp/time_warp.gd"
 
 [debug]
 
