@@ -61,9 +61,7 @@ func _load_character(character_name, data: Dictionary):
 
 
 func _ready():
-	_multiplayer_signals()
-	_persistance_signals()
-	_steam_signals()
+	pass
 
 
 func quit():
@@ -117,6 +115,9 @@ func _on_lobby_created(result: int, lobby_id: int) -> void:
 
 
 func start():
+	_multiplayer_signals()
+	_persistance_signals()
+	_steam_signals()
 	# load everything from persistance
 	Persistance.load.emit()
 
