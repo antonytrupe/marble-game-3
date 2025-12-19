@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://cdpdpwwn5voyq" path="res://src/server/server.tscn" id="3_n7s5x"]
 [ext_resource type="Script" uid="uid://c78dyt2pcfr7c" path="res://src/game/main_menu.gd" id="4_6kr85"]
 [ext_resource type="PackedScene" uid="uid://c70a50dqd5dfx" path="res://src/client/client.tscn" id="5_clwl7"]
-[ext_resource type="Script" uid="uid://cx8p4ymd2lt8g" path="res://debug/debug_ui.gd" id="6_7r0dx"]
+[ext_resource type="Script" uid="uid://cx8p4ymd2lt8g" path="res://src/debug/debug_ui.gd" id="6_7r0dx"]
 
 [node name="Game" type="Node"]
 script = ExtResource("1_yarin")
