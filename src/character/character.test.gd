@@ -5,7 +5,7 @@ extends GdUnitTestSuite
 @warning_ignore('return_value_discarded')
 
 # TestSuite generated from
-const __source: String = 'res://character/character.gd'
+const __source: String = 'res://src/character/character.gd'
 
 
 var instance:MarbleCharacter
@@ -25,4 +25,3 @@ func test_vector_to_array():
 	var v=Vector3(1,2,3)
 	var s=var_to_str(v)
 	assert_str(s).is_equal('"(1.0, 2.0, 3.0)"')
-	pass
