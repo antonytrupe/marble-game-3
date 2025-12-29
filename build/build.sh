@@ -90,6 +90,8 @@ fi
 
 ##################
 
+./scripts/pre-build.sh
+
 echo "Starting Steam build..."
 
 APP_VDF=$(realpath "./steam/playtest_app.vdf")

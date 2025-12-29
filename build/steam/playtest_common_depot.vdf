@@ -12,6 +12,11 @@
 		}
 	"FileMapping"
 		{
+			"LocalPath" "../../../../commit_number.txt"
+			"DepotPath" "." // mapped into the root of the depot
+		}
+	"FileMapping"
+		{
 			"LocalPath" "../../../../build_number.txt"
 			"DepotPath" "." // mapped into the root of the depot
 		}

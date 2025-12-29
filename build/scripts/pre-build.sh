@@ -1,11 +1,10 @@
 #!/bin/sh
 
-#.git/hooks/pre-commit
+#build/scripts/pre-build.sh 
 
-# This script runs from the root of the repository by default in recent git versions.
-VERSION_FILE="commit_number.txt"
+VERSION_FILE="../build_number.txt"
 
-echo "Running pre-commit hook: Incrementing commit number..."
+echo "Running pre-build hook: Incrementing build number..."
 
 # Check if the version file exists
 if [ ! -f "$VERSION_FILE" ]; then
@@ -21,7 +20,7 @@ NEW_VERSION=$((CURRENT_VERSION + 1))
 
 # Write the new version number back to the file
 echo "$NEW_VERSION" > "$VERSION_FILE"
-echo "Commit number incremented to $NEW_VERSION"
+echo "Build number incremented to $NEW_VERSION"
 
 # CRITICAL STEP: Add the modified file back to the git staging area,
 # otherwise the change won't be included in this commit.
