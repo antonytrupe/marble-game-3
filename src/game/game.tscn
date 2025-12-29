@@ -49,10 +49,13 @@ layout_mode = 2
 layout_mode = 2
 text = "Start Server"
 
-[node name="JoinGameButton" type="Button" parent="MainMenu/MarginContainer/CenterContainer/VBoxContainer"]
-visible = false
+[node name="ShowFriendsButton" type="Button" parent="MainMenu/MarginContainer/CenterContainer/VBoxContainer"]
 layout_mode = 2
-text = "Join Server"
+text = "Show Friends"
+
+[node name="JoinFriendsContainer" type="VBoxContainer" parent="MainMenu/MarginContainer/CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="LoadGameButton" type="Button" parent="MainMenu/MarginContainer/CenterContainer/VBoxContainer"]
 visible = false
@@ -93,6 +96,6 @@ scroll_following_visible_characters = true
 context_menu_enabled = true
 
 [connection signal="pressed" from="MainMenu/MarginContainer/CenterContainer/VBoxContainer/NewGameButton" to="MainMenu" method="_on_new_game_button_pressed"]
-[connection signal="pressed" from="MainMenu/MarginContainer/CenterContainer/VBoxContainer/JoinGameButton" to="MainMenu" method="_on_join_game_button_pressed"]
+[connection signal="pressed" from="MainMenu/MarginContainer/CenterContainer/VBoxContainer/ShowFriendsButton" to="MainMenu" method="_on_show_friends_button_pressed"]
 [connection signal="pressed" from="MainMenu/MarginContainer/CenterContainer/VBoxContainer/LoadGameButton" to="MainMenu" method="_on_load_game_button_pressed"]
 [connection signal="pressed" from="MainMenu/MarginContainer/CenterContainer/VBoxContainer/QuitButton" to="MainMenu" method="_on_quit_button_pressed"]
