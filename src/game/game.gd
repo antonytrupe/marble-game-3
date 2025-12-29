@@ -20,15 +20,22 @@ func _notification(what):
 
 func _ready():
 	if Steam.isSteamRunning():
-		Debug.debug.emit("steam is running")
+		debug("steam is running")
 	else:
-		Debug.debug.emit("steam is not running")
+		debug("steam is not running")
 
-	var file_path = "res://build_number.txt" # The path to your file in the Godot project
-	var file_content = read_text_file(file_path)
+	var build_number_path = "res://build_number.txt" # The path to your file in the Godot project
+	var build_number = read_text_file(build_number_path)
 
-	if file_content != "":
-		debug( "Build Version: " + file_content)
+	if build_number != "":
+		debug( "Build Version: " + build_number)
+
+
+	var commit_number_path = "res://commit_number.txt" # The path to your file in the Godot project
+	var commit_number = read_text_file(commit_number_path)
+
+	if commit_number != "":
+		debug( "Commit Number: " + commit_number)
 
 	var command_args: Array = OS.get_cmdline_args()
 	if(command_args.size()>=2 && command_args[0]=='+connect_lobby'):
