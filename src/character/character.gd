@@ -87,13 +87,13 @@ func _physics_process(delta: float) -> void:
 				server_jump()
 			else:
 				server_jump.rpc_id(1)
-				server_jump()
+				#server_jump()
 
 		if is_server():
 			server_move(input_dir)
 		else:
 			server_move.rpc_id(1, input_dir)
-			server_move(input_dir)
+			#server_move(input_dir)
 
 	move_and_slide()
 	update_neighbors_warp()
@@ -138,8 +138,8 @@ func _set_warp_speed(w):
 	warp_speed = w
 	_update_label()
 
-	if warp_detector:
-		(warp_detector.shape as SphereShape3D).radius=w*30
+	#if warp_detector:
+		#(warp_detector.shape as SphereShape3D).radius=w*30
 
 
 @rpc("any_peer")
@@ -148,6 +148,14 @@ func server_turn(value: Vector2):
 		return
 	rotate_y(-value.x * .005)
 	_rotate_camera(value)
+
+
+@rpc("any_peer")
+func server_camera_zoom(scroll_amount):
+	if !is_server():
+		return
+	var direction=camera_pivot.transform.basis.z
+	camera_pivot.position += direction * scroll_amount * .1
 
 
 func _rotate_camera(value: Vector2):

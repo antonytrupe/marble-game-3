@@ -42,7 +42,7 @@ func get_friends_in_game():
 					 "lobby_id": game_info.get("lobby", 0) # Get lobby ID if available
 })
 
-	#debug(friends_playing_this_game)
+	debug(friends_playing_this_game)
 	return friends_playing_this_game
 
 
@@ -53,6 +53,8 @@ func _on_show_friends_button_pressed() -> void:
 		child.queue_free()
 
 	for friend in friends:
+		if friend.lobby_id==0:
+			return
 		# 1. Create the button instance
 		var my_button = Button.new()
 
@@ -66,18 +68,13 @@ func _on_show_friends_button_pressed() -> void:
 
 		# 4. Add it to the current node
 		join_friends_container.add_child(my_button)
-	#debug.debug.emit('_on_join_game_button_pressed')
-	#if not client.start("localhost", PORT):
-		#main_menu.visible = false
-		#client.visible = true
 
 
 func _on_join_friend_button_pressed(friend:Dictionary):
 	debug(friend)
 	var lobby_id=int(friend.lobby_id)
 	client.join_lobby(lobby_id)
-	main_menu.visible = false
-	client.visible = true
+
 
 func _on_load_game_button_pressed() -> void:
 	Debug.debug.emit("_on_load_game_button_pressed")

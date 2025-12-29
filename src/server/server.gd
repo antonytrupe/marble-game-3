@@ -16,6 +16,8 @@ const PLAYER_SCENE = preload("res://src/player/player.gd")
 @onready var client: Client = $/root/Game/Client
 
 
+var lobby_id=0
+
 func _steam_signals():
 	Steam.lobby_created.connect(_on_lobby_created)
 	# just for information
@@ -66,6 +68,7 @@ func _ready():
 
 func quit():
 	print("server quit")
+	Steam.leaveLobby(lobby_id)
 	players.keys().all(
 		func(player_id):
 			Persistance.persist.emit("Player", players[player_id])
@@ -92,7 +95,8 @@ func debug(...args: Array):
 	Debug.debug.emit(args)
 
 
-func _on_lobby_created(result: int, lobby_id: int) -> void:
+func _on_lobby_created(result: int, _lobby_id: int) -> void:
+	self.lobby_id=_lobby_id
 	if result == Steam.RESULT_OK:
 		var peer: SteamMultiplayerPeer = SteamMultiplayerPeer.new()
 		peer.host_with_lobby(lobby_id)

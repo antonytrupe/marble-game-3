@@ -3,8 +3,9 @@ extends Control
 
 @onready var server:Server = $/root/Game/Server
 @onready var world:World = $/root/Game/World
+@onready var main_menu = $/root/Game/MainMenu
 
-@onready var ui=%UI
+#@onready var ui=%UI
 @onready var chat_text_edit: TextEdit = %ChatInput
 
 @export var current_character:MarbleCharacter
@@ -28,15 +29,16 @@ func join_lobby(lobby_id: int) -> void:
 
 	# Make the lobby join request to Steam
 	Steam.joinLobby(lobby_id)
-	ui.visible=true
+	#ui.visible=true
 
 
 func _on_lobby_joined(lobby_id: int, _permissions: int, _locked: bool, _response: int) -> void:
-	#debug("_on_lobby_joined")
+	debug("_on_lobby_joined")
 	if Steam.getLobbyOwner(lobby_id) == Steam.getSteamID():
 		# We're probably hosting so we can ignore this
 		#debug('this is us')
 		return
+
 
 	# But if we're joining
 	var peer := SteamMultiplayerPeer.new()
@@ -47,6 +49,7 @@ func _on_lobby_joined(lobby_id: int, _permissions: int, _locked: bool, _response
 
 func is_server() -> bool:
 	return multiplayer.is_server()
+
 
 func _input(event: InputEvent) -> void:
 	if current_character:
@@ -64,18 +67,27 @@ func _input(event: InputEvent) -> void:
 				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 
+
+
+
 func _unhandled_input(event) -> void:
 	if current_character:
 		if event is InputEventMouseButton:
+			#handle moving the camera forward
 			if(Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP )):
 				var scroll_amount = -event.factor if event.factor else -1.0
-				var direction=current_character.camera_pivot.transform.basis.z
-				current_character.camera_pivot.position += direction * scroll_amount * .1
+				if is_server():
+					current_character.server_camera_zoom(scroll_amount)
+				else:
+					current_character.server_camera_zoom.rpc_id(1, scroll_amount)
 
+			#handle moving the camera backwards
 			if(Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN )):
 				var scroll_amount = event.factor if event.factor else 1.0
-				var direction=current_character.camera_pivot.transform.basis.z
-				current_character.camera_pivot.position += direction * scroll_amount * .1
+				if is_server():
+					current_character.server_camera_zoom(scroll_amount)
+				else:
+					current_character.server_camera_zoom.rpc_id(1, scroll_amount)
 
 
 	if Input.is_action_just_pressed("command"):
@@ -140,10 +152,14 @@ func start(address, port):
 		ERR_CANT_CREATE:
 			debug('ERR_CANT_CREATE')
 
-	ui.visible=true
+	main_menu.visible=false
 
 
 func _on_connected_to_server():
+
+	main_menu.visible = false
+	visible = true
+
 	debug("_on_connected_to_server")
 	# var steam_id = Steam.getSteamID()
 	#return "steam:"+str(steam_id)
@@ -152,4 +168,5 @@ func _on_connected_to_server():
 
 func _server_disconnected():
 	debug("_server_disconnected")
-	ui.visible=true
+	main_menu.visible=true
+	visible=false
