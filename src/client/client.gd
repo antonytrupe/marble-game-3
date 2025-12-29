@@ -67,9 +67,6 @@ func _input(event: InputEvent) -> void:
 				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 
-
-
-
 func _unhandled_input(event) -> void:
 	if current_character:
 		if event is InputEventMouseButton:
