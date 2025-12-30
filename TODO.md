@@ -3,7 +3,10 @@ TODO
 2. ~~fix saving/loading~~
 3. ~~jumping~~
 4. ~~join friend from ingame~~
-5. clean up chat
+5. ~~clean up chat~~
 6. sprinting
 7. fix reconnecting
 8. fix starting server when not logged in to steam
+9. swithcing characters
+10. spawning characters
+11. spawning trees

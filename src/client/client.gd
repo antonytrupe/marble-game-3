@@ -74,6 +74,24 @@ func _input(event: InputEvent) -> void:
 
 func _unhandled_input(event) -> void:
 	if current_character:
+		#only if we're not typing
+		if !chat_text_edit.visible:
+			# Jump
+			if Input.is_action_just_pressed("jump") and current_character.is_on_floor() and current_character.warp_speed <= 20:
+				if is_server():
+					current_character.server_jump()
+				else:
+					current_character.server_jump.rpc_id(1)
+					#server_jump()
+			#moving
+			var input_dir: Vector2 = Input.get_vector("left", "right", "forward", "backward")
+			if is_server():
+				current_character.server_move(input_dir)
+			else:
+				current_character.server_move.rpc_id(1, input_dir)
+				#server_move(input_dir)
+
+
 		if event is InputEventMouseButton:
 			#handle moving the camera forward
 			if (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP)):

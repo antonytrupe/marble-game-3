@@ -87,21 +87,7 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= gravity * delta * warp_speed * warp_speed
 
-	var input_dir: Vector2 = Input.get_vector("left", "right", "forward", "backward")
-	if client.current_character and client.current_character.name == name:
-		# Jump
-		if Input.is_action_just_pressed("jump") and is_on_floor() and warp_speed <= 20:
-			if is_server():
-				server_jump()
-			else:
-				server_jump.rpc_id(1)
-				#server_jump()
 
-		if is_server():
-			server_move(input_dir)
-		else:
-			server_move.rpc_id(1, input_dir)
-			#server_move(input_dir)
 
 	move_and_slide()
 	update_neighbors_warp()
