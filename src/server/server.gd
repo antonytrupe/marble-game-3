@@ -51,7 +51,7 @@ func _load_character(character_name, data: Dictionary):
 	if data.has("player_id"):
 		c.player_id = data.player_id
 	if data.has("player_name"):
-		c.player_id = data.player_name
+		c.player_name = data.player_name
 	if data.has("warp_speed"):
 		c.warp_speed = data.warp_speed
 	if data.has("position"):
@@ -230,11 +230,14 @@ func _on_peer_connected(peer_id = 1):
 
 func _on_peer_disconnected(peer_id):
 	debug("Peer disconnected with ID: %s" % peer_id)
-	connected_players.erase(peer_id)
+	var p:Player=connected_players[peer_id]
+	var c:MarbleCharacter=world.characters.get_node(p.current_character_id)
+	#"clear" the player_name of the character
+	c.player_name="(%s)" % c.player_name
+	Persistance.persist.emit("MarbleCharacter",c)
+	c._update_label()
 
-	#TODO clear the player_name of the character
-	#var c:MarbleCharacter=world.characters.get_node(p.current_character_id)
-	#c.player_name=""
+	connected_players.erase(peer_id)
 
 
 func _create_character():

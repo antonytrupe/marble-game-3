@@ -82,3 +82,7 @@ func _on_load_game_button_pressed() -> void:
 
 func _on_quit_button_pressed() -> void:
 	get_tree().quit(0)
+
+
+func _on_delete_data_button_pressed() -> void:
+	Persistance.new.emit()
