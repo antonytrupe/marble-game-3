@@ -70,7 +70,7 @@ func _load():
 
 
 func _persist(className, o: Object):
-	Debug.debug.emit("persisting " + o.name)
+	Debug.debug.emit("persisting %s:%s" % [className, o.name])
 	#Debug.debug.emit('persisting '+o.get_script().get_global_name())
 	#var className:String=o.get_script().get_global_name()
 	(
