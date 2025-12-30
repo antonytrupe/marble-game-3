@@ -4,8 +4,10 @@
 [ext_resource type="Script" uid="uid://uvvavg0qjb8x" path="res://src/character/warp_detector.gd" id="2_1l1n4"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vu45j"]
+height = 1.9
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_glpr6"]
+height = 1.9
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_glpr6"]
 properties/0/path = NodePath(".:position")
@@ -29,7 +31,7 @@ properties/5/replication_mode = 2
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_yf0e5"]
 resource_local_to_scene = true
-radius = 1.0
+radius = 0.95
 
 [node name="Character" type="CharacterBody3D" groups=["persist"]]
 collision_layer = 2
@@ -37,11 +39,11 @@ collision_mask = 31
 script = ExtResource("1_glpr6")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
 shape = SubResource("CapsuleShape3D_vu45j")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
 mesh = SubResource("CapsuleMesh_glpr6")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
@@ -63,7 +65,7 @@ unique_name_in_owner = true
 [node name="RayCast3D" type="RayCast3D" parent="CameraPivot/Camera3D"]
 
 [node name="WarpDetectorArea3D" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
 collision_layer = 0
 collision_mask = 30
 script = ExtResource("2_1l1n4")
@@ -72,6 +74,10 @@ script = ExtResource("2_1l1n4")
 unique_name_in_owner = true
 shape = SubResource("SphereShape3D_yf0e5")
 debug_color = Color(9.62615e-07, 0.5445036, 0.6378255, 0.41960785)
+
+[node name="ChatBubbles" type="Node3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
 [connection signal="body_entered" from="WarpDetectorArea3D" to="WarpDetectorArea3D" method="_on_body_entered"]
 [connection signal="body_exited" from="WarpDetectorArea3D" to="WarpDetectorArea3D" method="_on_body_exited"]

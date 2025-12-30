@@ -48,6 +48,7 @@ var player_id: String
 @onready var label: Label3D = $Label3D
 @onready var camera_pivot = %CameraPivot
 @onready var camera = %Camera3D
+@onready var chat_bubbles = %ChatBubbles
 @onready var client = $/root/Game/Client
 @onready var warp_detector=%WarpDetectorCollisionShape3D
 
@@ -71,6 +72,14 @@ func server_jump():
 	if !is_server():
 		return
 	velocity.y = JUMP_VELOCITY * warp_speed
+
+
+#this the function that runs on all the peers that only the server can call
+@rpc("authority", "call_local", "reliable", 1)
+func chat_bubble(message:String):
+	var bubble:Bubble = load("res://src/chat_bubble/ChatBubble.tscn").instantiate()
+	bubble.text = message
+	chat_bubbles.add_child(bubble)
 
 
 func _physics_process(delta: float) -> void:
@@ -165,7 +174,7 @@ func _rotate_camera(value: Vector2):
 
 func _ready():
 	_update_label()
-	(warp_detector.shape as SphereShape3D).radius=warp_speed*30
+	#(warp_detector.shape as SphereShape3D).radius=warp_speed*30
 
 
 func serialize_transform3d() -> Dictionary:

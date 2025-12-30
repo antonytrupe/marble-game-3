@@ -10,6 +10,8 @@ extends Control
 
 @export var current_character:MarbleCharacter
 
+var lobby_id:int
+
 func debug(...args: Array):
 	Debug.debug.emit(args)
 
@@ -24,6 +26,7 @@ func _ready() -> void:
 	_steam_signals()
 
 
+@warning_ignore("shadowed_variable")
 func join_lobby(lobby_id: int) -> void:
 	debug("Attempting to join lobby %s" % lobby_id)
 
@@ -32,6 +35,7 @@ func join_lobby(lobby_id: int) -> void:
 	#ui.visible=true
 
 
+@warning_ignore("shadowed_variable")
 func _on_lobby_joined(lobby_id: int, _permissions: int, _locked: bool, _response: int) -> void:
 	debug("_on_lobby_joined")
 	if Steam.getLobbyOwner(lobby_id) == Steam.getSteamID():
@@ -45,6 +49,7 @@ func _on_lobby_joined(lobby_id: int, _permissions: int, _locked: bool, _response
 	peer.debug_level = SteamMultiplayerPeer.DEBUG_LEVEL_PEER # <- optional, adds info to log
 	peer.connect_to_lobby(lobby_id)
 	multiplayer.multiplayer_peer = peer
+	self.lobby_id=lobby_id
 
 
 func is_server() -> bool:
@@ -165,5 +170,6 @@ func _on_connected_to_server():
 
 func _server_disconnected():
 	debug("_server_disconnected")
+	Steam.leaveLobby(lobby_id)
 	main_menu.visible=true
 	visible=false

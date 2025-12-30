@@ -20,10 +20,9 @@ func _on_new_game_button_pressed() -> void:
 
 func get_friends_in_game():
 	var friends_playing_this_game = []
-	# k_EFriendFlagImmediate = 0x01
 	var friend_count = Steam.getFriendCount(Steam.FRIEND_FLAG_IMMEDIATE)
 	var app_id=Steam.getAppID()
-	debug("app_id:",app_id)
+	#debug("app_id:",app_id)
 	for i in range(0, friend_count):
 		var steam_id = Steam.getFriendByIndex(i, Steam.FRIEND_FLAG_IMMEDIATE)
 		#debug("steam_id:",steam_id)
@@ -40,7 +39,7 @@ func get_friends_in_game():
 					{"name": friend_name,
 					 "id": steam_id,
 					 "lobby_id": game_info.get("lobby", 0) # Get lobby ID if available
-})
+					})
 
 	debug(friends_playing_this_game)
 	return friends_playing_this_game

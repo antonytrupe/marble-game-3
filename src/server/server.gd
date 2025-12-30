@@ -95,8 +95,9 @@ func debug(...args: Array):
 	Debug.debug.emit(args)
 
 
-func _on_lobby_created(result: int, _lobby_id: int) -> void:
-	self.lobby_id=_lobby_id
+@warning_ignore("shadowed_variable")
+func _on_lobby_created(result: int, lobby_id: int) -> void:
+	self.lobby_id=lobby_id
 	if result == Steam.RESULT_OK:
 		var peer: SteamMultiplayerPeer = SteamMultiplayerPeer.new()
 		peer.host_with_lobby(lobby_id)
@@ -135,6 +136,27 @@ func start():
 @rpc("any_peer", "call_local")
 func chat(message):
 	debug(message)
+	#find the character that sent
+	var peer_id=multiplayer.get_remote_sender_id()
+	var steam_id=multiplayer.multiplayer_peer.get_steam_id_for_peer_id(peer_id)
+
+	debug('steam_id:%s' % steam_id)
+	var p:Player=players['Steam:%s' %steam_id]
+	debug('p.current_character_id:%s' % p.current_character_id)
+	var c_name=str(p.current_character_id)
+	var c=world.characters.get_node(c_name)
+	c.chat_bubble.rpc(message)
+
+
+#this is the function that runs on the server that any peer can call
+#@rpc("any_peer", "call_remote", "reliable", 1)
+#func server_chat(message: String):
+	#if message.begins_with("/"):
+		#game.command(message, self)
+	#else:
+		#client_chat.rpc(message)
+
+
 
 
 @rpc("any_peer")
@@ -174,13 +196,13 @@ func _create_player(peer_id, player_id) -> Player:
 
 ## peer_id from multiplayer_pee, 1 for host
 func _on_peer_connected(peer_id = 1):
-	debug("Peer connected with ID: %s" % peer_id)
+	#debug("Peer connected with ID: %s" % peer_id)
 
 	var steam_id:int
 	var friend_name:String
 	if multiplayer.has_multiplayer_peer():
 		steam_id = (multiplayer.multiplayer_peer as SteamMultiplayerPeer).get_steam_id_for_peer_id(peer_id)
-		debug("steam id: %s" % steam_id)
+		#debug("steam id: %s" % steam_id)
 		friend_name = Steam.getFriendPersonaName(steam_id)
 		debug("friend_name: %s" % friend_name)
 
