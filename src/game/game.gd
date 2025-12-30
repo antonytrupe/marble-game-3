@@ -4,8 +4,8 @@ extends Node
 #PlayTest app id: 4041750
 #live app id: 4041660
 
-@onready var client:Client=%Client
-@onready var main_menu=%MainMenu
+@onready var client: Client = %Client
+@onready var main_menu = %MainMenu
 
 
 func debug(...args: Array):
@@ -15,7 +15,7 @@ func debug(...args: Array):
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		print("game quit")
-		get_tree().quit()  # default behavior
+		get_tree().quit() # default behavior
 
 
 func _ready():
@@ -28,18 +28,18 @@ func _ready():
 	var build_number = read_text_file(build_number_path)
 
 	if build_number != "":
-		debug( "Build Version: " + build_number)
+		debug("Build Version: " + build_number)
 
 
 	var commit_number_path = "res://commit_number.txt" # The path to your file in the Godot project
 	var commit_number = read_text_file(commit_number_path)
 
 	if commit_number != "":
-		debug( "Commit Number: " + commit_number)
+		debug("Commit Number: " + commit_number)
 
 	var command_args: Array = OS.get_cmdline_args()
-	if(command_args.size()>=2 && command_args[0]=='+connect_lobby'):
-		var lobby_id=int(command_args[1])
+	if (command_args.size() >= 2 && command_args[0] == '+connect_lobby'):
+		var lobby_id = int(command_args[1])
 		client.join_lobby(lobby_id)
 		main_menu.visible = false
 		client.visible = true

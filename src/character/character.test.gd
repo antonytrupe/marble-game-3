@@ -8,12 +8,12 @@ extends GdUnitTestSuite
 const __source: String = 'res://src/character/character.gd'
 
 
-var instance:MarbleCharacter
-var other:MarbleCharacter
+var instance: MarbleCharacter
+var other: MarbleCharacter
 
 func before_test() -> void:
-	instance=MarbleCharacter.new()
-	other=MarbleCharacter.new()
+	instance = MarbleCharacter.new()
+	other = MarbleCharacter.new()
 
 
 func after_test() -> void:
@@ -22,6 +22,6 @@ func after_test() -> void:
 
 
 func test_vector_to_array():
-	var v=Vector3(1,2,3)
-	var s=var_to_str(v)
+	var v = Vector3(1, 2, 3)
+	var s = var_to_str(v)
 	assert_str(s).is_equal('"(1.0, 2.0, 3.0)"')

@@ -16,7 +16,7 @@ const PLAYER_SCENE = preload("res://src/player/player.gd")
 @onready var client: Client = $/root/Game/Client
 
 
-var lobby_id=0
+var lobby_id = 0
 
 func _steam_signals():
 	Steam.lobby_created.connect(_on_lobby_created)
@@ -57,7 +57,7 @@ func _load_character(character_name, data: Dictionary):
 	if data.has("position"):
 		c.position = str_to_var(data.position)
 	if data.has("transform"):
-		c.transform =  str_to_var(data.transform)
+		c.transform = str_to_var(data.transform)
 	if data.has("rotation"):
 		c.rotation = str_to_var(data.rotation)
 
@@ -97,7 +97,7 @@ func debug(...args: Array):
 
 @warning_ignore("shadowed_variable")
 func _on_lobby_created(result: int, lobby_id: int) -> void:
-	self.lobby_id=lobby_id
+	self.lobby_id = lobby_id
 	if result == Steam.RESULT_OK:
 		var peer: SteamMultiplayerPeer = SteamMultiplayerPeer.new()
 		peer.host_with_lobby(lobby_id)
@@ -137,14 +137,14 @@ func start():
 func chat(message):
 	debug(message)
 	#find the character that sent
-	var peer_id=multiplayer.get_remote_sender_id()
-	var steam_id=multiplayer.multiplayer_peer.get_steam_id_for_peer_id(peer_id)
+	var peer_id = multiplayer.get_remote_sender_id()
+	var steam_id = multiplayer.multiplayer_peer.get_steam_id_for_peer_id(peer_id)
 
 	debug('steam_id:%s' % steam_id)
-	var p:Player=players['Steam:%s' %steam_id]
+	var p: Player = players['Steam:%s'%steam_id]
 	debug('p.current_character_id:%s' % p.current_character_id)
-	var c_name=str(p.current_character_id)
-	var c=world.characters.get_node(c_name)
+	var c_name = str(p.current_character_id)
+	var c = world.characters.get_node(c_name)
 	c.chat_bubble.rpc(message)
 
 
@@ -155,8 +155,6 @@ func chat(message):
 		#game.command(message, self)
 	#else:
 		#client_chat.rpc(message)
-
-
 
 
 @rpc("any_peer")
@@ -197,9 +195,8 @@ func _create_player(peer_id, player_id) -> Player:
 ## peer_id from multiplayer_pee, 1 for host
 func _on_peer_connected(peer_id = 1):
 	#debug("Peer connected with ID: %s" % peer_id)
-
-	var steam_id:int
-	var friend_name:String
+	var steam_id: int
+	var friend_name: String
 	if multiplayer.has_multiplayer_peer():
 		steam_id = (multiplayer.multiplayer_peer as SteamMultiplayerPeer).get_steam_id_for_peer_id(peer_id)
 		#debug("steam id: %s" % steam_id)
@@ -224,17 +221,17 @@ func _on_peer_connected(peer_id = 1):
 		client.set_current_character.rpc_id(peer_id, p.current_character_id)
 
 	#set the player_name of the character
-	var c:MarbleCharacter=world.characters.get_node(p.current_character_id)
-	c.player_name=friend_name
+	var c: MarbleCharacter = world.characters.get_node(p.current_character_id)
+	c.player_name = friend_name
 	c._update_label()
 
 func _on_peer_disconnected(peer_id):
 	debug("Peer disconnected with ID: %s" % peer_id)
-	var p:Player=connected_players[peer_id]
-	var c:MarbleCharacter=world.characters.get_node(p.current_character_id)
+	var p: Player = connected_players[peer_id]
+	var c: MarbleCharacter = world.characters.get_node(p.current_character_id)
 	#"clear" the player_name of the character
-	c.player_name="(%s)" % c.player_name
-	Persistance.persist.emit("MarbleCharacter",c)
+	c.player_name = "(%s)" % c.player_name
+	Persistance.persist.emit("MarbleCharacter", c)
 	c._update_label()
 
 	connected_players.erase(peer_id)

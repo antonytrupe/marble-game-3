@@ -18,9 +18,9 @@ func _ready():
 
 
 func _load_characters():
-	var instancedClass = MarbleCharacter.new()
-	var className = instancedClass.get_script().get_global_name()
-	var rs = _db.select_rows(className, "", ["name", "data"])
+	var instanced_class = MarbleCharacter.new()
+	var clazz_name = instanced_class.get_script().get_global_name()
+	var rs = _db.select_rows(clazz_name, "", ["name", "data"])
 
 	var _load_character = func(r):
 		Debug.debug.emit("persistance._load_character " + str(r.name))
@@ -31,9 +31,9 @@ func _load_characters():
 
 
 func _load_players():
-	var instancedClass = Player.new()
-	var className = instancedClass.get_script().get_global_name()
-	var rs = _db.select_rows(className, "", ["name", "data"])
+	var instanced_class = Player.new()
+	var clazz_name = instanced_class.get_script().get_global_name()
+	var rs = _db.select_rows(clazz_name, "", ["name", "data"])
 
 	rs.all(
 		func(r):
@@ -69,16 +69,16 @@ func _load():
 	_load_characters()
 
 
-func _persist(className, o: Object):
-	Debug.debug.emit("persisting %s:%s" % [className, o.name])
+func _persist(clazz_name, o: Object):
+	Debug.debug.emit("persisting %s:%s" % [clazz_name, o.name])
 	#Debug.debug.emit('persisting '+o.get_script().get_global_name())
 	#var className:String=o.get_script().get_global_name()
 	(
 		_db
-		. query_with_bindings(
+		.query_with_bindings(
 			(
 				"INSERT INTO %s (name, data) VALUES (?, ? ) ON CONFLICT (name) DO update set data=excluded.data"
-				% [className]
+				% [clazz_name]
 			),
 			[str(o.name), JSON.stringify(o.get_data())]
 		)
@@ -86,10 +86,10 @@ func _persist(className, o: Object):
 
 
 func _create_character_table():
-	var instancedClass = MarbleCharacter.new()
-	var className = instancedClass.get_script().get_global_name()
+	var instanced_class = MarbleCharacter.new()
+	var clazz_name = instanced_class.get_script().get_global_name()
 
-	var r = _db.select_rows("sqlite_master", "type='table' and name='%s'" % [className], ["name"])
+	var r = _db.select_rows("sqlite_master", "type='table' and name='%s'" % [clazz_name], ["name"])
 	Debug.debug.emit(r)
 	if r.size() > 0:
 		return
@@ -100,14 +100,14 @@ func _create_character_table():
 	}
 	table_dict["data"] = {"data_type": "text", "not_null": true}
 
-	_db.create_table(className, table_dict)
+	_db.create_table(clazz_name, table_dict)
 
 
 func _create_player_table():
-	var instancedClass = Player.new()
-	var className = instancedClass.get_script().get_global_name()
+	var instanced_class = Player.new()
+	var clazz_name = instanced_class.get_script().get_global_name()
 
-	var r = _db.select_rows("sqlite_master", "type='table' and name='%s'" % [className], ["name"])
+	var r = _db.select_rows("sqlite_master", "type='table' and name='%s'" % [clazz_name], ["name"])
 	if r.size() > 0:
 		return
 
@@ -117,4 +117,4 @@ func _create_player_table():
 	}
 	table_dict["data"] = {"data_type": "text", "not_null": true}
 
-	_db.create_table(className, table_dict)
+	_db.create_table(clazz_name, table_dict)

@@ -27,7 +27,7 @@ const JUMP_VELOCITY = 5.0
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
-var mode: MODE = MODE.WALK  #:
+var mode: MODE = MODE.WALK # :
 #set = _set_mode
 
 var speed = 30.0
@@ -36,21 +36,21 @@ var speed = 30.0
 @export var warp_speed = 1:
 	set = _set_warp_speed
 ##target warp speed
-var target_warp_speed=1
+var target_warp_speed = 1
 ##allowed maximum warp speed
-var max_warp_speed=5000
+var max_warp_speed = 5000
 ##allowed minimum warp speed
-var min_warp_speed=1
+var min_warp_speed = 1
 
 var player_id: String
-@export var player_name:String
+@export var player_name: String
 
 @onready var label: Label3D = $Label3D
 @onready var camera_pivot = %CameraPivot
 @onready var camera = %Camera3D
 @onready var chat_bubbles = %ChatBubbles
 @onready var client = $/root/Game/Client
-@onready var warp_detector=%WarpDetectorCollisionShape3D
+@onready var warp_detector = %WarpDetectorCollisionShape3D
 
 func is_server() -> bool:
 	return multiplayer.is_server()
@@ -60,8 +60,8 @@ func update_neighbors_warp():
 	pass
 
 
-func get_max_warp(other:MarbleCharacter)->int:
-	var d=global_transform.origin.distance_to(other.global_transform.origin)
+func get_max_warp(other: MarbleCharacter) -> int:
+	var d = global_transform.origin.distance_to(other.global_transform.origin)
 	print(d)
 
 	return 1
@@ -76,14 +76,13 @@ func server_jump():
 
 #this the function that runs on all the peers that only the server can call
 @rpc("authority", "call_local", "reliable", 1)
-func chat_bubble(message:String):
-	var bubble:Bubble = load("res://src/chat_bubble/ChatBubble.tscn").instantiate()
+func chat_bubble(message: String):
+	var bubble: Bubble = load("res://src/chat_bubble/ChatBubble.tscn").instantiate()
 	bubble.text = message
 	chat_bubbles.add_child(bubble)
 
 
 func _physics_process(delta: float) -> void:
-
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta * warp_speed * warp_speed
@@ -139,8 +138,8 @@ func server_move(d: Vector2):
 func server_warp(value: int):
 	if !is_server():
 		return
-	warp_speed=value
-	Persistance.persist.emit("MarbleCharacter",self)
+	warp_speed = value
+	Persistance.persist.emit("MarbleCharacter", self)
 
 
 func _set_warp_speed(w):
@@ -163,7 +162,7 @@ func server_turn(value: Vector2):
 func server_camera_zoom(scroll_amount):
 	if !is_server():
 		return
-	var direction=camera_pivot.transform.basis.z
+	var direction = camera_pivot.transform.basis.z
 	camera_pivot.position += direction * scroll_amount * .1
 
 
@@ -179,8 +178,8 @@ func _ready():
 
 func serialize_transform3d() -> Dictionary:
 	var data = {}
-	data["origin"] = JSON.stringify(transform.origin)  # Convert Vector3 to array [x, y, z]
-	data["basis_x"] = JSON.stringify(transform.basis.x)  # Convert Basis vectors to arrays
+	data["origin"] = JSON.stringify(transform.origin) # Convert Vector3 to array [x, y, z]
+	data["basis_x"] = JSON.stringify(transform.basis.x) # Convert Basis vectors to arrays
 	data["basis_y"] = JSON.stringify(transform.basis.y)
 	data["basis_z"] = JSON.stringify(transform.basis.z)
 	return data
@@ -190,14 +189,14 @@ func get_data() -> Dictionary:
 	return {
 		"name": name,
 		"player_id": player_id,
-		"player_name":player_name,
+		"player_name": player_name,
 		"warp_speed": warp_speed,
 		"position": var_to_str(position),
-		"transform":var_to_str(transform),
+		"transform": var_to_str(transform),
 	}
 
 func _update_label():
 	if label:
-		label.text = "warp speed:" + str(warp_speed)+'\n'+\
-		"name:"+name+'\n'+\
-		"player:"+player_name
+		label.text = str(warp_speed) + 'x\n' + \
+		#"name:" + name + '\n' + \
+		player_name

@@ -1,16 +1,16 @@
 class_name Client
 extends Control
 
-@onready var server:Server = $/root/Game/Server
-@onready var world:World = $/root/Game/World
+@onready var server: Server = $/root/Game/Server
+@onready var world: World = $/root/Game/World
 @onready var main_menu = $/root/Game/MainMenu
 
 #@onready var ui=%UI
 @onready var chat_text_edit: TextEdit = %ChatInput
 
-@export var current_character:MarbleCharacter
+@export var current_character: MarbleCharacter
 
-var lobby_id:int
+var lobby_id: int
 
 func debug(...args: Array):
 	Debug.debug.emit(args)
@@ -49,7 +49,7 @@ func _on_lobby_joined(lobby_id: int, _permissions: int, _locked: bool, _response
 	peer.debug_level = SteamMultiplayerPeer.DEBUG_LEVEL_PEER # <- optional, adds info to log
 	peer.connect_to_lobby(lobby_id)
 	multiplayer.multiplayer_peer = peer
-	self.lobby_id=lobby_id
+	self.lobby_id = lobby_id
 
 
 func is_server() -> bool:
@@ -76,15 +76,15 @@ func _unhandled_input(event) -> void:
 	if current_character:
 		if event is InputEventMouseButton:
 			#handle moving the camera forward
-			if(Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP )):
-				var scroll_amount = -event.factor if event.factor else -1.0
+			if (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP)):
+				var scroll_amount = - event.factor if event.factor else -1.0
 				if is_server():
 					current_character.server_camera_zoom(scroll_amount)
 				else:
 					current_character.server_camera_zoom.rpc_id(1, scroll_amount)
 
 			#handle moving the camera backwards
-			if(Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN )):
+			if (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN)):
 				var scroll_amount = event.factor if event.factor else 1.0
 				if is_server():
 					current_character.server_camera_zoom(scroll_amount)
@@ -94,7 +94,7 @@ func _unhandled_input(event) -> void:
 
 	if Input.is_action_just_pressed("escape"):
 		#show the menu
-		main_menu.visible=!main_menu.visible
+		main_menu.visible = !main_menu.visible
 
 	if Input.is_action_just_pressed("command"):
 		chat_text_edit.visible = !chat_text_edit.visible
@@ -114,19 +114,19 @@ func _unhandled_input(event) -> void:
 			chat_text_edit.grab_focus()
 		else:
 			chat_text_edit.release_focus()
-			server.chat.rpc_id(1,chat_text_edit.text)
+			server.chat.rpc_id(1, chat_text_edit.text)
 			chat_text_edit.text = ""
 
 
 #this is for the server to tell this client who it's character is
 @rpc()
 func set_current_character(character_id):
-	debug('set_current_character:',character_id)
-	current_character=world.characters.get_node(character_id)
+	debug('set_current_character:', character_id)
+	current_character = world.characters.get_node(character_id)
 	#to get the warp ui to update
 	TimeWarp.warp_change.emit(current_character.warp_speed)
 	TimeWarp.warp_change.connect(set_current_character_warp_speed)
-	current_character.camera.current=true
+	current_character.camera.current = true
 
 
 func set_current_character_warp_speed(value):
@@ -140,8 +140,8 @@ func set_current_character_warp_speed(value):
 func start(address, port):
 	debug("Attempting to connect to: %s:%s" % [address, port])
 	var peer = SteamMultiplayerPeer.new()
-	var r=peer.create_client(address, port)
-	multiplayer.multiplayer_peer=peer
+	var r = peer.create_client(address, port)
+	multiplayer.multiplayer_peer = peer
 	#get_tree().set_multiplayer(peer,get_path())
 
 	match r:
@@ -152,11 +152,10 @@ func start(address, port):
 		ERR_CANT_CREATE:
 			debug('ERR_CANT_CREATE')
 
-	main_menu.visible=false
+	main_menu.visible = false
 
 
 func _on_connected_to_server():
-
 	main_menu.visible = false
 	visible = true
 
@@ -169,5 +168,5 @@ func _on_connected_to_server():
 func _server_disconnected():
 	debug("_server_disconnected")
 	Steam.leaveLobby(lobby_id)
-	main_menu.visible=true
-	visible=false
+	main_menu.visible = true
+	visible = false

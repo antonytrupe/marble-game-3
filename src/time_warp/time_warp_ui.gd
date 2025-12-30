@@ -9,9 +9,9 @@ func _ready():
 	label.text = str(custom_values[0])
 	TimeWarp.warp_change.connect(_c)
 
-func _c(c:int):
+func _c(c: int):
 	#Debug.debug.emit(c)
-	h_slider.value=custom_values.find(c)
+	h_slider.value = custom_values.find(c)
 
 
 func _on_h_slider_value_changed(value: int) -> void:

@@ -5,7 +5,7 @@ const PORT = 9999
 @onready var server: Server = %Server
 @onready var client: Client = %Client
 @onready var main_menu: Control = %MainMenu
-@onready var join_friends_container:= %JoinFriendsContainer
+@onready var join_friends_container := %JoinFriendsContainer
 
 func debug(...args: Array):
 	Debug.debug.emit(args)
@@ -21,7 +21,7 @@ func _on_new_game_button_pressed() -> void:
 func get_friends_in_game():
 	var friends_playing_this_game = []
 	var friend_count = Steam.getFriendCount(Steam.FRIEND_FLAG_IMMEDIATE)
-	var app_id=Steam.getAppID()
+	var app_id = Steam.getAppID()
 	#debug("app_id:",app_id)
 	for i in range(0, friend_count):
 		var steam_id = Steam.getFriendByIndex(i, Steam.FRIEND_FLAG_IMMEDIATE)
@@ -30,10 +30,9 @@ func get_friends_in_game():
 		# Check if they are playing a game
 		if game_info.has("id"):
 			#debug("game_info[id]:",game_info["id"])
-
 			#var app_id = game_info["id"]
 			# Optional: Check if they are playing YOUR specific game
-			if game_info["id"]==app_id:
+			if game_info["id"] == app_id:
 				var friend_name = Steam.getFriendPersonaName(steam_id)
 				friends_playing_this_game.append(
 					{"name": friend_name,
@@ -46,13 +45,13 @@ func get_friends_in_game():
 
 
 func _on_show_friends_button_pressed() -> void:
-	var friends=get_friends_in_game()
+	var friends = get_friends_in_game()
 	# clear the join buttons
 	for child in join_friends_container.get_children():
 		child.queue_free()
 
 	for friend in friends:
-		if friend.lobby_id==0:
+		if friend.lobby_id == 0:
 			return
 		# 1. Create the button instance
 		var my_button = Button.new()
@@ -69,9 +68,9 @@ func _on_show_friends_button_pressed() -> void:
 		join_friends_container.add_child(my_button)
 
 
-func _on_join_friend_button_pressed(friend:Dictionary):
+func _on_join_friend_button_pressed(friend: Dictionary):
 	debug(friend)
-	var lobby_id=int(friend.lobby_id)
+	var lobby_id = int(friend.lobby_id)
 	client.join_lobby(lobby_id)
 
 
