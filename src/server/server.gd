@@ -144,7 +144,7 @@ func chat(message):
 	var p: Player = players['Steam:%s'%steam_id]
 	debug('p.current_character_id:%s' % p.current_character_id)
 	var c_name = str(p.current_character_id)
-	var c = world.characters.get_node(c_name)
+	var c: MarbleCharacter = world.characters.get_node(c_name)
 	c.chat_bubble.rpc(message)
 
 

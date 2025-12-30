@@ -7,6 +7,9 @@ TODO
 6. sprinting
 7. fix reconnecting
 8. fix starting server when not logged in to steam
-9. swithcing characters
+9. switching characters
 10. spawning characters
 11. spawning trees
+12. show warp clock/calendar
+13. warp zones
+14. make chat only show up if close enough
