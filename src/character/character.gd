@@ -141,6 +141,7 @@ func server_warp(value: int):
 	if !is_server():
 		return
 	warp_speed=value
+	Persistance.persist.emit("MarbleCharacter",self)
 
 
 func _set_warp_speed(w):
