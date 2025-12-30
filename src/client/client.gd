@@ -92,6 +92,10 @@ func _unhandled_input(event) -> void:
 					current_character.server_camera_zoom.rpc_id(1, scroll_amount)
 
 
+	if Input.is_action_just_pressed("escape"):
+		#show the menu
+		main_menu.visible=!main_menu.visible
+
 	if Input.is_action_just_pressed("command"):
 		chat_text_edit.visible = !chat_text_edit.visible
 		#chat_mode = !chat_mode

@@ -16,6 +16,10 @@ script = ExtResource("1_yarin")
 unique_name_in_owner = true
 mouse_filter = 1
 
+[node name="Client" parent="." instance=ExtResource("5_clwl7")]
+unique_name_in_owner = true
+mouse_filter = 1
+
 [node name="MainMenu" type="Control" parent="."]
 unique_name_in_owner = true
 z_index = 1
@@ -69,10 +73,6 @@ text = "Load Game"
 [node name="QuitButton" type="Button" parent="MainMenu/MarginContainer/CenterContainer/VBoxContainer"]
 layout_mode = 2
 text = "Quit"
-
-[node name="Client" parent="." instance=ExtResource("5_clwl7")]
-unique_name_in_owner = true
-mouse_filter = 1
 
 [node name="Debug" type="Control" parent="."]
 layout_mode = 3
