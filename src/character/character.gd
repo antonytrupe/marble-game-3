@@ -90,7 +90,7 @@ func _physics_process(delta: float) -> void:
 	var input_dir: Vector2 = Input.get_vector("left", "right", "forward", "backward")
 	if client.current_character and client.current_character.name == name:
 		# Jump
-		if Input.is_action_just_pressed("jump") and is_on_floor():
+		if Input.is_action_just_pressed("jump") and is_on_floor() and warp_speed <= 20:
 			if is_server():
 				server_jump()
 			else:
@@ -197,6 +197,4 @@ func get_data() -> Dictionary:
 
 func _update_label():
 	if label:
-		label.text = str(warp_speed) + 'x\n' + \
-		#"name:" + name + '\n' + \
-		player_name
+		label.text = "%s (x%s)" % [player_name, str(warp_speed)]
