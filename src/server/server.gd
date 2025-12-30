@@ -185,7 +185,7 @@ func _create_player(peer_id, player_id) -> Player:
 	c.player_id = player_id
 	p.characters.append(c.name)
 	p.current_character_id = c.name
-	c.set_multiplayer_authority(peer_id)
+	#c.set_multiplayer_authority(peer_id)
 	Persistance.persist.emit("Player", p)
 
 	players[player_id] = p
