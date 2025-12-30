@@ -114,13 +114,7 @@ func _unhandled_input(event) -> void:
 			chat_text_edit.grab_focus()
 		else:
 			chat_text_edit.release_focus()
-			#if multiplayer.is_server():
-				#print('is_server')
-			#print(multiplayer)
 			server.chat.rpc_id(1,chat_text_edit.text)
-			#else:
-				#print('not is_server')
-				#server.chat.rpc_id(1, chat_text_edit.text)
 			chat_text_edit.text = ""
 
 

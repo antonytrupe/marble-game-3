@@ -112,7 +112,6 @@ func _physics_process(delta: float) -> void:
 func server_move(d: Vector2):
 	if !is_server():
 		return
-	#print(d)
 	var direction = (transform.basis * Vector3(d.x, 0, d.y)).normalized()
 
 	#m*SPEED_MULTIPLIER*speed
