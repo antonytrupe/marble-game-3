@@ -7,3 +7,5 @@ build/godot/exports/
 build/steam/logs/*
 **/*.TMP
 reports/
+addons/godot-sqlite/bin/~libgdsqlite.windows.template_debug.x86_64.dll
+addons/godotsteam/win64/~libgodotsteam.windows.template_debug.x86_64.dll
