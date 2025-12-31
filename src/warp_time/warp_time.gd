@@ -2,6 +2,10 @@
 class_name WarpTime
 extends Node3D
 
+
+const CUSTOM_VALUES: Array[int] = [1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 60,
+								300, 600, 1800, 3600,
+								86400, 604800, 2419200, 24192000]
 const MONTHS = [
 	"March", # 1
 	"April", # 2
@@ -16,11 +20,11 @@ const MONTHS = [
 	]
 
 @export var age: float = Time.get_unix_time_from_system()
-@export var warp_speed: int = 1
+@export var warp_speed: int = 1:
+	set = _set_warp_speed
 
 var max_distance = 2
 var is_dragging: bool = false
-
 
 @onready var hour_hand: Node3D = %HourHand
 @onready var second_hand: Node3D = %SecondHand
@@ -29,27 +33,46 @@ var is_dragging: bool = false
 @onready var day_of_month_label: Label3D = $Calendar/Node3D/Day/DayOfMonth
 @onready var month_of_year_label: Label3D = $Calendar/Node3D2/MonthOfYearLabel
 @onready var label_3d: Label3D = %Label3D
-@onready var ball: StaticBody3D = %Ball
+@onready var ball: StaticBody3D = %SpeedSliderBall
 
 
 func _ready():
 	age = Time.get_unix_time_from_system()
-	#warp_speed = 1
+
+func _set_warp_speed(value):
+	if value != warp_speed:
+		warp_speed = value
+		update_position_to_warp()
 
 
 func _input(event: InputEvent):
-	#print("_input")
 	# Stop dragging when the mouse button is released anywhere
 	if is_dragging and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 			is_dragging = false
-			print("stop dragging")
-			#freeze = true # Re-freeze when dropped
 
 	# Update position while dragging
 	if is_dragging and event is InputEventMouseMotion:
-		print("drag")
 		update_position_to_mouse()
+
+
+func update_position_to_warp():
+	if !ball: return
+	var p: float
+	for i in range(CUSTOM_VALUES.size() - 1):
+		if CUSTOM_VALUES[i] <= warp_speed:
+			p = i
+		else:
+			break
+	var new_y = p / (CUSTOM_VALUES.size() - 1) * 2
+	print(new_y)
+	ball.position.y = new_y
+
+
+func update_warp_to_position(y: float):
+	var i: int = y / max_distance * (CUSTOM_VALUES.size() - 1)
+	print(i)
+	warp_speed = CUSTOM_VALUES[i]
 
 
 func update_position_to_mouse():
@@ -66,8 +89,12 @@ func update_position_to_mouse():
 
 	if world_intersect != null:
 		var local_pos = to_local(world_intersect)
-		# Apply the drag ONLY to the X axis and clamp within limits
-		ball.position.y = clamp(local_pos.y, 0.0, max_distance)
+		# Apply the drag ONLY to the Y axis and clamp within limits
+		var new_y = clamp(local_pos.y, 0.0, max_distance)
+		var old_y = ball.position.y
+		ball.position.y = new_y
+		if new_y != old_y:
+			update_warp_to_position(new_y)
 
 
 func _on_input_event(_camera, event, _position, _normal, _shape_idx):
@@ -75,8 +102,7 @@ func _on_input_event(_camera, event, _position, _normal, _shape_idx):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			is_dragging = true
-			print('start drag')
-			#freeze = false # Unfreeze to allow movement via script
+
 
 func _process(delta: float) -> void:
 	if warp_speed > 120:
