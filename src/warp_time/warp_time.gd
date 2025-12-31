@@ -15,9 +15,11 @@ const MONTHS = [
 	"December" # 10
 	]
 
-
 @export var age: float = Time.get_unix_time_from_system()
 @export var warp_speed: int = 1
+
+var max_distance = 2
+var is_dragging: bool = false
 
 
 @onready var hour_hand: Node3D = %HourHand
@@ -29,13 +31,10 @@ const MONTHS = [
 @onready var label_3d: Label3D = %Label3D
 @onready var ball: StaticBody3D = %Ball
 
-var max_distance=2
 
 func _ready():
 	age = Time.get_unix_time_from_system()
 	#warp_speed = 1
-
-var is_dragging: bool = false
 
 
 func _input(event: InputEvent):
@@ -72,7 +71,6 @@ func update_position_to_mouse():
 
 
 func _on_input_event(_camera, event, _position, _normal, _shape_idx):
-	print("_on_input_event")
 	# Start dragging when the handle itself is clicked
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
@@ -81,8 +79,6 @@ func _on_input_event(_camera, event, _position, _normal, _shape_idx):
 			#freeze = false # Unfreeze to allow movement via script
 
 func _process(delta: float) -> void:
-
-
 	if warp_speed > 120:
 		second_hand.visible = false
 	else:
@@ -102,21 +98,21 @@ func _process(delta: float) -> void:
 
 	#seconds hand
 	var seconds = int(age) % (60)
-	var sec_radians = seconds / 60.0 * PI*2 +PI
+	var sec_radians = seconds / 60.0 * PI * 2 + PI
 	second_hand.rotation = Vector3(0, sec_radians, 0)
 
 	#minutes hand
 	var minutes = int(age) % (60 * 60) / (60.0)
-	var min_radians = minutes / (60.0) * PI*2+PI
+	var min_radians = minutes / (60.0) * PI * 2 + PI
 	minute_hand.rotation = Vector3(0, min_radians, 0)
 
 	#hours hand
 	var hours = int(age) % (60 * 60 * 12) / (60.0 * 60)
-	var hours_radians = hours / (12.0) * PI*2+PI
+	var hours_radians = hours / (12.0) * PI * 2 + PI
 	hour_hand.rotation = Vector3(0, hours_radians, 0)
 
 
-	label_3d.text="%02d:%02d:%02d" % [hours, minutes, seconds]
+	label_3d.text = "%02d:%02d:%02d" % [hours, minutes, seconds]
 	#day of month
 	@warning_ignore("integer_division")
 	var day_of_month: int = int(age) % (60 * 60 * 24 * 28) / (60 * 60 * 24) + 1

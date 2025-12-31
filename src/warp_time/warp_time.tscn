@@ -56,13 +56,13 @@ properties/1/replication_mode = 2
 
 [node name="WarpMonument" type="Node3D"]
 script = ExtResource("1_ln326")
-age = 1767241186.8374066
+age = 1767249737.066008
 warp_speed = 100
 
 [node name="Label3D" type="Label3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.022458851, 2.1898332, 3.5527137e-15)
-text = "04:19:46"
+text = "06:42:17"
 
 [node name="Clock" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.022458851, 1.6232744, 0)
@@ -70,7 +70,7 @@ mesh = SubResource("CylinderMesh_elqtf")
 
 [node name="SecondHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(-0.1045297, 0, 0.99452156, 0, 1.0000015, 0, -0.9945316, 0, -0.10452865, 0, -0.1, 0)
+transform = Transform3D(0.2079135, 0, -0.9781473, 0, 1.0000015, 0, 0.97815716, 0, 0.20791142, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/SecondHand"]
 transform = Transform3D(1, 8.881783e-16, 3.547835e-16, -8.881783e-16, 1, 6.302221e-31, -3.547835e-16, -9.453331e-31, 1, 0, 0, -0.23864883)
@@ -79,7 +79,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_kycxd")
 
 [node name="MinuteHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(0.4786915, 0, -0.8779823, 0, 1, 0, 0.8779823, 0, 0.4786915, 0, -0.1, 0)
+transform = Transform3D(0.28066665, 0, 0.95980453, 0, 1, 0, -0.95980453, 0, 0.28066665, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/MinuteHand"]
 transform = Transform3D(1.0000001, -1.7763568e-15, -3.5478356e-16, -8.881784e-16, 1, 0, -3.5478354e-16, 0, 1.0000001, 0, 0, -0.25)
@@ -89,7 +89,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_elqtf")
 
 [node name="HourHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(0.64122623, 0, -0.7673514, 0, 1, 0, 0.7673514, 0, 0.64122623, 0, -0.1, 0)
+transform = Transform3D(0.9326911, 0, 0.3606749, 0, 1, 0, -0.3606749, 0, 0.9326911, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/HourHand"]
 transform = Transform3D(1.0000001, -1.7763568e-15, -3.5478356e-16, -8.881784e-16, 1, 0, -3.5478354e-16, 0, 1.0000001, 0, 0, -0.17104703)
@@ -124,11 +124,6 @@ shape = SubResource("SphereShape3D_kycxd")
 [node name="Handle" type="MeshInstance3D" parent="Warp/Ball/CollisionShape3D"]
 mesh = SubResource("SphereMesh_bpk1q")
 skeleton = NodePath("../../..")
-
-[node name="SliderJoint3D" type="SliderJoint3D" parent="Warp"]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
-node_a = NodePath("../Arm")
-node_b = NodePath("../Ball")
 
 [node name="Calendar" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0111294985, 0.5703186, 0)
