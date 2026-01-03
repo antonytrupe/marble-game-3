@@ -1,7 +1,9 @@
-[gd_scene load_steps=18 format=3 uid="uid://bdkw10fdrlljw"]
+[gd_scene load_steps=19 format=3 uid="uid://bdkw10fdrlljw"]
 
 [ext_resource type="Script" uid="uid://b8xygpeqk5c05" path="res://src/warp_time/warp_time.gd" id="1_ln326"]
 [ext_resource type="PackedScene" uid="uid://jnsejnjhhfih" path="res://src/warp_time/Slider3D.tscn" id="2_kycxd"]
+[ext_resource type="PackedScene" uid="uid://d0gg3xuxeqxg1" path="res://src/warp_time/warp_sphere.tscn" id="3_elqtf"]
+[ext_resource type="Shader" uid="uid://dtl1y23tl3kfx" path="res://src/warp_time/bubble2.gdshader" id="4_rydde"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ln326"]
 properties/0/path = NodePath(".:age")
@@ -42,24 +44,27 @@ material = SubResource("StandardMaterial3D_7b8f5")
 size = Vector2(0.2, 0.2)
 center_offset = Vector3(0.05, 0, 0.05)
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_ln326"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_rydde"]
 radius = 1.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ln326"]
-
-[sub_resource type="SphereMesh" id="SphereMesh_ln326"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rydde"]
 resource_local_to_scene = true
-material = SubResource("StandardMaterial3D_ln326")
+render_priority = 0
+shader = ExtResource("4_rydde")
+shader_parameter/blur_amount = 0.02000000095
+shader_parameter/iterations = 8
+shader_parameter/bubble_color = Color(0.7, 0.8, 1, 0.1)
+shader_parameter/fresnel_power = 3.64000016964012
+
+[sub_resource type="SphereMesh" id="SphereMesh_rydde"]
+resource_local_to_scene = true
+material = SubResource("ShaderMaterial_rydde")
 radius = 1.0
 height = 2.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n6kfb"]
-transparency = 1
-albedo_color = Color(1, 1, 1, 0.105882354)
-
 [node name="WarpMonument" type="Node3D"]
 script = ExtResource("1_ln326")
-age = 1767471412.5355954
+age = 1767474906.7656112
 warp_speed = 30
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
@@ -68,7 +73,7 @@ replication_config = SubResource("SceneReplicationConfig_ln326")
 [node name="Label3D" type="Label3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.022458851, 2.1898332, 3.5527137e-15)
-text = "08:16:52"
+text = "09:15:06"
 
 [node name="Clock" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.022458851, 1.6232744, 0)
@@ -76,7 +81,7 @@ mesh = SubResource("CylinderMesh_elqtf")
 
 [node name="SecondHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(-0.6691368, 0, 0.7431444, 0, 1.0000015, 0, -0.7431517, 0, -0.6691302, 0, -0.1, 0)
+transform = Transform3D(-0.8090243, 0, -0.5877848, 0, 1.0000015, 0, 0.58779067, 0, -0.80901617, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/SecondHand"]
 transform = Transform3D(1, 8.881783e-16, 3.547835e-16, -8.881783e-16, 1, 6.302221e-31, -3.547835e-16, -9.453331e-31, 1, 0, 0, -0.23864883)
@@ -85,7 +90,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_kycxd")
 
 [node name="MinuteHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(0.19423431, 0, -0.9809542, 0, 1, 0, 0.9809542, 0, 0.19423431, 0, -0.1, 0)
+transform = Transform3D(0.010471631, 0, -0.99994415, 0, 1, 0, 0.99994415, 0, 0.010471631, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/MinuteHand"]
 transform = Transform3D(1.0000001, -1.7763568e-15, -3.5478356e-16, -8.881784e-16, 1, 0, -3.5478354e-16, 0, 1.0000001, 0, 0, -0.25)
@@ -95,7 +100,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_elqtf")
 
 [node name="HourHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(0.36758316, 0, 0.9299899, 0, 1, 0, -0.9299899, 0, 0.36758316, 0, -0.1, 0)
+transform = Transform3D(-0.13139123, 0, 0.9913295, 0, 1, 0, -0.9913295, 0, -0.13139123, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/HourHand"]
 transform = Transform3D(1.0000001, -1.7763568e-15, -3.5478356e-16, -8.881784e-16, 1, 0, -3.5478354e-16, 0, 1.0000001, 0, 0, -0.17104703)
@@ -134,22 +139,21 @@ text = "March"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 1.1920929e-07, 0)
 CUSTOM_VALUES = Array[int]([1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 60, 300, 600, 1800, 3600, 86400, 604800, 2419200, 24192000])
 
+[node name="RadiusSlider" parent="." instance=ExtResource("2_kycxd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.74801326, 0, 0)
+CUSTOM_VALUES = Array[int]([1, 2, 3, 6, 10, 20, 60, 300, 600])
+
 [node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
 input_ray_pickable = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 unique_name_in_owner = true
-shape = SubResource("SphereShape3D_ln326")
+shape = SubResource("SphereShape3D_rydde")
 
-[node name="Sphere" type="MeshInstance3D" parent="Area3D"]
+[node name="Sphere" parent="Area3D" instance=ExtResource("3_elqtf")]
 unique_name_in_owner = true
-mesh = SubResource("SphereMesh_ln326")
-skeleton = NodePath("../CollisionShape3D")
-surface_material_override/0 = SubResource("StandardMaterial3D_n6kfb")
-
-[node name="RadiusSlider" parent="." instance=ExtResource("2_kycxd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.74801326, 0, 0)
-CUSTOM_VALUES = Array[int]([1, 2, 3, 6, 10, 20, 60, 300, 600])
+mesh = SubResource("SphereMesh_rydde")
 
 [connection signal="value_changed" from="WarpSlider" to="." method="_on_warp_slider_value_changed"]
 [connection signal="value_changed" from="RadiusSlider" to="." method="_on_radius_slider_value_changed"]

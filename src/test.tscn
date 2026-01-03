@@ -76,18 +76,22 @@ warp_speed = 3600
 
 [node name="OneDay(86400x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.128108, 0, 0)
+age = 1767513199.8950005
 warp_speed = 86400
 
 [node name="OneWeek" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9246264, 0, 0.8434315)
+age = 1767746300.1829994
 warp_speed = 604800
 
 [node name="OneMonth" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.733845, 0, 0)
+age = 1768562151.1909997
 warp_speed = 2419200
 
 [node name="OneYear" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.258245, 0, 0.7808571)
+age = 1778352363.2869992
 warp_speed = 24192000
 
 [node name="Camera3D" type="Camera3D" parent="."]
@@ -103,5 +107,5 @@ transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49
 [node name="water" parent="." instance=ExtResource("2_y2bxs")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.38389492, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="ground" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_y2bxs")

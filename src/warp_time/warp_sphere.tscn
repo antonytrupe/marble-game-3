@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://d0gg3xuxeqxg1"]
+
+[ext_resource type="Shader" uid="uid://dtl1y23tl3kfx" path="res://src/warp_time/bubble2.gdshader" id="1_3omkl"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3omkl"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("1_3omkl")
+shader_parameter/blur_amount = 0.02
+shader_parameter/iterations = 8
+shader_parameter/bubble_color = Color(0.7, 0.8, 1, 0.1)
+shader_parameter/fresnel_power = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_3omkl"]
+resource_local_to_scene = true
+material = SubResource("ShaderMaterial_3omkl")
+radius = 1.0
+height = 2.0
+
+[node name="MeshInstance3D2" type="MeshInstance3D"]
+mesh = SubResource("SphereMesh_3omkl")
