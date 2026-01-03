@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://dg5pngnp7smv8"]
+
+[ext_resource type="Shader" uid="uid://by6nn2of3a1ig" path="res://src/water.gdshader" id="1_mxv3a"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_y2bxs"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kycxd"]
+render_priority = 0
+shader = ExtResource("1_mxv3a")
+shader_parameter/height_scale = 0.5
+shader_parameter/noise = SubResource("NoiseTexture2D_y2bxs")
+shader_parameter/calmness = 50.0
+shader_parameter/num_of_additional_waves_in_x_direction = 2
+shader_parameter/num_of_additional_waves_in_z_direction = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_lr5sy"]
+material = SubResource("ShaderMaterial_kycxd")
+size = Vector2(10, 10)
+subdivide_width = 32
+subdivide_depth = 32
+
+[node name="MeshInstance3D" type="MeshInstance3D"]
+mesh = SubResource("PlaneMesh_lr5sy")
