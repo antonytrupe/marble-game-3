@@ -2,6 +2,9 @@ class_name World
 extends Node3D
 
 @onready var characters = %Characters
+@onready var flora: Node3D = %Flora
+@onready var fauna: Node3D = %Fauna
+@onready var terra: Node3D = %Terra
 
 
 func _ready() -> void:
