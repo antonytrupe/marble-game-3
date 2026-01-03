@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://jnsejnjhhfih"]
 
-[ext_resource type="Script" uid="uid://cm0ja40045h5l" path="res://src/warp_time/slider_3d.gd" id="1_vqyuw"]
+[ext_resource type="Script" uid="uid://cm0ja40045h5l" path="res://src/Slider3D/slider_3d.gd" id="1_vqyuw"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ln326"]
 size = Vector3(0.1, 2, 0.1)

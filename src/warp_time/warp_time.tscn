@@ -1,9 +1,8 @@
 [gd_scene load_steps=19 format=3 uid="uid://bdkw10fdrlljw"]
 
 [ext_resource type="Script" uid="uid://b8xygpeqk5c05" path="res://src/warp_time/warp_time.gd" id="1_ln326"]
-[ext_resource type="PackedScene" uid="uid://jnsejnjhhfih" path="res://src/warp_time/Slider3D.tscn" id="2_kycxd"]
+[ext_resource type="PackedScene" uid="uid://jnsejnjhhfih" path="res://src/Slider3D/Slider3D.tscn" id="2_kycxd"]
 [ext_resource type="PackedScene" uid="uid://d0gg3xuxeqxg1" path="res://src/warp_time/warp_sphere.tscn" id="3_elqtf"]
-[ext_resource type="Shader" uid="uid://dtl1y23tl3kfx" path="res://src/warp_time/bubble2.gdshader" id="4_rydde"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ln326"]
 properties/0/path = NodePath(".:age")
@@ -47,10 +46,50 @@ center_offset = Vector3(0.05, 0, 0.05)
 [sub_resource type="SphereShape3D" id="SphereShape3D_rydde"]
 radius = 1.0
 
+[sub_resource type="Shader" id="Shader_elqtf"]
+resource_local_to_scene = true
+code = "shader_type spatial;
+// depth_draw_always fixes many \"missing background\" issues in Godot 4
+render_mode blend_mix, depth_draw_always, cull_back;
+
+uniform sampler2D screen_tex : hint_screen_texture, filter_linear_mipmap;
+uniform float blur_amount : hint_range(0.0, 0.1) = 0.02; // Small values work best for multi-sampling
+uniform int iterations : hint_range(1, 20) = 8;
+uniform vec4 bubble_color : source_color = vec4(0.7, 0.8, 1.0, 0.1);
+uniform float fresnel_power : hint_range(0.1, 10.0) = 2.0;
+
+void fragment() {
+    // 1. Smooth Multi-Sample Blur
+    // Instead of textureLod (which is blocky), we sample in a ring
+    vec3 blurred_bg = vec3(0.0);
+    float total_weight = 0.0;
+    
+    for (int i = 0; i < iterations; i++) {
+        float angle = float(i) * (6.28318 / float(iterations));
+        vec2 offset = vec2(cos(angle), sin(angle)) * blur_amount;
+        blurred_bg += texture(screen_tex, SCREEN_UV + offset).rgb;
+        total_weight += 1.0;
+    }
+    blurred_bg /= total_weight;
+
+    // 2. Fresnel Effect (Glowing Edges)
+    float fresnel = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), fresnel_power);
+    
+    // 3. Final Composition
+    vec3 final_color = mix(blurred_bg, bubble_color.rgb, bubble_color.a);
+    ALBEDO = mix(final_color, bubble_color.rgb, fresnel);
+    ALPHA = clamp(bubble_color.a + fresnel, 0.0, 1.0);
+    
+    // Physical properties
+    ROUGHNESS = 0.05;
+    SPECULAR = 0.5;
+}
+"
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rydde"]
 resource_local_to_scene = true
 render_priority = 0
-shader = ExtResource("4_rydde")
+shader = SubResource("Shader_elqtf")
 shader_parameter/blur_amount = 0.02000000095
 shader_parameter/iterations = 8
 shader_parameter/bubble_color = Color(0.7, 0.8, 1, 0.1)
@@ -64,7 +103,7 @@ height = 2.0
 
 [node name="WarpMonument" type="Node3D"]
 script = ExtResource("1_ln326")
-age = 1767474906.7656112
+age = 1767479065.9304044
 warp_speed = 30
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
@@ -73,7 +112,7 @@ replication_config = SubResource("SceneReplicationConfig_ln326")
 [node name="Label3D" type="Label3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.022458851, 2.1898332, 3.5527137e-15)
-text = "09:15:06"
+text = "10:24:25"
 
 [node name="Clock" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.022458851, 1.6232744, 0)
@@ -81,7 +120,7 @@ mesh = SubResource("CylinderMesh_elqtf")
 
 [node name="SecondHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(-0.8090243, 0, -0.5877848, 0, 1.0000015, 0, 0.58779067, 0, -0.80901617, 0, -0.1, 0)
+transform = Transform3D(0.8660332, 0, -0.4999997, 0, 1.0000015, 0, 0.5000047, 0, 0.8660245, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/SecondHand"]
 transform = Transform3D(1, 8.881783e-16, 3.547835e-16, -8.881783e-16, 1, 6.302221e-31, -3.547835e-16, -9.453331e-31, 1, 0, 0, -0.23864883)
@@ -90,7 +129,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_kycxd")
 
 [node name="MinuteHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(0.010471631, 0, -0.99994415, 0, 1, 0, 0.99994415, 0, 0.010471631, 0, -0.1, 0)
+transform = Transform3D(0.8338851, 0, -0.5519363, 0, 1, 0, 0.5519363, 0, 0.8338851, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/MinuteHand"]
 transform = Transform3D(1.0000001, -1.7763568e-15, -3.5478356e-16, -8.881784e-16, 1, 0, -3.5478354e-16, 0, 1.0000001, 0, 0, -0.25)
@@ -100,7 +139,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_elqtf")
 
 [node name="HourHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(-0.13139123, 0, 0.9913295, 0, 1, 0, -0.9913295, 0, -0.13139123, 0, -0.1, 0)
+transform = Transform3D(-0.67182773, 0, 0.7407059, 0, 1, 0, -0.7407059, 0, -0.67182773, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/HourHand"]
 transform = Transform3D(1.0000001, -1.7763568e-15, -3.5478356e-16, -8.881784e-16, 1, 0, -3.5478354e-16, 0, 1.0000001, 0, 0, -0.17104703)
