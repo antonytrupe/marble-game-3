@@ -1,26 +1,16 @@
-[gd_scene load_steps=7 format=3 uid="uid://dibu85hjscd1f"]
+[gd_scene load_steps=6 format=3 uid="uid://dibu85hjscd1f"]
 
 [ext_resource type="PackedScene" uid="uid://bdkw10fdrlljw" path="res://src/warp_time/warp_time.tscn" id="1_gwkrg"]
-[ext_resource type="Shader" uid="uid://by6nn2of3a1ig" path="res://src/warp_time/warp_time.gdshader" id="2_nn3fe"]
+[ext_resource type="PackedScene" uid="uid://dg5pngnp7smv8" path="res://src/water.tscn" id="2_y2bxs"]
 
 [sub_resource type="Environment" id="Environment_gwkrg"]
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_y2bxs"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nn3fe"]
+albedo_color = Color(0.0012114991, 0.30787307, 0, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_kycxd"]
-render_priority = 0
-shader = ExtResource("2_nn3fe")
-shader_parameter/height_scale = 0.5
-shader_parameter/noise = SubResource("NoiseTexture2D_y2bxs")
-shader_parameter/calmness = 50.0
-shader_parameter/num_of_additional_waves_in_x_direction = 2
-shader_parameter/num_of_additional_waves_in_z_direction = 2
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_lr5sy"]
-material = SubResource("ShaderMaterial_kycxd")
-size = Vector2(10, 10)
-subdivide_width = 32
-subdivide_depth = 32
+[sub_resource type="PlaneMesh" id="PlaneMesh_y2bxs"]
+material = SubResource("StandardMaterial3D_nn3fe")
+size = Vector2(30, 30)
 
 [node name="Node3D" type="Node3D"]
 
@@ -78,36 +68,30 @@ warp_speed = 600
 
 [node name="ThirtyMinutes(1800x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4719296, 0, 0)
-age = 1767505733.7054539
 warp_speed = 1800
 
 [node name="OneHour(3600x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(0.9785809, 0, -0.20586261, 0, 1, 0, 0.20586261, 0, 0.9785809, 0.20313597, 0, 0.55229855)
-age = 1767548633.7829103
 warp_speed = 3600
 
 [node name="OneDay(86400x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.128108, 0, 0)
-age = 1769522037.3458192
 warp_speed = 86400
 
 [node name="OneWeek" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9246264, 0, 0.8434315)
-age = 1781877259.6527271
 warp_speed = 604800
 
 [node name="OneMonth" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.733845, 0, 0)
-age = 1825120537.7269094
 warp_speed = 2419200
 
 [node name="OneYear" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.258245, 0, 0.7808571)
-age = 2344039874.617091
 warp_speed = 24192000
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.9967621, -0.02081104, 0.077667855, -6.735162e-09, 0.9659259, 0.2588191, -0.08040769, -0.25798106, 0.96279824, -22.278746, 1.8882055, 3.503049)
+transform = Transform3D(0.9967621, -0.02081104, 0.077667855, -6.735162e-09, 0.9659259, 0.2588191, -0.08040769, -0.25798106, 0.96279824, -17.83009, 1.8882055, 5.956807)
 current = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -116,6 +100,8 @@ environment = SubResource("Environment_gwkrg")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 4.757888, 0)
 
+[node name="water" parent="." instance=ExtResource("2_y2bxs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.38389492, 0)
+
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5678778, -0.4658084, 3.0599232)
-mesh = SubResource("PlaneMesh_lr5sy")
+mesh = SubResource("PlaneMesh_y2bxs")
