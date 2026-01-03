@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bdkw10fdrlljw"]
+[gd_scene load_steps=21 format=3 uid="uid://bdkw10fdrlljw"]
 
 [ext_resource type="Script" uid="uid://b8xygpeqk5c05" path="res://src/warp_time/warp_time.gd" id="1_ln326"]
 
@@ -57,7 +57,11 @@ height = 0.2
 [sub_resource type="SphereShape3D" id="SphereShape3D_ln326"]
 radius = 1.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_kycxd"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ln326"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_ln326"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_ln326")
 radius = 1.0
 height = 2.0
 
@@ -67,7 +71,7 @@ albedo_color = Color(1, 1, 1, 0.105882354)
 
 [node name="WarpMonument" type="Node3D"]
 script = ExtResource("1_ln326")
-age = 1805198864.6238177
+age = 86118501.95555937
 warp_speed = 50012
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
@@ -76,7 +80,7 @@ replication_config = SubResource("SceneReplicationConfig_ln326")
 [node name="Label3D" type="Label3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.022458851, 2.1898332, 3.5527137e-15)
-text = "00:07:44"
+text = "05:48:21"
 
 [node name="Clock" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.022458851, 1.6232744, 0)
@@ -84,7 +88,7 @@ mesh = SubResource("CylinderMesh_elqtf")
 
 [node name="SecondHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(0.10452951, 0, 0.9945216, 0, 1.0000015, 0, -0.99453163, 0, 0.10452846, 0, -0.1, 0)
+transform = Transform3D(0.5877908, 0, -0.8090169, 0, 1.0000015, 0, 0.80902505, 0, 0.5877849, 0, -0.1, 0)
 visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/SecondHand"]
@@ -94,7 +98,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_kycxd")
 
 [node name="MinuteHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(-0.6896191, 0, -0.7241712, 0, 1, 0, 0.7241712, 0, -0.6896191, 0, -0.1, 0)
+transform = Transform3D(-0.3436596, 0, 0.93909353, 0, 1, 0, -0.93909353, 0, -0.3436596, 0, -0.1, 0)
 visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/MinuteHand"]
@@ -105,7 +109,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_elqtf")
 
 [node name="HourHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(-0.9977233, 0, -0.06743489, 0, 1, 0, 0.06743489, 0, -0.9977233, 0, -0.1, 0)
+transform = Transform3D(0.9948361, 0, -0.10149024, 0, 1, 0, 0.10149024, 0, 0.9948361, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/HourHand"]
 transform = Transform3D(1.0000001, -1.7763568e-15, -3.5478356e-16, -8.881784e-16, 1, 0, -3.5478354e-16, 0, 1.0000001, 0, 0, -0.17104703)
@@ -124,7 +128,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.35649967, 0.11404601)
 
 [node name="Day" type="Node3D" parent="Calendar/Node3D"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.71428573, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2857143, -0.5, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Calendar/Node3D/Day"]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
@@ -132,13 +136,13 @@ mesh = SubResource("PlaneMesh_n6kfb")
 
 [node name="DayOfMonth" type="Label3D" parent="Calendar/Node3D/Day"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.043460965, -0.040435076, 0.012545377)
-text = "6"
+text = "17"
 
 [node name="Node3D2" type="Node3D" parent="Calendar"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.11)
 
 [node name="MonthOfYearLabel" type="Label3D" parent="Calendar/Node3D2"]
-text = "September"
+text = "August"
 
 [node name="Warp" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 1.1, 0)
@@ -169,36 +173,37 @@ shape = SubResource("SphereShape3D_kycxd")
 mesh = SubResource("SphereMesh_bpk1q")
 skeleton = NodePath("../../..")
 
-[node name="AreaSlider" type="Node3D" parent="."]
+[node name="RadiusSlider" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8446503, 1.1, 0)
 
-[node name="Node3D" type="Node3D" parent="AreaSlider"]
+[node name="Node3D" type="Node3D" parent="RadiusSlider"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 
-[node name="Arm" type="StaticBody3D" parent="AreaSlider"]
+[node name="Arm" type="StaticBody3D" parent="RadiusSlider"]
 collision_layer = 0
 collision_mask = 0
 input_ray_pickable = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaSlider/Arm"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RadiusSlider/Arm"]
 shape = SubResource("BoxShape3D_ln326")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="AreaSlider/Arm/CollisionShape3D"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="RadiusSlider/Arm/CollisionShape3D"]
 mesh = SubResource("BoxMesh_ujni2")
 skeleton = NodePath("../../../..")
 
-[node name="AreaSliderBall" type="StaticBody3D" parent="AreaSlider"]
+[node name="RadiusSliderBall" type="StaticBody3D" parent="RadiusSlider"]
 unique_name_in_owner = true
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaSlider/AreaSliderBall"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RadiusSlider/RadiusSliderBall"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 shape = SubResource("SphereShape3D_kycxd")
 
-[node name="Handle" type="MeshInstance3D" parent="AreaSlider/AreaSliderBall/CollisionShape3D"]
+[node name="Handle" type="MeshInstance3D" parent="RadiusSlider/RadiusSliderBall/CollisionShape3D"]
 mesh = SubResource("SphereMesh_bpk1q")
 skeleton = NodePath("../../..")
 
 [node name="Area3D" type="Area3D" parent="."]
+input_ray_pickable = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 unique_name_in_owner = true
@@ -206,8 +211,9 @@ shape = SubResource("SphereShape3D_ln326")
 
 [node name="Sphere" type="MeshInstance3D" parent="Area3D"]
 unique_name_in_owner = true
-mesh = SubResource("SphereMesh_kycxd")
+mesh = SubResource("SphereMesh_ln326")
 skeleton = NodePath("../CollisionShape3D")
 surface_material_override/0 = SubResource("StandardMaterial3D_n6kfb")
 
-[connection signal="input_event" from="Warp/SpeedSliderBall" to="." method="_on_input_event"]
+[connection signal="input_event" from="Warp/SpeedSliderBall" to="." method="_on_speed_slider_ball_input_event"]
+[connection signal="input_event" from="RadiusSlider/RadiusSliderBall" to="." method="_on_radius_slider_ball_input_event"]
