@@ -26,101 +26,88 @@ subdivide_depth = 32
 
 [node name="OneSecond" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.330336, 0, -0.000600338)
-age = 1767234504.8223574
 warp_speed = 1
 
 [node name="TwoSeconds" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.178997, 0, 0)
-age = 1767235787.2020533
 warp_speed = 2
 
 [node name="ThreeSeconds" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.013958, 0, 0.4381125)
-age = 1767237069.579412
 warp_speed = 3
 
 [node name="4" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.350018, 0, 0)
-age = 1767238351.959109
 warp_speed = 4
 
 [node name="6" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.521333, 0, 0.7037301)
-age = 1767240916.7138207
 warp_speed = 6
 
 [node name="8" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.848719, 0, 0)
-age = 1767243481.4708827
 warp_speed = 8
 
 [node name="10" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.300029, 0, 0.57524157)
-age = 1767246046.23277
 warp_speed = 10
 
 [node name="12" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.077459, 0, 0)
-age = 1767248610.9898307
 warp_speed = 12
 
 [node name="16" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.735256, 0, 0.51031065)
-age = 1767253740.501601
 warp_speed = 16
 
 [node name="20" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5558977, 0, 0)
-age = 1767258870.015701
 warp_speed = 20
 
 [node name="OneMinute(60x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.147558, 0, 0.5862651)
-age = 1767310165.157119
 warp_speed = 60
 
 [node name="FiveMinutes(300x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.478894, 0, 0)
-age = 1767617936.0104797
 warp_speed = 300
 
 [node name="TenMinutes(600x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0503387, 0, 0.6067071)
-age = 1768002649.5759976
 warp_speed = 600
 
 [node name="ThirtyMinutes(1800x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4719296, 0, 0)
-age = 1769541503.837982
+age = 1767505733.7054539
 warp_speed = 1800
 
 [node name="OneHour(3600x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(0.9785809, 0, -0.20586261, 0, 1, 0, 0.20586261, 0, 0.9785809, 0.20313597, 0, 0.55229855)
-age = 1771849785.230989
+age = 1767548633.7829103
 warp_speed = 3600
 
 [node name="OneDay(86400x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.128108, 0, 0)
-age = 1878030729.3090138
+age = 1769522037.3458192
 warp_speed = 86400
 
 [node name="OneWeek" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9246264, 0, 0.8434315)
-age = 2542815770.4929943
+age = 1781877259.6527271
 warp_speed = 604800
 
 [node name="OneMonth" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.733845, 0, 0)
-age = 4869563414.636983
+age = 1825120537.7269094
 warp_speed = 2419200
 
 [node name="OneYear" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.258245, 0, 0.7808571)
-age = 32790535144.364933
+age = 2344039874.617091
 warp_speed = 24192000
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.9967621, -0.02081104, 0.077667855, -6.735162e-09, 0.9659259, 0.2588191, -0.08040769, -0.25798106, 0.96279824, -6.313614, 6.4031973, 20.030388)
+transform = Transform3D(0.9967621, -0.02081104, 0.077667855, -6.735162e-09, 0.9659259, 0.2588191, -0.08040769, -0.25798106, 0.96279824, -22.278746, 1.8882055, 3.503049)
 current = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
