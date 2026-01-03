@@ -1,112 +1,134 @@
-[gd_scene load_steps=3 format=3 uid="uid://dibu85hjscd1f"]
+[gd_scene load_steps=7 format=3 uid="uid://dibu85hjscd1f"]
 
 [ext_resource type="PackedScene" uid="uid://bdkw10fdrlljw" path="res://src/warp_time/warp_time.tscn" id="1_gwkrg"]
+[ext_resource type="Shader" uid="uid://by6nn2of3a1ig" path="res://src/warp_time/warp_time.gdshader" id="2_nn3fe"]
 
 [sub_resource type="Environment" id="Environment_gwkrg"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_y2bxs"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kycxd"]
+render_priority = 0
+shader = ExtResource("2_nn3fe")
+shader_parameter/height_scale = 0.5
+shader_parameter/noise = SubResource("NoiseTexture2D_y2bxs")
+shader_parameter/calmness = 50.0
+shader_parameter/num_of_additional_waves_in_x_direction = 2
+shader_parameter/num_of_additional_waves_in_z_direction = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_lr5sy"]
+material = SubResource("ShaderMaterial_kycxd")
+size = Vector2(10, 10)
+subdivide_width = 32
+subdivide_depth = 32
 
 [node name="Node3D" type="Node3D"]
 
 [node name="OneSecond" parent="." instance=ExtResource("1_gwkrg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.84358, 0, -0.000600338)
-age = 1767212787.5665622
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.330336, 0, -0.000600338)
+age = 1767234504.8223574
 warp_speed = 1
 
 [node name="TwoSeconds" parent="." instance=ExtResource("1_gwkrg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.475641, 0, 0)
-age = 1767213027.1980653
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.178997, 0, 0)
+age = 1767235787.2020533
 warp_speed = 2
 
 [node name="ThreeSeconds" parent="." instance=ExtResource("1_gwkrg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.543226, 0, 0)
-age = 1767213266.8296113
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.013958, 0, 0.4381125)
+age = 1767237069.579412
 warp_speed = 3
 
 [node name="4" parent="." instance=ExtResource("1_gwkrg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.886597, 0, 0)
-age = 1767213506.461121
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.350018, 0, 0)
+age = 1767238351.959109
 warp_speed = 4
 
 [node name="6" parent="." instance=ExtResource("1_gwkrg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.521333, 0, 0)
-age = 1767213985.724242
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.521333, 0, 0.7037301)
+age = 1767240916.7138207
 warp_speed = 6
 
 [node name="8" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.848719, 0, 0)
-age = 1767214464.9873028
+age = 1767243481.4708827
 warp_speed = 8
 
 [node name="10" parent="." instance=ExtResource("1_gwkrg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.300029, 0, 0)
-age = 1767214944.2543561
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.300029, 0, 0.57524157)
+age = 1767246046.23277
 warp_speed = 10
 
 [node name="12" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.077459, 0, 0)
-age = 1767215423.5174327
+age = 1767248610.9898307
 warp_speed = 12
 
 [node name="16" parent="." instance=ExtResource("1_gwkrg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.735256, 0, 0)
-age = 1767216382.043605
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.735256, 0, 0.51031065)
+age = 1767253740.501601
 warp_speed = 16
 
 [node name="20" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5558977, 0, 0)
-age = 1767217340.5697212
+age = 1767258870.015701
 warp_speed = 20
 
 [node name="OneMinute(60x)" parent="." instance=ExtResource("1_gwkrg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.147558, 0, 0)
-age = 1767226925.8391776
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.147558, 0, 0.5862651)
+age = 1767310165.157119
 warp_speed = 60
 
 [node name="FiveMinutes(300x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.478894, 0, 0)
-age = 1767284437.4599676
+age = 1767617936.0104797
 warp_speed = 300
 
 [node name="TenMinutes(600x)" parent="." instance=ExtResource("1_gwkrg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0503387, 0, 0)
-age = 1767356326.9849916
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0503387, 0, 0.6067071)
+age = 1768002649.5759976
 warp_speed = 600
 
 [node name="ThirtyMinutes(1800x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4719296, 0, 0)
-age = 1767643885.084971
+age = 1769541503.837982
 warp_speed = 1800
 
 [node name="OneHour(3600x)" parent="." instance=ExtResource("1_gwkrg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.20313597, 0, 0)
-age = 1768075222.2349966
+transform = Transform3D(0.9785809, 0, -0.20586261, 0, 1, 0, 0.20586261, 0, 0.9785809, 0.20313597, 0, 0.55229855)
+age = 1771849785.230989
 warp_speed = 3600
 
 [node name="OneDay(86400x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.128108, 0, 0)
-age = 1787916731.1350133
+age = 1878030729.3090138
 warp_speed = 86400
 
 [node name="OneWeek" parent="." instance=ExtResource("1_gwkrg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9246264, 0, 0)
-age = 1912141830.3349938
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9246264, 0, 0.8434315)
+age = 2542815770.4929943
 warp_speed = 604800
 
 [node name="OneMonth" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.733845, 0, 0)
-age = 2346929677.534979
+age = 4869563414.636983
 warp_speed = 2419200
 
 [node name="OneYear" parent="." instance=ExtResource("1_gwkrg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.258245, 0, 0)
-age = 7564383843.935006
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.258245, 0, 0.7808571)
+age = 32790535144.364933
 warp_speed = 24192000
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.9967621, -0.02081104, 0.07766786, -6.735162e-09, 0.9659259, 0.2588191, -0.08040769, -0.25798106, 0.96279824, -20.227028, 2, 6.1473665)
+transform = Transform3D(0.9967621, -0.02081104, 0.077667855, -6.735162e-09, 0.9659259, 0.2588191, -0.08040769, -0.25798106, 0.96279824, -6.313614, 6.4031973, 20.030388)
 current = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_gwkrg")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 4.757888, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5678778, -0.4658084, 3.0599232)
+mesh = SubResource("PlaneMesh_lr5sy")
