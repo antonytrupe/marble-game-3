@@ -103,7 +103,7 @@ height = 2.0
 
 [node name="WarpMonument" type="Node3D"]
 script = ExtResource("1_ln326")
-age = 1767479065.9304044
+age = 1767484305.0105984
 warp_speed = 30
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
@@ -112,7 +112,7 @@ replication_config = SubResource("SceneReplicationConfig_ln326")
 [node name="Label3D" type="Label3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.022458851, 2.1898332, 3.5527137e-15)
-text = "10:24:25"
+text = "11:51:45"
 
 [node name="Clock" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.022458851, 1.6232744, 0)
@@ -120,7 +120,7 @@ mesh = SubResource("CylinderMesh_elqtf")
 
 [node name="SecondHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(0.8660332, 0, -0.4999997, 0, 1.0000015, 0, 0.5000047, 0, 0.8660245, 0, -0.1, 0)
+transform = Transform3D(1.3907218e-07, 0, 0.99999905, 0, 1.0000015, 0, -1.0000091, 0, 1.3907079e-07, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/SecondHand"]
 transform = Transform3D(1, 8.881783e-16, 3.547835e-16, -8.881783e-16, 1, 6.302221e-31, -3.547835e-16, -9.453331e-31, 1, 0, 0, -0.23864883)
@@ -129,7 +129,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_kycxd")
 
 [node name="MinuteHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(0.8338851, 0, -0.5519363, 0, 1, 0, 0.5519363, 0, 0.8338851, 0, -0.1, 0)
+transform = Transform3D(-0.64944714, 0, 0.7604054, 0, 1, 0, -0.7604054, 0, -0.64944714, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/MinuteHand"]
 transform = Transform3D(1.0000001, -1.7763568e-15, -3.5478356e-16, -8.881784e-16, 1, 0, -3.5478354e-16, 0, 1.0000001, 0, 0, -0.25)
@@ -139,7 +139,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_elqtf")
 
 [node name="HourHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(-0.67182773, 0, 0.7407059, 0, 1, 0, -0.7407059, 0, -0.67182773, 0, -0.1, 0)
+transform = Transform3D(-0.9974084, 0, 0.071932495, 0, 1, 0, -0.071932495, 0, -0.9974084, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/HourHand"]
 transform = Transform3D(1.0000001, -1.7763568e-15, -3.5478356e-16, -8.881784e-16, 1, 0, -3.5478354e-16, 0, 1.0000001, 0, 0, -0.17104703)

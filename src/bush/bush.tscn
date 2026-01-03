@@ -1,0 +1,153 @@
+[gd_scene load_steps=25 format=3 uid="uid://damvmfs7dqebu"]
+
+[ext_resource type="Script" uid="uid://bsctidn2uowx1" path="res://src/bush/bush.gd" id="1_ww0ai"]
+[ext_resource type="Script" uid="uid://bv3dl61gkc7tm" path="res://src/bush/bush_staticbody.gd" id="2_ggt4o"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_vjxuo"]
+radius = 1.0
+height = 3.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6vxsv"]
+albedo_color = Color(0.128272, 0.388059, 0.135242, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_1wivi"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ugvs8"]
+albedo_color = Color(0.529947, 0.0159607, 1.44392e-07, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ng8vl"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qfen0"]
+albedo_color = Color(0.529947, 0.0159607, 1.44392e-07, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_g31xs"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fexpp"]
+albedo_color = Color(0.529947, 0.0159607, 1.44392e-07, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_jpa8f"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1nwxo"]
+albedo_color = Color(0.529947, 0.0159607, 1.44392e-07, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_eca8h"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vit7c"]
+albedo_color = Color(0.529947, 0.0159607, 1.44392e-07, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_4m2bj"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a7r0q"]
+albedo_color = Color(0.529947, 0.0159607, 1.44392e-07, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_b2hbs"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_25hny"]
+albedo_color = Color(0.529947, 0.0159607, 1.44392e-07, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_uxwtj"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pu3n6"]
+albedo_color = Color(0.529947, 0.0159607, 1.44392e-07, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_gs0sy"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v7oee"]
+albedo_color = Color(0.529947, 0.0159607, 1.44392e-07, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_olmtm"]
+radius = 1.0
+height = 3.0
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_wxu3a"]
+properties/0/path = NodePath(".:berries")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:position")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[node name="Bush" type="Node3D" groups=["flora", "persist"]]
+script = ExtResource("1_ww0ai")
+
+[node name="BushMeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49961, 0)
+mesh = SubResource("CapsuleMesh_vjxuo")
+surface_material_override/0 = SubResource("StandardMaterial3D_6vxsv")
+
+[node name="BerryMeshInstance3D1" type="MeshInstance3D" parent="BushMeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.991211, 0.533531, 0)
+mesh = SubResource("SphereMesh_1wivi")
+surface_material_override/0 = SubResource("StandardMaterial3D_ugvs8")
+
+[node name="BerryMeshInstance3D2" type="MeshInstance3D" parent="BushMeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.489995, 1.18722, -0.499398)
+mesh = SubResource("SphereMesh_ng8vl")
+surface_material_override/0 = SubResource("StandardMaterial3D_qfen0")
+
+[node name="BerryMeshInstance3D3" type="MeshInstance3D" parent="BushMeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.664762, 1.19579, 0)
+mesh = SubResource("SphereMesh_g31xs")
+surface_material_override/0 = SubResource("StandardMaterial3D_fexpp")
+
+[node name="BerryMeshInstance3D4" type="MeshInstance3D" parent="BushMeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.117649, 0.55591, -1.00287)
+mesh = SubResource("SphereMesh_jpa8f")
+surface_material_override/0 = SubResource("StandardMaterial3D_1nwxo")
+
+[node name="BerryMeshInstance3D5" type="MeshInstance3D" parent="BushMeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.707369, 0.738103, 0.689769)
+mesh = SubResource("SphereMesh_eca8h")
+surface_material_override/0 = SubResource("StandardMaterial3D_vit7c")
+
+[node name="BerryMeshInstance3D6" type="MeshInstance3D" parent="BushMeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.117649, 1.14673, 0.73837)
+mesh = SubResource("SphereMesh_4m2bj")
+surface_material_override/0 = SubResource("StandardMaterial3D_a7r0q")
+
+[node name="BerryMeshInstance3D7" type="MeshInstance3D" parent="BushMeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.21808, 1.33234, -0.49546)
+mesh = SubResource("SphereMesh_b2hbs")
+surface_material_override/0 = SubResource("StandardMaterial3D_25hny")
+
+[node name="BerryMeshInstance3D8" type="MeshInstance3D" parent="BushMeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.788989, 0.687007, -0.565958)
+mesh = SubResource("SphereMesh_uxwtj")
+surface_material_override/0 = SubResource("StandardMaterial3D_pu3n6")
+
+[node name="BerryMeshInstance3D9" type="MeshInstance3D" parent="BushMeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55841, 1.05764, 0.555924)
+mesh = SubResource("SphereMesh_gs0sy")
+surface_material_override/0 = SubResource("StandardMaterial3D_v7oee")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." node_paths=PackedStringArray("root")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_ggt4o")
+root = NodePath("..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.372366, 0)
+shape = SubResource("CapsuleShape3D_olmtm")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_wxu3a")

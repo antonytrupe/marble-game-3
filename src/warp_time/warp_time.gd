@@ -67,6 +67,9 @@ func _update_radius():
 
 
 func _process(delta: float) -> void:
+
+	age += delta * warp_speed
+
 	if warp_speed > 120:
 		second_hand.visible = false
 	else:
@@ -81,8 +84,6 @@ func _process(delta: float) -> void:
 		hour_hand.visible = false
 	else:
 		hour_hand.visible = true
-
-	age += delta * warp_speed
 
 	#seconds hand
 	var seconds = int(age) % (60)

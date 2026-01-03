@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://di4ln3kjrvrgq"]
+
+[ext_resource type="Script" uid="uid://8tr4rupbnr6p" path="res://src/acorn/acorn.gd" id="1_ivuht"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_xfybs"]
+radius = 0.03
+
+[node name="Acorn" type="Node3D" groups=["flora", "persist"]]
+script = ExtResource("1_ivuht")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0302564, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.000121634, 0)
+shape = SubResource("SphereShape3D_xfybs")
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="RigidBody3D"]
+radius = 0.03

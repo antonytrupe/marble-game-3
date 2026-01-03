@@ -3,6 +3,11 @@ extends Node
 
 const CHARACTER_SCENE = preload("res://src/character/character.tscn")
 const PLAYER_SCENE = preload("res://src/player/player.gd")
+const STONE_SCENE = preload("res://src/stone/stone.tscn")
+const ACORN_SCENE = preload("res://src/acorn/acorn.tscn")
+const BUSH_SCENE = preload("res://src/bush/bush.tscn")
+const TREE_SCENE = preload("res://src/tree/tree.tscn")
+const MOB_SCENE = preload("res://src/monster/monster.tscn")
 
 ## key is unique id
 ## e.g. Steam:steam_id.
@@ -133,6 +138,8 @@ func start():
 	Steam.createLobby(Steam.LobbyType.LOBBY_TYPE_PUBLIC, lobby_members_max)
 
 
+
+
 @rpc("any_peer", "call_local")
 func chat(message):
 	debug(message)
@@ -140,12 +147,17 @@ func chat(message):
 	var peer_id = multiplayer.get_remote_sender_id()
 	var steam_id = multiplayer.multiplayer_peer.get_steam_id_for_peer_id(peer_id)
 
-	debug('steam_id:%s' % steam_id)
-	var p: Player = players['Steam:%s'%steam_id]
-	debug('p.current_character_id:%s' % p.current_character_id)
-	var c_name = str(p.current_character_id)
-	var c: MarbleCharacter = world.characters.get_node(c_name)
-	c.chat_bubble.rpc(message)
+
+
+	#debug('steam_id:%s' % steam_id)
+	var player: Player = players['Steam:%s'%steam_id]
+	#debug('p.current_character_id:%s' % p.current_character_id)
+	var c_name = str(player.current_character_id)
+	var character: MarbleCharacter = world.characters.get_node(c_name)
+	if message.begins_with("/"):
+		command(message,player,character)
+	else:
+		character.chat_bubble.rpc(message)
 
 
 #this is the function that runs on the server that any peer can call
@@ -157,10 +169,139 @@ func chat(message):
 		#client_chat.rpc(message)
 
 
-@rpc("any_peer")
-func command(message):
-	debug(message)
+func command(cmd: String, player: Player,character:MarbleCharacter):
+	print(cmd)
+	if !multiplayer.is_server():
+		print("not server")
+		return
+	var parts: PackedStringArray = cmd.replace("/", "").split(" ")
+	match parts[0]:
+		"s", "switch":
+			print("switch")
+			var target = character.get_target()
+			if target:
+				print(target.name)
+				print(target)
+				#Signals.CurrentPlayer.emit(target)
+			else:
+				print("no target")
+		"teleport":
+			if parts.size() >= 4:
+				character.position = Vector3(float(parts[1]), float(parts[2]), float(parts[3]))
+		"wander":
+			var count = 10
+			if parts.size() >= 2:
+				count = int(parts[1])
+			character._wander(count)
+		"action":
+			#todo create the action
+			var count = 1
+			var frequency = 1
+			if parts.size() >= 2:
+				count = int(parts[1])
+				if parts.size() >= 3:
+					frequency = int(parts[2])
+			character.add_action(count, frequency)
+		"spawn", "/spawn":
+			match parts[1]:
+				"monument","warp":
+					#_spawn_warp_monument()
+					pass
+				"mob", "monster":
+					var count = 1
+					if parts.size() >= 3:
+						count = int(parts[2])
+					_spawn_mob(count, character.position)
+				"stone", "stones","rocks","rock":
+					var count = 1
+					if parts.size() >= 3:
+						count = int(parts[2])
+					_spawn_stones(count, character.position)
 
+				"acorn", "acorns":
+					var count = 1
+					if parts.size() >= 3:
+						count = int(parts[2])
+					count = clampi(count, 1, 100)
+					_spawn_acorns(count, character.position)
+
+				"bush", "bushes":
+					var count = 1
+					if parts.size() >= 3:
+						count = int(parts[2])
+					_spawn_bushes(count, character.position)
+
+				"tree", "trees":
+					var count = 1
+					if parts.size() >= 3:
+						count = int(parts[2])
+					_spawn_trees(count, character.position)
+
+
+func _get_random_vector(radius: float, center: Vector3) -> Vector3:
+	#var rng = RandomNumberGenerator.new()
+	var r = radius * sqrt(randf())
+	var theta = randf() * 2 * PI
+	var x = center.x + r * cos(theta)
+	var z = center.z + r * sin(theta)
+	return Vector3(x, 0, z)
+
+
+func _spawn_acorns(count: int, center: Vector3):
+	count = clampi(count, 1, 100)
+	for i in count:
+		var acorn = ACORN_SCENE.instantiate()
+		acorn.name = acorn.name + "%010d" % randi()
+		acorn.global_position = _get_random_vector(10, center)
+		#var chunk = chunks.get_chunk(acorn.global_position)
+		world.flora.add_child(acorn)
+
+
+func _spawn_bushes(count: int, center: Vector3):
+	count = clampi(count, 1, 100)
+	for i in count:
+		var bush = BUSH_SCENE.instantiate()
+		bush.name = bush.name + "%010d" % randi()
+		bush.global_position = _get_random_vector(10, center)
+		#var chunk = chunks.get_chunk(bush.global_position)
+		world.flora.add_child(bush)
+
+
+func _spawn_trees(count: int, center: Vector3):
+	count = clampi(count, 1, 100)
+	for i in count:
+		var tree = TREE_SCENE.instantiate()
+		tree.name = tree.name + "%010d" % randi()
+		#TODO do this more righter
+		tree.global_position = _get_random_vector(10, center)
+		#var chunk = chunks.get_chunk(tree.global_position)
+		world.flora.add_child(tree)
+
+
+func _spawn_stones(quantity: int, p: Vector3):
+	print('_spawn_stones')
+	quantity = clampi(quantity, 1, 100)
+	for i in quantity:
+		var stone = STONE_SCENE.instantiate()
+		stone.name = stone.name + "%010d" % randi()
+		stone.position = _get_random_vector(10, p)
+		#var chunk: Chunk = chunks.get_chunk(stone.global_position)
+		world.terra.add_child(stone)
+
+
+func _spawn_mob(count: int, center: Vector3):
+	for i in count:
+		var mob = MOB_SCENE.instantiate()
+		mob.name = mob.name + "%010d" % randi()
+		#var chunk = chunks.get_chunk(center)
+		var y = randf_range(0, PI)
+		print("y:", y)  # Debug
+
+		mob.rotation.y = y
+		world.add_child(mob)
+
+		print("After rotation:", mob.rotation.y)  # Debug
+		mob.position = _get_random_vector(10, center)
 
 func _load_player(player_name, data: Dictionary):
 	var p = PLAYER_SCENE.new()
