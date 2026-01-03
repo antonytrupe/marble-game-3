@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://c70a50dqd5dfx"]
+[gd_scene load_steps=3 format=3 uid="uid://c70a50dqd5dfx"]
 
 [ext_resource type="Script" uid="uid://bm4xlm4n6hqkm" path="res://src/client/client.gd" id="1_lgb4g"]
 [ext_resource type="Script" uid="uid://jnoxhwe83f6c" path="res://src/chat_input.gd" id="2_1drpi"]
-[ext_resource type="PackedScene" uid="uid://dl0mmfrncxlbo" path="res://src/time_warp/time_warp_ui.tscn" id="3_mgmel"]
 
 [node name="Client" type="Control"]
 visible = false
@@ -22,15 +21,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="TimeWarpUI" parent="UI" instance=ExtResource("3_mgmel")]
-layout_mode = 1
-anchors_preset = 10
-anchor_bottom = 0.0
-offset_left = 473.0
-offset_right = -439.0
-offset_bottom = 51.0
-grow_vertical = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI"]
 layout_mode = 1
