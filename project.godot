@@ -19,7 +19,6 @@ config/icon="res://icon.svg"
 
 Debug="*res://src/debug/debug.gd"
 Persistance="*res://src/server/persistance.gd"
-TimeWarp="*res://src/time_warp/time_warp.gd"
 
 [debug]
 

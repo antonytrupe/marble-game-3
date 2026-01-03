@@ -142,8 +142,8 @@ func set_current_character(character_id):
 	debug('set_current_character:', character_id)
 	current_character = world.characters.get_node(character_id)
 	#to get the warp ui to update
-	TimeWarp.warp_change.emit(current_character.warp_speed)
-	TimeWarp.warp_change.connect(set_current_character_warp_speed)
+	#TimeWarp.warp_change.emit(current_character.warp_speed)
+	#TimeWarp.warp_change.connect(set_current_character_warp_speed)
 	current_character.camera.current = true
 
 
