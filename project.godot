@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Debug="*res://src/debug/debug.gd"
 Persistance="*res://src/server/persistance.gd"
+Utilites="*res://src/utilites.gd"
 
 [debug]
 
