@@ -101,10 +101,8 @@ material = SubResource("ShaderMaterial_rydde")
 radius = 1.0
 height = 2.0
 
-[node name="WarpMonument" type="Node3D"]
+[node name="WarpMonument" type="Node3D" groups=["persist"]]
 script = ExtResource("1_ln326")
-age = 1767490047.4524405
-warp_speed = 30
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_ln326")
