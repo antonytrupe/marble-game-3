@@ -32,6 +32,8 @@ var mode: MODE = MODE.WALK # :
 
 var speed = 30.0
 
+var warp_monuments = {}
+
 ## current actual warp speed
 @export var warp_speed = 1:
 	set = _set_warp_speed
@@ -86,7 +88,6 @@ func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta * warp_speed * warp_speed
-
 
 
 	move_and_slide()
@@ -168,7 +169,6 @@ func get_data() -> Dictionary:
 		"player_id": player_id,
 		"player_name": player_name,
 		"warp_speed": warp_speed,
-		"position": var_to_str(position),
 		"transform": var_to_str(transform),
 	}
 
