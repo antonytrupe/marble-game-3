@@ -5,6 +5,7 @@ extends Node3D
 @onready var flora: Node3D = %Flora
 @onready var fauna: Node3D = %Fauna
 @onready var terra = %Terra
+@onready var warp_monuments: Node = %WarpMonuments
 
 
 func _ready() -> void:

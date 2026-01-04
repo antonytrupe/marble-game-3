@@ -1,7 +1,6 @@
-[gd_scene load_steps=10 format=3 uid="uid://hwslegxxru8h"]
+[gd_scene load_steps=9 format=3 uid="uid://hwslegxxru8h"]
 
 [ext_resource type="Script" uid="uid://bod6lvq43qjsc" path="res://src/world/world.gd" id="1_f3sb7"]
-[ext_resource type="PackedScene" uid="uid://bdkw10fdrlljw" path="res://src/warp_monument/warp_monument.tscn" id="2_6fy3g"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f3sb7"]
 
@@ -26,12 +25,6 @@ ambient_light_color = Color(0.7750634, 0.7750634, 0.7750634, 1)
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_f3sb7")
-
-[node name="WarpMonument2" parent="." instance=ExtResource("2_6fy3g")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.568985, 0, 0)
-
-[node name="WarpMonument1" parent="." instance=ExtResource("2_6fy3g")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.388697, 0, 0)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_f3sb7")
@@ -70,4 +63,7 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 
 [node name="Terra" type="Node" parent="."]
+unique_name_in_owner = true
+
+[node name="WarpMonuments" type="Node" parent="."]
 unique_name_in_owner = true
