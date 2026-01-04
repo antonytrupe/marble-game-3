@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://d0gg3xuxeqxg1"]
 
-[ext_resource type="Shader" uid="uid://dtl1y23tl3kfx" path="res://src/warp_time/bubble2.gdshader" id="1_3omkl"]
+[ext_resource type="Shader" uid="uid://dtl1y23tl3kfx" path="res://src/warp_monument/warp_sphere.gdshader" id="1_3omkl"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3omkl"]
 resource_local_to_scene = true

@@ -1,8 +1,8 @@
 [gd_scene load_steps=19 format=3 uid="uid://bdkw10fdrlljw"]
 
-[ext_resource type="Script" uid="uid://b8xygpeqk5c05" path="res://src/warp_time/warp_time.gd" id="1_ln326"]
+[ext_resource type="Script" uid="uid://b8xygpeqk5c05" path="res://src/warp_monument/warp_monument.gd" id="1_ln326"]
 [ext_resource type="PackedScene" uid="uid://jnsejnjhhfih" path="res://src/Slider3D/Slider3D.tscn" id="2_kycxd"]
-[ext_resource type="PackedScene" uid="uid://d0gg3xuxeqxg1" path="res://src/warp_time/warp_sphere.tscn" id="3_elqtf"]
+[ext_resource type="PackedScene" uid="uid://d0gg3xuxeqxg1" path="res://src/warp_monument/warp_sphere.tscn" id="3_elqtf"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ln326"]
 properties/0/path = NodePath(".:age")
@@ -46,7 +46,7 @@ center_offset = Vector3(0.05, 0, 0.05)
 [sub_resource type="SphereShape3D" id="SphereShape3D_rydde"]
 radius = 1.0
 
-[sub_resource type="Shader" id="Shader_elqtf"]
+[sub_resource type="Shader" id="Shader_wyfss"]
 resource_local_to_scene = true
 code = "shader_type spatial;
 // depth_draw_always fixes many \"missing background\" issues in Godot 4
@@ -89,7 +89,7 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rydde"]
 resource_local_to_scene = true
 render_priority = 0
-shader = SubResource("Shader_elqtf")
+shader = SubResource("Shader_wyfss")
 shader_parameter/blur_amount = 0.02000000095
 shader_parameter/iterations = 8
 shader_parameter/bubble_color = Color(0.7, 0.8, 1, 0.1)
@@ -103,7 +103,7 @@ height = 2.0
 
 [node name="WarpMonument" type="Node3D"]
 script = ExtResource("1_ln326")
-age = 1767484305.0105984
+age = 1767490047.4524405
 warp_speed = 30
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
@@ -112,7 +112,7 @@ replication_config = SubResource("SceneReplicationConfig_ln326")
 [node name="Label3D" type="Label3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.022458851, 2.1898332, 3.5527137e-15)
-text = "11:51:45"
+text = "01:27:27"
 
 [node name="Clock" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.022458851, 1.6232744, 0)
@@ -120,7 +120,7 @@ mesh = SubResource("CylinderMesh_elqtf")
 
 [node name="SecondHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(1.3907218e-07, 0, 0.99999905, 0, 1.0000015, 0, -1.0000091, 0, 1.3907079e-07, 0, -0.1, 0)
+transform = Transform3D(0.9510652, 0, -0.30901664, 0, 1.0000015, 0, 0.30901974, 0, 0.95105565, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/SecondHand"]
 transform = Transform3D(1, 8.881783e-16, 3.547835e-16, -8.881783e-16, 1, 6.302221e-31, -3.547835e-16, -9.453331e-31, 1, 0, 0, -0.23864883)
@@ -129,7 +129,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_kycxd")
 
 [node name="MinuteHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(-0.64944714, 0, 0.7604054, 0, 1, 0, -0.7604054, 0, -0.64944714, 0, -0.1, 0)
+transform = Transform3D(0.96455646, 0, -0.2638727, 0, 1, 0, 0.2638727, 0, 0.96455646, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/MinuteHand"]
 transform = Transform3D(1.0000001, -1.7763568e-15, -3.5478356e-16, -8.881784e-16, 1, 0, -3.5478354e-16, 0, 1.0000001, 0, 0, -0.25)
@@ -139,7 +139,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_elqtf")
 
 [node name="HourHand" type="Node3D" parent="Clock"]
 unique_name_in_owner = true
-transform = Transform3D(-0.9974084, 0, 0.071932495, 0, 1, 0, -0.071932495, 0, -0.9974084, 0, -0.1, 0)
+transform = Transform3D(-0.7226647, 0, -0.6911971, 0, 1, 0, 0.6911971, 0, -0.7226647, 0, -0.1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/HourHand"]
 transform = Transform3D(1.0000001, -1.7763568e-15, -3.5478356e-16, -8.881784e-16, 1, 0, -3.5478354e-16, 0, 1.0000001, 0, 0, -0.17104703)
@@ -158,7 +158,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.35649967, 0.11404601)
 
 [node name="Day" type="Node3D" parent="Calendar/Node3D"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2857143, -0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42857143, -0.5, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Calendar/Node3D/Day"]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
@@ -166,7 +166,7 @@ mesh = SubResource("PlaneMesh_n6kfb")
 
 [node name="DayOfMonth" type="Label3D" parent="Calendar/Node3D/Day"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.043460965, -0.040435076, 0.012545377)
-text = "17"
+text = "18"
 
 [node name="Node3D2" type="Node3D" parent="Calendar"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.11)
@@ -176,7 +176,6 @@ text = "March"
 
 [node name="WarpSlider" parent="." instance=ExtResource("2_kycxd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 1.1920929e-07, 0)
-CUSTOM_VALUES = Array[int]([1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 60, 300, 600, 1800, 3600, 86400, 604800, 2419200, 24192000])
 
 [node name="RadiusSlider" parent="." instance=ExtResource("2_kycxd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.74801326, 0, 0)

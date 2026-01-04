@@ -1,5 +1,5 @@
-@tool
-class_name WarpTime
+#@tool
+class_name WarpMonument
 extends Node3D
 
 #[1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 60,
@@ -121,6 +121,7 @@ func _process(delta: float) -> void:
 
 
 func _on_warp_slider_value_changed(value: float) -> void:
+	print('_on_warp_slider_value_changed')
 	warp_speed = int(value)
 
 
