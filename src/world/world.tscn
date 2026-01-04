@@ -25,10 +25,13 @@ sky = SubResource("Sky_4717r")
 ambient_light_color = Color(0.7750634, 0.7750634, 0.7750634, 1)
 
 [node name="World" type="Node3D"]
-visible = false
 script = ExtResource("1_f3sb7")
 
-[node name="WarpMonument" parent="." instance=ExtResource("2_6fy3g")]
+[node name="WarpMonument2" parent="." instance=ExtResource("2_6fy3g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.568985, 0, 0)
+
+[node name="WarpMonument1" parent="." instance=ExtResource("2_6fy3g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.388697, 0, 0)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_f3sb7")

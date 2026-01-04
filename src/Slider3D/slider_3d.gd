@@ -24,7 +24,6 @@ func _set_value(v):
 		value_changed.emit(value)
 
 func _input(event: InputEvent):
-	print('_input')
 	# Stop dragging when the mouse button is released anywhere
 	if is_dragging and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
@@ -67,7 +66,6 @@ func update_value(y: float):
 
 
 func _on_slider_ball_input_event(_camera, event, _position, _normal, _shape_idx):
-	print('_on_slider_ball_input_event')
 	# Start dragging when the handle itself is clicked
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:

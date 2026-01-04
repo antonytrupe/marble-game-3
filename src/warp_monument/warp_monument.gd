@@ -40,7 +40,10 @@ const MONTHS = [
 @onready var warp_slider: Slider3D = $WarpSlider
 @onready var radius_slider: Slider3D = $RadiusSlider
 @onready var sphere: MeshInstance3D = %Sphere
+@onready var scanner_shape: CollisionShape3D = %ScannerShape
 
+
+var bodies = {}
 
 func _ready():
 	age = Time.get_unix_time_from_system()
@@ -49,6 +52,8 @@ func _ready():
 func _set_warp_speed(value):
 	if value != warp_speed:
 		warp_speed = value
+		for body in bodies.values():
+			body.warp_speed = warp_speed
 		if warp_slider:
 			warp_slider.value = value
 
@@ -64,10 +69,10 @@ func _set_radius(value):
 func _update_radius():
 	sphere.mesh.radius = radius
 	sphere.mesh.height = radius * 2
+	scanner_shape.shape.radius = radius
 
 
 func _process(delta: float) -> void:
-
 	age += delta * warp_speed
 
 	if warp_speed > 120:
@@ -121,9 +126,26 @@ func _process(delta: float) -> void:
 
 
 func _on_warp_slider_value_changed(value: float) -> void:
-	print('_on_warp_slider_value_changed')
+	#print('_on_warp_slider_value_changed')
 	warp_speed = int(value)
 
 
 func _on_radius_slider_value_changed(value: float) -> void:
 	radius = int(value)
+
+
+func _on_scanner_body_entered(body: Node3D) -> void:
+	pass # Replace with function body.
+	#print('_on_scanner_body_entered %s' %body.get_class())
+	if body is MarbleCharacter:
+		print('gg %s' % body.name)
+		bodies[body.name] = body
+		body.warp_speed = warp_speed
+
+
+func _on_scanner_body_exited(body: Node3D) -> void:
+	pass # Replace with function body.
+	#print('_on_scanner_body_exited')
+	if body is MarbleCharacter:
+		print('ff %s' % body.name)
+		bodies.erase(body.name)

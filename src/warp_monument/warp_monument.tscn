@@ -182,17 +182,22 @@ CUSTOM_VALUES = Array[int]([1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 60, 300, 600, 1800
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.74801326, 0, 0)
 CUSTOM_VALUES = Array[int]([1, 2, 3, 6, 10, 20, 60, 300, 600])
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="ScannerArea" type="Area3D" parent="." groups=["persist"]]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+collision_layer = 0
+collision_mask = 31
 input_ray_pickable = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="ScannerShape" type="CollisionShape3D" parent="ScannerArea"]
 unique_name_in_owner = true
 shape = SubResource("SphereShape3D_rydde")
 
-[node name="Sphere" parent="Area3D" instance=ExtResource("3_elqtf")]
+[node name="Sphere" parent="ScannerArea" instance=ExtResource("3_elqtf")]
 unique_name_in_owner = true
 mesh = SubResource("SphereMesh_rydde")
 
 [connection signal="value_changed" from="WarpSlider" to="." method="_on_warp_slider_value_changed"]
 [connection signal="value_changed" from="RadiusSlider" to="." method="_on_radius_slider_value_changed"]
+[connection signal="body_entered" from="ScannerArea" to="." method="_on_scanner_body_entered"]
+[connection signal="body_exited" from="ScannerArea" to="." method="_on_scanner_body_exited"]

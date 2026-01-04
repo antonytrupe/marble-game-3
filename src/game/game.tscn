@@ -12,9 +12,11 @@ script = ExtResource("1_yarin")
 
 [node name="Client" parent="." instance=ExtResource("5_clwl7")]
 unique_name_in_owner = true
+visible = false
 mouse_filter = 1
 
 [node name="World" parent="." instance=ExtResource("2_jhw8o")]
+visible = false
 
 [node name="Server" parent="." instance=ExtResource("3_n7s5x")]
 unique_name_in_owner = true
