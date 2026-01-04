@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://dibu85hjscd1f"]
 
-[ext_resource type="PackedScene" uid="uid://bdkw10fdrlljw" path="res://src/warp_time/warp_time.tscn" id="1_gwkrg"]
+[ext_resource type="PackedScene" uid="uid://bdkw10fdrlljw" path="res://src/warp_monument/warp_monument.tscn" id="1_gwkrg"]
 [ext_resource type="PackedScene" uid="uid://dg5pngnp7smv8" path="res://src/water.tscn" id="2_y2bxs"]
 
 [sub_resource type="Environment" id="Environment_gwkrg"]

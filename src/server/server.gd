@@ -72,6 +72,7 @@ func _ready():
 
 
 func quit():
+	world.visible=false
 	print("server quit")
 	Steam.leaveLobby(lobby_id)
 	players.keys().all(
@@ -129,6 +130,7 @@ func start():
 	_persistance_signals()
 	_steam_signals()
 	# load everything from persistance
+	world.visible=true
 	Persistance.load.emit()
 
 	get_viewport().get_window().title += " - " + "SERVER"
@@ -169,7 +171,7 @@ func chat(message):
 		#client_chat.rpc(message)
 
 
-func command(cmd: String, player: Player,character:MarbleCharacter):
+func command(cmd: String, _player: Player,character:MarbleCharacter):
 	print(cmd)
 	if !multiplayer.is_server():
 		print("not server")

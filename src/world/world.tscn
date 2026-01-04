@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://hwslegxxru8h"]
 
 [ext_resource type="Script" uid="uid://bod6lvq43qjsc" path="res://src/world/world.gd" id="1_f3sb7"]
-[ext_resource type="PackedScene" uid="uid://cxdxuhs5yk36t" path="res://src/stone/stone.tscn" id="2_6fy3g"]
+[ext_resource type="PackedScene" uid="uid://bdkw10fdrlljw" path="res://src/warp_monument/warp_monument.tscn" id="2_6fy3g"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f3sb7"]
 
@@ -12,7 +12,7 @@ resource_local_to_scene = true
 size = Vector2(300, 300)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f3sb7"]
-albedo_color = Color(0.1882353, 0.34117648, 0.11372549, 1)
+albedo_color = Color(0.0810126, 0.1661947, 0.039572515, 1)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tcf2h"]
 
@@ -28,20 +28,19 @@ ambient_light_color = Color(0.7750634, 0.7750634, 0.7750634, 1)
 visible = false
 script = ExtResource("1_f3sb7")
 
+[node name="WarpMonument" parent="." instance=ExtResource("2_6fy3g")]
+
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_f3sb7")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
-visible = false
 collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-visible = false
 shape = SubResource("WorldBoundaryShape3D_gv5m4")
 debug_fill = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-visible = false
 mesh = SubResource("PlaneMesh_gv5m4")
 surface_material_override/0 = SubResource("StandardMaterial3D_f3sb7")
 
@@ -69,5 +68,3 @@ unique_name_in_owner = true
 
 [node name="Terra" type="Node" parent="."]
 unique_name_in_owner = true
-
-[node name="Stone" parent="Terra" instance=ExtResource("2_6fy3g")]
