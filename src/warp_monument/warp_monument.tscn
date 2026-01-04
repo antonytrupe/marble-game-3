@@ -176,6 +176,7 @@ text = "March"
 
 [node name="WarpSlider" parent="." instance=ExtResource("2_kycxd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 1.1920929e-07, 0)
+CUSTOM_VALUES = Array[int]([1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 60, 300, 600, 1800, 3600, 86400, 604800, 2419200, 24192000])
 
 [node name="RadiusSlider" parent="." instance=ExtResource("2_kycxd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.74801326, 0, 0)

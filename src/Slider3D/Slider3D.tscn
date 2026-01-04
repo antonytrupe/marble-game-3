@@ -17,7 +17,6 @@ height = 0.2
 
 [node name="WarpSlider" type="Node3D"]
 script = ExtResource("1_vqyuw")
-CUSTOM_VALUES = null
 value = 15.0
 
 [node name="Node3D" type="Node3D" parent="."]

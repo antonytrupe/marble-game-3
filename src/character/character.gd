@@ -162,15 +162,6 @@ func _ready():
 	#(warp_detector.shape as SphereShape3D).radius=warp_speed*30
 
 
-#func serialize_transform3d() -> Dictionary:
-	#var data = {}
-	#data["origin"] = JSON.stringify(transform.origin) # Convert Vector3 to array [x, y, z]
-	#data["basis_x"] = JSON.stringify(transform.basis.x) # Convert Basis vectors to arrays
-	#data["basis_y"] = JSON.stringify(transform.basis.y)
-	#data["basis_z"] = JSON.stringify(transform.basis.z)
-	#return data
-
-
 func get_data() -> Dictionary:
 	return {
 		"name": name,

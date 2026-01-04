@@ -10,13 +10,13 @@
 [node name="Game" type="Node"]
 script = ExtResource("1_yarin")
 
-[node name="World" parent="." instance=ExtResource("2_jhw8o")]
-
-[node name="Server" parent="." instance=ExtResource("3_n7s5x")]
+[node name="Client" parent="." instance=ExtResource("5_clwl7")]
 unique_name_in_owner = true
 mouse_filter = 1
 
-[node name="Client" parent="." instance=ExtResource("5_clwl7")]
+[node name="World" parent="." instance=ExtResource("2_jhw8o")]
+
+[node name="Server" parent="." instance=ExtResource("3_n7s5x")]
 unique_name_in_owner = true
 mouse_filter = 1
 
@@ -75,6 +75,7 @@ layout_mode = 2
 text = "Quit"
 
 [node name="Debug" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 285.0
