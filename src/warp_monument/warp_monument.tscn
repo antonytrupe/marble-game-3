@@ -44,6 +44,7 @@ size = Vector2(0.2, 0.2)
 center_offset = Vector3(0.05, 0, 0.05)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_rydde"]
+resource_local_to_scene = true
 radius = 1.0
 
 [sub_resource type="Shader" id="Shader_wyfss"]
@@ -175,16 +176,18 @@ text = "March"
 [node name="WarpSlider" parent="." instance=ExtResource("2_kycxd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 1.1920929e-07, 0)
 CUSTOM_VALUES = Array[int]([1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 60, 300, 600, 1800, 3600, 86400, 604800, 2419200, 24192000])
+show_label = true
 
 [node name="RadiusSlider" parent="." instance=ExtResource("2_kycxd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.74801326, 0, 0)
 CUSTOM_VALUES = Array[int]([1, 2, 3, 6, 10, 20, 60, 300, 600])
+show_label = true
 
 [node name="ScannerArea" type="Area3D" parent="." groups=["persist"]]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
 collision_layer = 0
-collision_mask = 31
+collision_mask = 30
 input_ray_pickable = false
 
 [node name="ScannerShape" type="CollisionShape3D" parent="ScannerArea"]

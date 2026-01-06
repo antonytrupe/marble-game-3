@@ -67,9 +67,11 @@ func _set_radius(value):
 
 
 func _update_radius():
-	sphere.mesh.radius = radius
-	sphere.mesh.height = radius * 2
-	scanner_shape.shape.radius = radius
+	if sphere:
+		sphere.mesh.radius = radius
+		sphere.mesh.height = radius * 2
+	if scanner_shape:
+		scanner_shape.shape.radius = radius
 
 
 func _process(delta: float) -> void:
@@ -135,17 +137,26 @@ func _on_radius_slider_value_changed(value: float) -> void:
 
 
 func _on_scanner_body_entered(body: Node3D) -> void:
-	pass # Replace with function body.
-	#print('_on_scanner_body_entered %s' %body.get_class())
+	print('_on_scanner_body_entered %s:%s %s' % [body.get_class(), body.name, name])
 	if body is MarbleCharacter:
-		print('gg %s' % body.name)
+		#print('gg %s' % body.name)
 		bodies[body.name] = body
 		body.warp_speed = warp_speed
 
 
 func _on_scanner_body_exited(body: Node3D) -> void:
-	pass # Replace with function body.
-	#print('_on_scanner_body_exited')
+	print('_on_scanner_body_exited %s:%s' % [body.get_class(), body.name])
 	if body is MarbleCharacter:
-		print('ff %s' % body.name)
-		bodies.erase(body.name)
+		#print('ff %s' % body.name)
+		var removed = bodies.erase(body.name)
+		# print('removed:%s %s' % [removed, body.name])
+		# print(bodies)
+
+
+func get_data() -> Dictionary:
+	return {
+		"name": name,
+		"warp_speed": warp_speed,
+		"radius": radius,
+		"transform": var_to_str(transform),
+	}

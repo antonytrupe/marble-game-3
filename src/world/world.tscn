@@ -29,10 +29,10 @@ script = ExtResource("1_f3sb7")
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_f3sb7")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="FloorStaticBody3D" type="StaticBody3D" parent="."]
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="FloorCollisionShape3D" type="CollisionShape3D" parent="FloorStaticBody3D"]
 shape = SubResource("WorldBoundaryShape3D_gv5m4")
 debug_fill = false
 

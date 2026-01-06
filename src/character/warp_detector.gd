@@ -5,10 +5,10 @@ extends Area3D
 @onready var character: MarbleCharacter = owner
 
 func _on_body_entered(body: Node3D) -> void:
-	print(body.name)
+	#print(body.name)
 	nearby_bodies.set(body.name, body)
 
 
 func _on_body_exited(body: Node3D) -> void:
-	print(body.name)
+	#print(body.name)
 	nearby_bodies.erase(body.name)

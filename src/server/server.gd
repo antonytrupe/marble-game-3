@@ -8,6 +8,7 @@ const ACORN_SCENE = preload("res://src/acorn/acorn.tscn")
 const BUSH_SCENE = preload("res://src/bush/bush.tscn")
 const TREE_SCENE = preload("res://src/tree/tree.tscn")
 const MOB_SCENE = preload("res://src/monster/monster.tscn")
+const WARP_MONUMENT_SCENE = preload("res://src/warp_monument/warp_monument.tscn")
 
 ## key is unique id
 ## e.g. Steam:steam_id.
@@ -47,32 +48,43 @@ func _multiplayer_signals():
 func _persistance_signals():
 	Persistance.load_player.connect(_load_player)
 	Persistance.load_character.connect(_load_character)
+	Persistance.load_warp_monument.connect(_load_warp_monument)
+
+
+func _load_warp_monument(object_name, data: Dictionary):
+	var w: WarpMonument = WARP_MONUMENT_SCENE.instantiate()
+	w.name = object_name
+	w.ready.connect(func():
+		#print(data)
+		if data.has("radius"):
+			w.radius = data.radius
+		if data.has("warp_speed"):
+			w.warp_speed = data.warp_speed
+		)
+	if data.has("transform"):
+		w.transform = str_to_var(data.transform)
+	world.warp_monuments.add_child(w)
 
 
 func _load_character(character_name, data: Dictionary):
 	var c: MarbleCharacter = CHARACTER_SCENE.instantiate()
 	c.name = character_name
-	world.characters.add_child(c, true)
-	if data.has("player_id"):
-		c.player_id = data.player_id
-	if data.has("player_name"):
-		c.player_name = data.player_name
-	if data.has("warp_speed"):
-		c.warp_speed = data.warp_speed
-	if data.has("position"):
-		c.position = str_to_var(data.position)
+	c.ready.connect(func():
+		if data.has("player_id"):
+			c.player_id = data.player_id
+		if data.has("player_name"):
+			c.player_name = data.player_name
+		if data.has("warp_speed"):
+			c.warp_speed = data.warp_speed
+
+		)
 	if data.has("transform"):
-		c.transform = str_to_var(data.transform)
-	if data.has("rotation"):
-		c.rotation = str_to_var(data.rotation)
-
-
-func _ready():
-	pass
+			c.transform = str_to_var(data.transform)
+	world.characters.add_child(c)
 
 
 func quit():
-	world.visible=false
+	world.visible = false
 	print("server quit")
 	Steam.leaveLobby(lobby_id)
 	players.keys().all(
@@ -84,6 +96,12 @@ func quit():
 	world.characters.get_children().all(
 		func(character):
 			Persistance.persist.emit("MarbleCharacter", character)
+			return true
+	)
+
+	world.warp_monuments.get_children().all(
+		func(w):
+			Persistance.persist.emit("WarpMonument", w)
 			return true
 	)
 
@@ -130,7 +148,7 @@ func start():
 	_persistance_signals()
 	_steam_signals()
 	# load everything from persistance
-	world.visible=true
+	world.visible = true
 	Persistance.load.emit()
 
 	get_viewport().get_window().title += " - " + "SERVER"
@@ -138,8 +156,6 @@ func start():
 	var lobby_members_max: int = 4
 	#fires _on_lobby_created
 	Steam.createLobby(Steam.LobbyType.LOBBY_TYPE_PUBLIC, lobby_members_max)
-
-
 
 
 @rpc("any_peer", "call_local")
@@ -150,14 +166,13 @@ func chat(message):
 	var steam_id = multiplayer.multiplayer_peer.get_steam_id_for_peer_id(peer_id)
 
 
-
 	#debug('steam_id:%s' % steam_id)
 	var player: Player = players['Steam:%s'%steam_id]
 	#debug('p.current_character_id:%s' % p.current_character_id)
 	var c_name = str(player.current_character_id)
 	var character: MarbleCharacter = world.characters.get_node(c_name)
 	if message.begins_with("/"):
-		command(message,player,character)
+		command(message, player, character)
 	else:
 		character.chat_bubble.rpc(message)
 
@@ -171,7 +186,7 @@ func chat(message):
 		#client_chat.rpc(message)
 
 
-func command(cmd: String, _player: Player,character:MarbleCharacter):
+func command(cmd: String, _player: Player, character: MarbleCharacter):
 	print(cmd)
 	if !multiplayer.is_server():
 		print("not server")
@@ -206,7 +221,7 @@ func command(cmd: String, _player: Player,character:MarbleCharacter):
 			character.add_action(count, frequency)
 		"spawn", "/spawn":
 			match parts[1]:
-				"monument","warp":
+				"monument", "warp":
 					#_spawn_warp_monument()
 					pass
 				"mob", "monster":
@@ -214,7 +229,7 @@ func command(cmd: String, _player: Player,character:MarbleCharacter):
 					if parts.size() >= 3:
 						count = int(parts[2])
 					_spawn_mob(count, character.position)
-				"stone", "stones","rocks","rock":
+				"stone", "stones", "rocks", "rock":
 					var count = 1
 					if parts.size() >= 3:
 						count = int(parts[2])
@@ -297,12 +312,12 @@ func _spawn_mob(count: int, center: Vector3):
 		mob.name = mob.name + "%010d" % randi()
 		#var chunk = chunks.get_chunk(center)
 		var y = randf_range(0, PI)
-		print("y:", y)  # Debug
+		print("y:", y) # Debug
 
 		mob.rotation.y = y
 		world.add_child(mob)
 
-		print("After rotation:", mob.rotation.y)  # Debug
+		print("After rotation:", mob.rotation.y) # Debug
 		mob.position = _get_random_vector(10, center)
 
 func _load_player(player_name, data: Dictionary):
@@ -386,6 +401,6 @@ func _create_character():
 	var c: MarbleCharacter = CHARACTER_SCENE.instantiate()
 	c.name = str(randi())
 	c.position = Vector3(randf_range(-100, 100), 0, randf_range(-100, 100))
-	world.characters.add_child(c, true)
+	world.characters.add_child(c)
 	Persistance.persist.emit("MarbleCharacter", c)
 	return c

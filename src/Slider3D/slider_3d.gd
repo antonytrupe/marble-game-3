@@ -4,24 +4,33 @@ extends Node3D
 
 @export var CUSTOM_VALUES: Array[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
 								]
-
+@export var show_label: bool = false
 signal drag_ended(value_changed: bool)
 signal drag_started()
 #signal changed() #emitted with min/max/custom_values changes
 signal value_changed(value: float)
 
 var is_dragging: bool = false
-var max_distance = 2
+var max_distance = 2.0
 @onready var slider_ball: StaticBody3D = %SliderBall
+@onready var label_3d: Label3D = %Label3D
 
 
-@export var value: float = 0.0:
+@export var value: float = 1.0:
 	set = _set_value
 
+
+func _ready():
+	update_position_to_value()
+	label_3d.visible = show_label
+
 func _set_value(v):
+	#print('slider3d._set_value: %s' % v)
 	if v != value:
 		value = v
+		label_3d.text = str(value)
 		value_changed.emit(value)
+		update_position_to_value()
 
 func _input(event: InputEvent):
 	# Stop dragging when the mouse button is released anywhere
@@ -33,6 +42,18 @@ func _input(event: InputEvent):
 	# Update position while dragging
 	if is_dragging and event is InputEventMouseMotion:
 		update_position_to_mouse()
+
+
+func update_position_to_value():
+	#print(slider_ball)
+	if slider_ball:
+		for i in range(0, CUSTOM_VALUES.size() - 1):
+			if value >= CUSTOM_VALUES[i]:
+				#TODO just make sure its between values, don't jump to lower tick
+				var y = i / float(CUSTOM_VALUES.size()) * max_distance
+				slider_ball.position.y = y
+			else:
+				break
 
 
 func update_position_to_mouse():
