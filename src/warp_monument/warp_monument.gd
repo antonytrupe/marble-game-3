@@ -29,6 +29,7 @@ const MONTHS = [
 @export var radius: int = 1:
 	set = _set_radius
 
+var bodies = {}
 
 @onready var hour_hand: Node3D = %HourHand
 @onready var second_hand: Node3D = %SecondHand
@@ -43,7 +44,7 @@ const MONTHS = [
 @onready var scanner_shape: CollisionShape3D = %ScannerShape
 
 
-var bodies = {}
+
 
 func _ready():
 	age = Time.get_unix_time_from_system()
@@ -148,7 +149,7 @@ func _on_scanner_body_exited(body: Node3D) -> void:
 	print('_on_scanner_body_exited %s:%s' % [body.get_class(), body.name])
 	if body is MarbleCharacter:
 		#print('ff %s' % body.name)
-		var removed = bodies.erase(body.name)
+		bodies.erase(body.name)
 		# print('removed:%s %s' % [removed, body.name])
 		# print(bodies)
 
