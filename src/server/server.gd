@@ -222,7 +222,7 @@ func command(cmd: String, _player: Player, character: MarbleCharacter):
 		"spawn", "/spawn":
 			match parts[1]:
 				"monument", "warp":
-					#_spawn_warp_monument()
+					_spawn_warp_monument(character.position)
 					pass
 				"mob", "monster":
 					var count = 1
@@ -262,6 +262,20 @@ func _get_random_vector(radius: float, center: Vector3) -> Vector3:
 	var x = center.x + r * cos(theta)
 	var z = center.z + r * sin(theta)
 	return Vector3(x, 0, z)
+
+
+func _spawn_warp_monument(center: Vector3):
+	#TODO
+	var m: WarpMonument = WARP_MONUMENT_SCENE.instantiate()
+	m.name = m.name + "%010d" % randi()
+	#var chunk = chunks.get_chunk(center)
+	var y = randf_range(0, PI)
+	print("y:", y) # Debug
+
+	m.rotation.y = y
+	m.position = _get_random_vector(10, center)
+
+	world.warp_monuments.add_child(m)
 
 
 func _spawn_acorns(count: int, center: Vector3):
