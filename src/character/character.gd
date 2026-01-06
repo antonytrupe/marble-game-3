@@ -58,15 +58,15 @@ func is_server() -> bool:
 	return multiplayer.is_server()
 
 
-func update_neighbors_warp():
-	pass
-
-
-func get_max_warp(other: MarbleCharacter) -> int:
-	var d = global_transform.origin.distance_to(other.global_transform.origin)
-	print(d)
-
-	return 1
+func calculate_warp():
+	var closest: WarpMonument = null
+	for w: WarpMonument in warp_monuments.values():
+		if !closest or w.position.distance_to(position) < closest.position.distance_to(position):
+			closest = w
+	if closest:
+		warp_speed = closest.warp_speed
+	else:
+		warp_speed = 1
 
 
 @rpc("any_peer")
@@ -88,10 +88,7 @@ func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta * warp_speed * warp_speed
-
-
 	move_and_slide()
-	update_neighbors_warp()
 
 
 @rpc("any_peer")

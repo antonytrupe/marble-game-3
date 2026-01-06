@@ -44,8 +44,6 @@ var bodies = {}
 @onready var scanner_shape: CollisionShape3D = %ScannerShape
 
 
-
-
 func _ready():
 	age = Time.get_unix_time_from_system()
 
@@ -141,8 +139,10 @@ func _on_scanner_body_entered(body: Node3D) -> void:
 	print('_on_scanner_body_entered %s:%s %s' % [body.get_class(), body.name, name])
 	if body is MarbleCharacter:
 		#print('gg %s' % body.name)
+		body.warp_monuments[self.name] = self
 		bodies[body.name] = body
-		body.warp_speed = warp_speed
+		body.calculate_warp()
+		#body.warp_speed = warp_speed
 
 
 func _on_scanner_body_exited(body: Node3D) -> void:
@@ -152,6 +152,8 @@ func _on_scanner_body_exited(body: Node3D) -> void:
 		bodies.erase(body.name)
 		# print('removed:%s %s' % [removed, body.name])
 		# print(bodies)
+		body.warp_monuments.erase(self.name)
+		body.calculate_warp()
 
 
 func get_data() -> Dictionary:
