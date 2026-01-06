@@ -60,8 +60,9 @@ func _load_warp_monument(object_name, data: Dictionary):
 			w.radius = data.radius
 		if data.has("warp_speed"):
 			w.warp_speed = data.warp_speed
-		)
-	if data.has("transform"):
+	)
+
+	if true and data.has("transform"):
 		w.transform = str_to_var(data.transform)
 	world.warp_monuments.add_child(w)
 
@@ -76,10 +77,9 @@ func _load_character(character_name, data: Dictionary):
 			c.player_name = data.player_name
 		if data.has("warp_speed"):
 			c.warp_speed = data.warp_speed
-
-		)
+	)
 	if data.has("transform"):
-			c.transform = str_to_var(data.transform)
+		c.transform = str_to_var(data.transform)
 	world.characters.add_child(c)
 
 

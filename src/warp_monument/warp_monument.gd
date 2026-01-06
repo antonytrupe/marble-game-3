@@ -136,7 +136,7 @@ func _on_radius_slider_value_changed(value: float) -> void:
 
 
 func _on_scanner_body_entered(body: Node3D) -> void:
-	print('_on_scanner_body_entered %s:%s %s' % [body.get_class(), body.name, name])
+	#print('_on_scanner_body_entered %s:%s %s' % [body.get_class(), body.name, name])
 	if body is MarbleCharacter:
 		#print('gg %s' % body.name)
 		body.warp_monuments[self.name] = self
@@ -146,7 +146,7 @@ func _on_scanner_body_entered(body: Node3D) -> void:
 
 
 func _on_scanner_body_exited(body: Node3D) -> void:
-	print('_on_scanner_body_exited %s:%s' % [body.get_class(), body.name])
+	#print('_on_scanner_body_exited %s:%s' % [body.get_class(), body.name])
 	if body is MarbleCharacter:
 		#print('ff %s' % body.name)
 		bodies.erase(body.name)
