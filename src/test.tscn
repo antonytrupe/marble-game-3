@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://dibu85hjscd1f"]
+[gd_scene load_steps=7 format=3 uid="uid://dibu85hjscd1f"]
 
 [ext_resource type="PackedScene" uid="uid://bdkw10fdrlljw" path="res://src/warp_monument/warp_monument.tscn" id="1_gwkrg"]
 [ext_resource type="PackedScene" uid="uid://dg5pngnp7smv8" path="res://src/water.tscn" id="2_y2bxs"]
+[ext_resource type="PackedScene" uid="uid://b4f3nuk5vp4rc" path="res://src/character/character.tscn" id="3_dm202"]
 
 [sub_resource type="Environment" id="Environment_gwkrg"]
 
@@ -16,81 +17,98 @@ size = Vector2(30, 30)
 
 [node name="OneSecond" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.330336, 0, -0.000600338)
-warp_speed = 1
 
 [node name="TwoSeconds" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.178997, 0, 0)
+visible = false
 warp_speed = 2
 
 [node name="ThreeSeconds" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.013958, 0, 0.4381125)
+visible = false
 warp_speed = 3
 
 [node name="4" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.350018, 0, 0)
+visible = false
 warp_speed = 4
 
 [node name="6" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.521333, 0, 0.7037301)
+visible = false
 warp_speed = 6
 
 [node name="8" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.848719, 0, 0)
+visible = false
 warp_speed = 8
 
 [node name="10" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.300029, 0, 0.57524157)
+visible = false
 warp_speed = 10
 
 [node name="12" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.077459, 0, 0)
+visible = false
 warp_speed = 12
 
 [node name="16" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.735256, 0, 0.51031065)
+visible = false
 warp_speed = 16
 
 [node name="20" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5558977, 0, 0)
+visible = false
 warp_speed = 20
 
 [node name="OneMinute(60x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.147558, 0, 0.5862651)
+visible = false
 warp_speed = 60
 
 [node name="FiveMinutes(300x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.478894, 0, 0)
+visible = false
 warp_speed = 300
 
 [node name="TenMinutes(600x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0503387, 0, 0.6067071)
+visible = false
 warp_speed = 600
 
 [node name="ThirtyMinutes(1800x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4719296, 0, 0)
+visible = false
 warp_speed = 1800
 
 [node name="OneHour(3600x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(0.9785809, 0, -0.20586261, 0, 1, 0, 0.20586261, 0, 0.9785809, 0.20313597, 0, 0.55229855)
 warp_speed = 3600
+radius = 6
 
 [node name="OneDay(86400x)" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.128108, 0, 0)
+visible = false
 age = 1767513199.8950005
 warp_speed = 86400
 
 [node name="OneWeek" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9246264, 0, 0.8434315)
+visible = false
 age = 1767746300.1829994
 warp_speed = 604800
 
 [node name="OneMonth" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.733845, 0, 0)
-age = 1768562151.1909997
+visible = false
+age = 1768562151.1909995
 warp_speed = 2419200
 
 [node name="OneYear" parent="." instance=ExtResource("1_gwkrg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.258245, 0, 0.7808571)
+visible = false
 age = 1778352363.2869992
 warp_speed = 24192000
 
@@ -106,6 +124,9 @@ transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49
 
 [node name="water" parent="." instance=ExtResource("2_y2bxs")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.38389492, 0)
+visible = false
 
 [node name="ground" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_y2bxs")
+
+[node name="Character" parent="." instance=ExtResource("3_dm202")]
