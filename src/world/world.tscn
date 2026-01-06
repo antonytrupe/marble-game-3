@@ -49,7 +49,7 @@ shadow_enabled = true
 [node name="Characters" type="Node" parent="."]
 unique_name_in_owner = true
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+[node name="CharacterSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://b4f3nuk5vp4rc")
 spawn_path = NodePath("../Characters")
 
@@ -67,3 +67,7 @@ unique_name_in_owner = true
 
 [node name="WarpMonuments" type="Node" parent="."]
 unique_name_in_owner = true
+
+[node name="WarpMonumentSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://bdkw10fdrlljw")
+spawn_path = NodePath("../WarpMonuments")

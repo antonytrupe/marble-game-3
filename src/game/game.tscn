@@ -77,7 +77,6 @@ layout_mode = 2
 text = "Quit"
 
 [node name="Debug" type="Control" parent="."]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 285.0

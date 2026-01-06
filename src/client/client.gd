@@ -155,27 +155,10 @@ func set_current_character_warp_speed(value):
 		current_character.server_warp.rpc_id(1, value)
 
 
-func start(address, port):
-	debug("Attempting to connect to: %s:%s" % [address, port])
-	var peer = SteamMultiplayerPeer.new()
-	var r = peer.create_client(address, port)
-	multiplayer.multiplayer_peer = peer
-	#get_tree().set_multiplayer(peer,get_path())
-
-	match r:
-		OK:
-			debug('OK')
-		ERR_ALREADY_IN_USE:
-			debug('ERR_ALREADY_IN_USE')
-		ERR_CANT_CREATE:
-			debug('ERR_CANT_CREATE')
-
-	main_menu.visible = false
-
-
 func _on_connected_to_server():
 	main_menu.visible = false
 	visible = true
+	world.visible = true
 
 	debug("_on_connected_to_server")
 	# var steam_id = Steam.getSteamID()
