@@ -99,7 +99,7 @@ APP_VDF=$(realpath "./steam/playtest_app.vdf")
 echo "Using Steam app build VDF at: $APP_VDF"
 pwd
 ls ${APP_VDF}
-
+# STEAMCMD is the path to your SteamCMD executable
 echo "$STEAMCMD" +login tynoan +run_app_build "$APP_VDF" +quit
 "$STEAMCMD" +login tynoan +run_app_build "$APP_VDF" +quit
 

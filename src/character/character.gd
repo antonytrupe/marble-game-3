@@ -60,10 +60,15 @@ func is_server() -> bool:
 
 func calculate_warp():
 	var closest: WarpMonument = null
+	#var closest_distance=0
 	for w: WarpMonument in warp_monuments.values():
-		if !closest or w.position.distance_to(position) < closest.position.distance_to(position):
+		var distance=w.position.distance_to(position)
+		if !closest or distance < closest.position.distance_to(position):
 			closest = w
+			#closest_distance=distance
 	if closest:
+		#TODO scale the warp within a bubble, maybe
+		#*(1-(closest_distance/closest.radius))
 		warp_speed = closest.warp_speed
 	else:
 		warp_speed = 1
