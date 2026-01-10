@@ -91,7 +91,7 @@ func _unhandled_input(event) -> void:
 					current_character.server_fly()
 				else:
 					current_character.server_fly.rpc_id(1)
-					
+
 			#moving
 			var input_dir: Vector2 = Input.get_vector("left", "right", "forward", "backward")
 			if is_server():

@@ -88,7 +88,6 @@ func server_jump():
 
 @rpc("any_peer")
 func server_fly():
-	print('fly')
 	if !is_server():
 		return
 	#stop flying

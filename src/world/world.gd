@@ -22,8 +22,15 @@ func get_ground_y(x: float, z: float) -> float:
 	var origin = Vector3(x, 100, z) # Start high up
 	var end = Vector3(x, -100, z)   # Point down
 	var query = PhysicsRayQueryParameters3D.create(origin, end)
-
+	query.collision_mask=1
 	var result = space_state.intersect_ray(query)
 	if result:
 		return result.position.y
 	return 0.0 # Default if nothing hit
+
+func underworld_raiser(nodes:Array[Node]):
+#	warp monuments
+	for n:Node3D in nodes:
+		var y=get_ground_y(n.position.x,n.position.z)
+		print("%s y:%s"%[n.name,y])
+		n.position.y=y

@@ -2,6 +2,7 @@ extends Node
 
 signal persist(o_name, o)
 signal load
+signal load_finished
 signal new
 signal load_character(name, data)
 signal load_player(name, data)
@@ -24,12 +25,11 @@ func _load_warp_monuments():
 	var instanced_class = WarpMonument.new()
 	var clazz_name = instanced_class.get_script().get_global_name()
 
-	var _load_character = func(r):
-		#Debug.debug.emit("persistance._load_character " + str(r.name))
+	var _load_warp_monument = func(r):
 		load_warp_monument.emit(r.name, JSON.parse_string(r.data))
 		return true
 
-	_load_object(clazz_name, _load_character)
+	_load_object(clazz_name, _load_warp_monument)
 
 
 func _load_characters():
@@ -80,6 +80,7 @@ func _load():
 	_load_players()
 	_load_characters()
 	_load_warp_monuments()
+	load_finished.emit()
 
 
 func _persist(clazz_name, o: Object):

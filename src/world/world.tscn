@@ -4,6 +4,9 @@
 [ext_resource type="Script" uid="uid://bga3y3kuercqk" path="res://src/world/mesh_instance_3d.gd" id="2_bsf3i"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f3sb7"]
+properties/0/path = NodePath(".:visible")
+properties/0/spawn = true
+properties/0/replication_mode = 2
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_gv5m4"]
 resource_local_to_scene = true

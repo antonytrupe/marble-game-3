@@ -49,6 +49,13 @@ func _persistance_signals():
 	Persistance.load_player.connect(_load_player)
 	Persistance.load_character.connect(_load_character)
 	Persistance.load_warp_monument.connect(_load_warp_monument)
+	Persistance.load_finished.connect(_load_finished)
+
+
+func _load_finished():
+	world.underworld_raiser(world.characters.get_children() )
+	world.underworld_raiser(world.warp_monuments.get_children() )
+	world.visible=true
 
 
 func _load_warp_monument(object_name, data: Dictionary):
@@ -62,7 +69,7 @@ func _load_warp_monument(object_name, data: Dictionary):
 			w.warp_speed = data.warp_speed
 	)
 
-	if true and data.has("transform"):
+	if data.has("transform"):
 		w.transform = str_to_var(data.transform)
 	world.warp_monuments.add_child(w)
 
@@ -148,7 +155,8 @@ func start():
 	_persistance_signals()
 	_steam_signals()
 	# load everything from persistance
-	world.visible = true
+
+	#world.visible = true
 	Persistance.load.emit()
 
 	get_viewport().get_window().title += " - " + "SERVER"

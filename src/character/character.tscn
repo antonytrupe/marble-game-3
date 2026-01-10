@@ -9,6 +9,10 @@ height = 1.9
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_glpr6"]
 height = 1.9
 
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_2p3op"]
+radius = 0.1
+height = 0.2
+
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_glpr6"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
@@ -33,10 +37,6 @@ properties/5/replication_mode = 2
 resource_local_to_scene = true
 radius = 0.95
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_2p3op"]
-radius = 0.1
-height = 0.2
-
 [node name="Character" type="CharacterBody3D" groups=["persist"]]
 collision_layer = 2
 collision_mask = 31
@@ -49,6 +49,16 @@ shape = SubResource("CapsuleShape3D_vu45j")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
 mesh = SubResource("CapsuleMesh_glpr6")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18112521, 0.66667503, -0.41810125)
+mesh = SubResource("CapsuleMesh_2p3op")
+skeleton = NodePath("../MeshInstance3D2")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16165185, 0.6219916, -0.4194979)
+mesh = SubResource("CapsuleMesh_2p3op")
+skeleton = NodePath("../..")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_glpr6")
@@ -82,15 +92,6 @@ debug_color = Color(9.62615e-07, 0.5445036, 0.6378255, 0.41960785)
 [node name="ChatBubbles" type="Node3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
-
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18112521, 1.616675, -0.41810125)
-mesh = SubResource("CapsuleMesh_2p3op")
-skeleton = NodePath("../MeshInstance3D2")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16165185, 1.5719916, -0.4194979)
-mesh = SubResource("CapsuleMesh_2p3op")
 
 [connection signal="body_entered" from="WarpDetectorArea3D" to="WarpDetectorArea3D" method="_on_body_entered"]
 [connection signal="body_exited" from="WarpDetectorArea3D" to="WarpDetectorArea3D" method="_on_body_exited"]
