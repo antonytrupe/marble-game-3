@@ -25,6 +25,11 @@ const STRINGS = {
 const SPEED_MULTIPLIER = 1.0 / 24.0
 const JUMP_VELOCITY = 5.0
 
+## current actual warp speed
+@export var warp_speed = 1:
+	set = _set_warp_speed
+@export var player_name: String
+
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 var mode: MODE = MODE.WALK # :
@@ -32,11 +37,10 @@ var mode: MODE = MODE.WALK # :
 
 var speed = 30.0
 
+var flying: bool = false
+
 var warp_monuments = {}
 
-## current actual warp speed
-@export var warp_speed = 1:
-	set = _set_warp_speed
 ##target warp speed
 var target_warp_speed = 1
 ##allowed maximum warp speed
@@ -45,7 +49,6 @@ var max_warp_speed = 5000
 var min_warp_speed = 1
 
 var player_id: String
-@export var player_name: String
 
 @onready var label: Label3D = $Label3D
 @onready var camera_pivot = %CameraPivot
@@ -62,7 +65,7 @@ func calculate_warp():
 	var closest: WarpMonument = null
 	#var closest_distance=0
 	for w: WarpMonument in warp_monuments.values():
-		var distance=w.position.distance_to(position)
+		var distance = w.position.distance_to(position)
 		if !closest or distance < closest.position.distance_to(position):
 			closest = w
 			#closest_distance=distance
@@ -78,7 +81,26 @@ func calculate_warp():
 func server_jump():
 	if !is_server():
 		return
-	velocity.y = JUMP_VELOCITY * warp_speed
+	if is_on_floor() and warp_speed <= 20:
+		velocity.y = JUMP_VELOCITY * warp_speed
+	elif flying:
+		velocity.y = JUMP_VELOCITY * warp_speed
+
+@rpc("any_peer")
+func server_fly():
+	print('fly')
+	if !is_server():
+		return
+	#stop flying
+	if flying:
+		flying = false
+		return
+
+	if not is_on_floor() and warp_speed <= 20:
+		if not flying:
+			flying = true
+
+		#velocity.y = JUMP_VELOCITY * warp_speed
 
 
 #this the function that runs on all the peers that only the server can call
@@ -92,7 +114,11 @@ func chat_bubble(message: String):
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor():
-		velocity.y -= gravity * delta * warp_speed * warp_speed
+		if not flying:
+			velocity.y -= gravity * delta * warp_speed * warp_speed
+		#not on floor and flying
+		else:
+			velocity.y = 0
 	move_and_slide()
 
 

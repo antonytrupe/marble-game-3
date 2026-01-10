@@ -77,12 +77,21 @@ func _unhandled_input(event) -> void:
 		#only if we're not typing
 		if !chat_text_edit.visible:
 			# Jump
-			if Input.is_action_just_pressed("jump") and current_character.is_on_floor() and current_character.warp_speed <= 20:
+			if Input.is_action_just_pressed("jump") or \
+			current_character.flying and Input.is_action_pressed("jump"):
 				if is_server():
 					current_character.server_jump()
 				else:
 					current_character.server_jump.rpc_id(1)
 					#server_jump()
+
+			#fly
+			if Input.is_action_pressed("fly"):
+				if is_server():
+					current_character.server_fly()
+				else:
+					current_character.server_fly.rpc_id(1)
+					
 			#moving
 			var input_dir: Vector2 = Input.get_vector("left", "right", "forward", "backward")
 			if is_server():

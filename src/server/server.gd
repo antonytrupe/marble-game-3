@@ -202,7 +202,7 @@ func command(cmd: String, _player: Player, character: MarbleCharacter):
 				#Signals.CurrentPlayer.emit(target)
 			else:
 				print("no target")
-		"teleport":
+		"teleport", "tele":
 			if parts.size() >= 4:
 				character.position = Vector3(float(parts[1]), float(parts[2]), float(parts[3]))
 		"wander":
@@ -223,7 +223,6 @@ func command(cmd: String, _player: Player, character: MarbleCharacter):
 			match parts[1]:
 				"monument", "warp":
 					_spawn_warp_monument(character.position)
-					pass
 				"mob", "monster":
 					var count = 1
 					if parts.size() >= 3:
@@ -273,8 +272,10 @@ func _spawn_warp_monument(center: Vector3):
 	print("y:", y) # Debug
 
 	m.rotation.y = y
-	m.position = _get_random_vector(10, center)
+	var p: Vector3 = _get_random_vector(10, center)
+	p.y = world.get_ground_y(p.x, p.z)
 
+	m.position = p
 	world.warp_monuments.add_child(m)
 
 

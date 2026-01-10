@@ -1,17 +1,12 @@
-[gd_scene load_steps=9 format=3 uid="uid://hwslegxxru8h"]
+[gd_scene load_steps=8 format=3 uid="uid://hwslegxxru8h"]
 
 [ext_resource type="Script" uid="uid://bod6lvq43qjsc" path="res://src/world/world.gd" id="1_f3sb7"]
+[ext_resource type="Script" uid="uid://bga3y3kuercqk" path="res://src/world/mesh_instance_3d.gd" id="2_bsf3i"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f3sb7"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_gv5m4"]
 resource_local_to_scene = true
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_gv5m4"]
-size = Vector2(300, 300)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f3sb7"]
-albedo_color = Color(0.0810126, 0.1661947, 0.039572515, 1)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tcf2h"]
 
@@ -37,8 +32,7 @@ shape = SubResource("WorldBoundaryShape3D_gv5m4")
 debug_fill = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("PlaneMesh_gv5m4")
-surface_material_override/0 = SubResource("StandardMaterial3D_f3sb7")
+script = ExtResource("2_bsf3i")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -0.3746066, 0.92718387, 0, -0.92718387, -0.3746066, 0, 10, 0)

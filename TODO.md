@@ -5,11 +5,12 @@ TODO
 4. ~~join friend from ingame~~
 5. ~~clean up chat~~
 6. sprinting
-7. fix reconnecting
-8. fix starting server when not logged in to steam
-9. switching characters
-10. spawning characters
-11. spawning trees
-12. ~~show warp clock/calendar~~
-13. ~~warp zones~~
-14. make chat only show up if close enough
+7. ducking
+8. fix reconnecting
+9. fix starting server when not logged in to steam
+10. switching characters
+11. spawning characters
+12. ~~spawning trees~~
+13. ~~show warp clock/calendar~~
+14. ~~warp zones~~
+15. make chat only show up if close enough
