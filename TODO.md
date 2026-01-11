@@ -14,3 +14,5 @@ TODO
 13. ~~show warp clock/calendar~~
 14. ~~warp zones~~
 15. make chat only show up if close enough
+16. click and drag/move items
+17. turn logic

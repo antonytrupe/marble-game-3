@@ -32,5 +32,5 @@ func underworld_raiser(nodes: Array[Node]):
 #	warp monuments
 	for n: Node3D in nodes:
 		var y = get_ground_y(n.position.x, n.position.z)
-		print("%s y:%s" % [n.name, y])
+		#print("%s y:%s" % [n.name, y])
 		n.position.y = y

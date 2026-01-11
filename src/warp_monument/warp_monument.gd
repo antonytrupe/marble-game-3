@@ -136,7 +136,7 @@ func _on_radius_slider_value_changed(value: float) -> void:
 
 
 func _on_scanner_body_entered(body: Node3D) -> void:
-	print('_on_scanner_body_entered %s:%s %s' % [body.get_class(), body.name, name])
+	#print('_on_scanner_body_entered %s:%s %s' % [body.get_class(), body.name, name])
 	if "warp_detector" in body:
 		#print('gg %s' % body.name)
 		body.warp_detector.warp_monuments[self.name] = self
@@ -163,3 +163,13 @@ func get_data() -> Dictionary:
 		"radius": radius,
 		"transform": var_to_str(transform),
 	}
+
+
+func load_node(node_data):
+	#transform = str_to_var(node_data["transform"])
+	if "age" in node_data:
+		age = node_data.age
+	if "warp_speed" in node_data:
+		warp_speed = node_data.warp_speed
+	if "radius" in node_data:
+		radius = node_data.radius

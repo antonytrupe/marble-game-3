@@ -62,15 +62,8 @@ func _load_finished():
 func _load_tree(object_name, data: Dictionary):
 	var t: MarbleTree = TREE_SCENE.instantiate()
 	t.name = object_name
-	t.ready.connect(func():
-		#print(data)
-		if data.has("radius"):
-			t.radius = data.radius
-		if data.has("warp_speed"):
-			t.warp_speed = data.warp_speed
-		if data.has("age"):
-			t.age = data.age
-	)
+
+	t.ready.connect(t.load_node.bind(data))
 
 	if data.has("transform"):
 		t.transform = str_to_var(data.transform)
@@ -80,13 +73,8 @@ func _load_tree(object_name, data: Dictionary):
 func _load_warp_monument(object_name, data: Dictionary):
 	var w: WarpMonument = WARP_MONUMENT_SCENE.instantiate()
 	w.name = object_name
-	w.ready.connect(func():
-		#print(data)
-		if data.has("radius"):
-			w.radius = data.radius
-		if data.has("warp_speed"):
-			w.warp_speed = data.warp_speed
-	)
+
+	w.ready.connect(w.load_node.bind(data))
 
 	if data.has("transform"):
 		w.transform = str_to_var(data.transform)
@@ -96,14 +84,9 @@ func _load_warp_monument(object_name, data: Dictionary):
 func _load_character(character_name, data: Dictionary):
 	var c: MarbleCharacter = CHARACTER_SCENE.instantiate()
 	c.name = character_name
-	c.ready.connect(func():
-		if data.has("player_id"):
-			c.player_id = data.player_id
-		if data.has("player_name"):
-			c.player_name = data.player_name
-		if data.has("warp_speed"):
-			c.warp_speed = data.warp_speed
-	)
+
+	c.ready.connect(c.load_node.bind(data))
+
 	if data.has("transform"):
 		c.transform = str_to_var(data.transform)
 	world.characters.add_child(c)

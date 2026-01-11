@@ -30,6 +30,9 @@ const MAX_CONTROLLED_WARP = 10
 	set = _set_warp_speed
 @export var player_name: String
 
+@export var age: float = 0
+var turn = 0
+
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 var mode: MODE = MODE.WALK # :
@@ -110,7 +113,19 @@ func chat_bubble(message: String):
 	chat_bubbles.add_child(bubble)
 
 
+@warning_ignore("shadowed_variable")
+func _start_turn(turn):
+	print('starting turn %.f'%turn)
+
+
 func _physics_process(delta: float) -> void:
+	if is_server():
+		age = age + delta * warp_speed
+	@warning_ignore("shadowed_variable")
+	var turn = age / 6 + 1
+	#for i in range(self.turn,turn):
+		#_start_turn(i)
+	self.turn = turn
 	# Add the gravity.
 	if not is_on_floor():
 		if not flying:
@@ -192,8 +207,25 @@ func get_data() -> Dictionary:
 		"player_id": player_id,
 		"player_name": player_name,
 		"warp_speed": warp_speed,
+		"age": age,
+		"turn": turn,
 		"transform": var_to_str(transform),
 	}
+
+
+func load_node(node_data):
+	#transform = str_to_var(node_data["transform"])
+	if "player_id" in node_data:
+		player_id = node_data.player_id
+	if "player_name" in node_data:
+		player_name = node_data.player_name
+	if "warp_speed" in node_data:
+		warp_speed = node_data.warp_speed
+	if "age" in node_data:
+		age = node_data.age
+	if "turn" in node_data:
+		turn = node_data.turn
+
 
 func _update_label():
 	if label:

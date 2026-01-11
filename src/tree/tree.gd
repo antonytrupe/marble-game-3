@@ -13,22 +13,27 @@ extends StaticBody3D
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D
 @onready var label_3d: Label3D = $Label3D
 
+var turn = 0
+
 
 func get_data():
 	var save_dict = {
 		"transform": var_to_str(transform),
 		"age": age,
+		"turn": turn,
 		"warp_speed": warp_speed,
 	}
 	return save_dict
 
 
 func load_node(node_data):
-	transform = str_to_var(node_data["transform"])
+	#transform = str_to_var(node_data["transform"])
 	if "age" in node_data:
 		age = node_data.age
 	if "warp_speed" in node_data:
 		warp_speed = node_data.warp_speed
+	if "turn" in node_data:
+		turn = node_data.turn
 
 
 func calculate_warp():
