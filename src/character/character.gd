@@ -31,7 +31,8 @@ const MAX_CONTROLLED_WARP = 10
 @export var player_name: String
 
 @export var age: float = 0
-var turn = 0
+var turn: int = 0:
+	set = _set_turn
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
@@ -63,6 +64,11 @@ var player_id: String
 func is_server() -> bool:
 	return multiplayer.is_server()
 
+
+func _set_turn(value):
+	if label and value != turn:
+		_update_label()
+	turn = value
 
 func calculate_warp():
 	var closest: WarpMonument = null
@@ -121,10 +127,10 @@ func _start_turn(turn):
 func _physics_process(delta: float) -> void:
 	if is_server():
 		age = age + delta * warp_speed
-	@warning_ignore("shadowed_variable")
-	var turn = age / 6 + 1
-	#for i in range(self.turn,turn):
-		#_start_turn(i)
+	@warning_ignore("shadowed_variable", "narrowing_conversion")
+	var turn: int = age / 6 + 1
+	for i in range(self.turn, turn):
+		_start_turn(i)
 	self.turn = turn
 	# Add the gravity.
 	if not is_on_floor():
@@ -231,4 +237,4 @@ func load_node(node_data):
 
 func _update_label():
 	if label:
-		label.text = "%s (x%s)" % [player_name, str(warp_speed)]
+		label.text = "%s (x%.f)\n turn %.f" % [player_name, warp_speed, turn]

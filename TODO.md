@@ -16,3 +16,4 @@ TODO
 15. make chat only show up if close enough
 16. click and drag/move items
 17. turn logic
+18. delete functionality
