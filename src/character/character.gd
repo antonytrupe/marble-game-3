@@ -24,7 +24,7 @@ const STRINGS = {
 
 const SPEED_MULTIPLIER = 1.0 / 24.0
 const JUMP_VELOCITY = 5.0
-
+const MAX_CONTROLLED_WARP = 10
 ## current actual warp speed
 @export var warp_speed = 1:
 	set = _set_warp_speed
@@ -81,10 +81,10 @@ func calculate_warp():
 func server_jump():
 	if !is_server():
 		return
-	if is_on_floor() and warp_speed <= 20:
-		velocity.y = JUMP_VELOCITY * warp_speed
+	if is_on_floor() and warp_speed <= MAX_CONTROLLED_WARP:
+		velocity.y = JUMP_VELOCITY * min(warp_speed, MAX_CONTROLLED_WARP)
 	elif flying:
-		velocity.y = JUMP_VELOCITY * warp_speed
+		velocity.y = JUMP_VELOCITY * min(warp_speed, MAX_CONTROLLED_WARP)
 
 @rpc("any_peer")
 func server_fly():
@@ -95,7 +95,7 @@ func server_fly():
 		flying = false
 		return
 
-	if not is_on_floor() and warp_speed <= 20:
+	if not is_on_floor() and warp_speed <= MAX_CONTROLLED_WARP:
 		if not flying:
 			flying = true
 
@@ -114,7 +114,7 @@ func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor():
 		if not flying:
-			velocity.y -= gravity * delta * warp_speed * warp_speed
+			velocity.y -= gravity * delta * min(warp_speed, MAX_CONTROLLED_WARP) * min(warp_speed, MAX_CONTROLLED_WARP)
 		#not on floor and flying
 		else:
 			velocity.y = 0
@@ -129,14 +129,14 @@ func server_move(d: Vector2):
 
 	#m*SPEED_MULTIPLIER*speed
 	if direction:
-		velocity.x = direction.x * mode * SPEED_MULTIPLIER * speed * min(warp_speed, 20)
-		velocity.z = direction.z * mode * SPEED_MULTIPLIER * speed * min(warp_speed, 20)
+		velocity.x = direction.x * mode * SPEED_MULTIPLIER * speed * min(warp_speed, MAX_CONTROLLED_WARP)
+		velocity.z = direction.z * mode * SPEED_MULTIPLIER * speed * min(warp_speed, MAX_CONTROLLED_WARP)
 	else:
 		velocity.x = move_toward(
-			velocity.x, 0, mode * SPEED_MULTIPLIER * speed * min(warp_speed, 20)
+			velocity.x, 0, mode * SPEED_MULTIPLIER * speed * min(warp_speed, MAX_CONTROLLED_WARP)
 		)
 		velocity.z = move_toward(
-			velocity.z, 0, mode * SPEED_MULTIPLIER * speed * min(warp_speed, 20)
+			velocity.z, 0, mode * SPEED_MULTIPLIER * speed * min(warp_speed, MAX_CONTROLLED_WARP)
 		)
 	#if !is_zero_approx(velocity.x) or !is_zero_approx(velocity.z):
 	#set_action({"move": mode})
