@@ -43,7 +43,7 @@ light_color = Color(1, 1, 0, 1)
 light_angular_distance = 0.5
 shadow_enabled = true
 
-[node name="Characters" type="Node" parent="."]
+[node name="Characters" type="Node3D" parent="."]
 unique_name_in_owner = true
 
 [node name="CharacterSpawner" type="MultiplayerSpawner" parent="."]
@@ -59,12 +59,16 @@ unique_name_in_owner = true
 [node name="Fauna" type="Node3D" parent="."]
 unique_name_in_owner = true
 
-[node name="Terra" type="Node" parent="."]
+[node name="Terra" type="Node3D" parent="."]
 unique_name_in_owner = true
 
-[node name="WarpMonuments" type="Node" parent="."]
+[node name="WarpMonuments" type="Node3D" parent="."]
 unique_name_in_owner = true
 
 [node name="WarpMonumentSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://bdkw10fdrlljw")
 spawn_path = NodePath("../WarpMonuments")
+
+[node name="FloraSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://c1e46m2pfqiji")
+spawn_path = NodePath("../Flora")

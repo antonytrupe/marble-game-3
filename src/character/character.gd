@@ -39,7 +39,7 @@ var speed = 30.0
 
 var flying: bool = false
 
-var warp_monuments = {}
+#var warp_monuments = {}
 
 ##target warp speed
 var target_warp_speed = 1
@@ -55,7 +55,7 @@ var player_id: String
 @onready var camera = %Camera3D
 @onready var chat_bubbles = %ChatBubbles
 @onready var client = $/root/Game/Client
-@onready var warp_detector = %WarpDetectorCollisionShape3D
+@onready var warp_detector: WarpDetector = $WarpDetector
 
 func is_server() -> bool:
 	return multiplayer.is_server()
@@ -64,7 +64,7 @@ func is_server() -> bool:
 func calculate_warp():
 	var closest: WarpMonument = null
 	#var closest_distance=0
-	for w: WarpMonument in warp_monuments.values():
+	for w: WarpMonument in warp_detector.warp_monuments.values():
 		var distance = w.position.distance_to(position)
 		if !closest or distance < closest.position.distance_to(position):
 			closest = w
@@ -160,9 +160,6 @@ func _set_warp_speed(w):
 	warp_speed = w
 	_update_label()
 
-	#if warp_detector:
-		#(warp_detector.shape as SphereShape3D).radius=w*30
-
 
 @rpc("any_peer")
 func server_turn(value: Vector2):
@@ -187,7 +184,6 @@ func _rotate_camera(value: Vector2):
 
 func _ready():
 	_update_label()
-	#(warp_detector.shape as SphereShape3D).radius=warp_speed*30
 
 
 func get_data() -> Dictionary:

@@ -49,13 +49,32 @@ func _persistance_signals():
 	Persistance.load_player.connect(_load_player)
 	Persistance.load_character.connect(_load_character)
 	Persistance.load_warp_monument.connect(_load_warp_monument)
+	Persistance.load_tree.connect(_load_tree)
 	Persistance.load_finished.connect(_load_finished)
 
 
 func _load_finished():
-	world.underworld_raiser(world.characters.get_children() )
-	world.underworld_raiser(world.warp_monuments.get_children() )
-	world.visible=true
+	world.underworld_raiser(world.characters.get_children())
+	world.underworld_raiser(world.warp_monuments.get_children())
+	world.visible = true
+
+
+func _load_tree(object_name, data: Dictionary):
+	var t: MarbleTree = TREE_SCENE.instantiate()
+	t.name = object_name
+	t.ready.connect(func():
+		#print(data)
+		if data.has("radius"):
+			t.radius = data.radius
+		if data.has("warp_speed"):
+			t.warp_speed = data.warp_speed
+		if data.has("age"):
+			t.age = data.age
+	)
+
+	if data.has("transform"):
+		t.transform = str_to_var(data.transform)
+	world.flora.add_child(t)
 
 
 func _load_warp_monument(object_name, data: Dictionary):
@@ -109,6 +128,12 @@ func quit():
 	world.warp_monuments.get_children().all(
 		func(w):
 			Persistance.persist.emit("WarpMonument", w)
+			return true
+	)
+
+	world.flora.get_children().all(
+		func(w):
+			Persistance.persist.emit("MarbleTree", w)
 			return true
 	)
 
@@ -201,6 +226,9 @@ func command(cmd: String, _player: Player, character: MarbleCharacter):
 		return
 	var parts: PackedStringArray = cmd.replace("/", "").split(" ")
 	match parts[0]:
+		"loc", "pos", "position", "location":
+			pass
+			print("%.f %.f %.f" % [character.position.x, character.position.y, character.position.z])
 		"s", "switch":
 			print("switch")
 			var target = character.get_target()
@@ -268,7 +296,8 @@ func _get_random_vector(radius: float, center: Vector3) -> Vector3:
 	var theta = randf() * 2 * PI
 	var x = center.x + r * cos(theta)
 	var z = center.z + r * sin(theta)
-	return Vector3(x, 0, z)
+	var y = world.get_ground_y(x, z)
+	return Vector3(x, y, z)
 
 
 func _spawn_warp_monument(center: Vector3):
@@ -281,7 +310,6 @@ func _spawn_warp_monument(center: Vector3):
 
 	m.rotation.y = y
 	var p: Vector3 = _get_random_vector(10, center)
-	p.y = world.get_ground_y(p.x, p.z)
 
 	m.position = p
 	world.warp_monuments.add_child(m)
@@ -313,7 +341,7 @@ func _spawn_trees(count: int, center: Vector3):
 		var tree = TREE_SCENE.instantiate()
 		tree.name = tree.name + "%010d" % randi()
 		#TODO do this more righter
-		tree.global_position = _get_random_vector(10, center)
+		tree.position = _get_random_vector(10, center)
 		#var chunk = chunks.get_chunk(tree.global_position)
 		world.flora.add_child(tree)
 

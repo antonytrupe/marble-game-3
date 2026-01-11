@@ -7,7 +7,7 @@ signal new
 signal load_character(name, data)
 signal load_player(name, data)
 signal load_warp_monument(name, data)
-
+signal load_tree(name, data)
 var _db: SQLite
 
 
@@ -54,6 +54,17 @@ func _load_players():
 	_load_object(clazz_name, _load_player)
 
 
+func _load_trees():
+	var instanced_class = MarbleTree.new()
+	var clazz_name = instanced_class.get_script().get_global_name()
+
+	var _load_tree = func(r):
+			load_tree.emit(r.name, JSON.parse_string(r.data))
+			return true
+
+	_load_object(clazz_name, _load_tree)
+
+
 func _new():
 	_db = SQLite.new()
 	_db.path = "res://server.db"
@@ -62,10 +73,13 @@ func _new():
 	persist.connect(_persist)
 	_db.drop_table("Player")
 	_db.drop_table("MarbleCharacter")
+	_db.drop_table("MarbleTree")
 	_create_character_table()
 	_create_player_table()
+	_create_tree_table()
 	_load_players()
 	_load_characters()
+	_load_trees()
 
 
 func _load():
@@ -80,6 +94,7 @@ func _load():
 	_load_players()
 	_load_characters()
 	_load_warp_monuments()
+	_load_trees()
 	load_finished.emit()
 
 
@@ -126,6 +141,13 @@ func _create_character_table():
 
 func _create_player_table():
 	var instanced_class = Player.new()
+	var clazz_name = instanced_class.get_script().get_global_name()
+
+	_create_table(clazz_name)
+
+
+func _create_tree_table():
+	var instanced_class = MarbleTree.new()
 	var clazz_name = instanced_class.get_script().get_global_name()
 
 	_create_table(clazz_name)

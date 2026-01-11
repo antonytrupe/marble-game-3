@@ -2,17 +2,19 @@ class_name MarbleTree
 extends StaticBody3D
 
 #50 years
-@export var maturity: int = int(1000 * 60 * 60 * 24 * 360 * (1))
+@export var maturity: int = int(60 * 60 * 24 * 360 * (50.0))
 
 ##milliseconds
 @export var age: float = 0
 @export var warp_speed: float = 1
 
-@onready var world = $/root/Game/World
-@onready var ageLabel = %AgeLabel
+#@onready var world = $/root/Game/World
+#@onready var ageLabel = %AgeLabel
+@onready var warp_detector: WarpDetector = $WarpDetectorArea3D
+@onready var label_3d: Label3D = $Label3D
 
 
-func save_node():
+func get_data():
 	var save_dict = {
 		"transform": var_to_str(transform),
 		"age": age,
@@ -29,21 +31,36 @@ func load_node(node_data):
 		warp_speed = node_data.warp_speed
 
 
-func time_warp(minutes):
-	print("tree time_warp")
-	age = age + 1000 * 60 * minutes
+func calculate_warp():
+	var closest: WarpMonument = null
+	#var closest_distance=0
+	for w: WarpMonument in warp_detector.warp_monuments.values():
+		var distance = w.position.distance_to(position)
+		if !closest or distance < closest.position.distance_to(position):
+			closest = w
+			#closest_distance=distance
+	if closest:
+		#TODO scale the warp within a bubble, maybe
+		#*(1-(closest_distance/closest.radius))
+		warp_speed = closest.warp_speed
+	else:
+		warp_speed = 1
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	var s = clampf(float(age) / maturity, .1, 1.0)
+	var r = float(age) / float(maturity)
+	#print(r)
+	var s = clampf(r, .001, 1.0)
+	#print(s)
 	scale = Vector3(s, s, s)
+	label_3d.text = "Age:%.f\nWarp:%.f\nScale:%.2f" % [age, warp_speed, scale.x]
 
 
 #delta is in seconds
 func _physics_process(delta: float):
 	if is_server():
-		age = age + delta * warp_speed * 1000.0
+		age = age + delta * warp_speed
 
 
 func is_server() -> bool:
