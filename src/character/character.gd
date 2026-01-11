@@ -215,6 +215,8 @@ func get_data() -> Dictionary:
 
 func load_node(node_data):
 	#transform = str_to_var(node_data["transform"])
+	#if "transform" in node_data:
+		#transform = str_to_var(node_data.transform)
 	if "player_id" in node_data:
 		player_id = node_data.player_id
 	if "player_name" in node_data:

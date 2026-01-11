@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector_area_3d.tscn" id="2_2p3op"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vu45j"]
+resource_local_to_scene = true
 height = 1.9
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_glpr6"]
@@ -41,6 +42,7 @@ script = ExtResource("1_glpr6")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
 shape = SubResource("CapsuleShape3D_vu45j")
+debug_fill = false
 
 [node name="BodyMesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)

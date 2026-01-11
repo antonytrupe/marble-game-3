@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector_area_3d.tscn" id="2_e4g3r"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_k6sc6"]
+resource_local_to_scene = true
 height = 10.0
 radius = 1.0
 
@@ -51,6 +52,7 @@ script = ExtResource("1_2omd0")
 [node name="TrunkCollision" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
 shape = SubResource("CylinderShape3D_k6sc6")
+debug_fill = false
 
 [node name="Trunk" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)

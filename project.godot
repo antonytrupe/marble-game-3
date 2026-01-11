@@ -110,6 +110,10 @@ avoidance/layer_3="flora"
 avoidance/layer_4="fauna"
 avoidance/layer_5="terra"
 
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

@@ -313,7 +313,7 @@ func _spawn_bushes(count: int, center: Vector3):
 	for i in count:
 		var bush = BUSH_SCENE.instantiate()
 		bush.name = bush.name + "%010d" % randi()
-		bush.global_position = _get_random_vector(10, center)
+		bush.position = _get_random_vector(10, center)
 		#var chunk = chunks.get_chunk(bush.global_position)
 		world.flora.add_child(bush)
 
@@ -349,10 +349,11 @@ func _spawn_mob(count: int, center: Vector3):
 		print("y:", y) # Debug
 
 		mob.rotation.y = y
-		world.add_child(mob)
-
-		print("After rotation:", mob.rotation.y) # Debug
 		mob.position = _get_random_vector(10, center)
+		world.fauna.add_child(mob)
+
+		#print("After rotation:", mob.rotation.y) # Debug
+
 
 func _load_player(player_name, data: Dictionary):
 	var p = PLAYER_SCENE.new()
