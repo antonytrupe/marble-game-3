@@ -45,8 +45,6 @@ func calculate_warp():
 			closest = w
 			#closest_distance=distance
 	if closest:
-		#TODO scale the warp within a bubble, maybe
-		#*(1-(closest_distance/closest.radius))
 		warp_speed = closest.warp_speed
 	else:
 		warp_speed = 1

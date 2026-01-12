@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Marble Game 3"
-run/main_scene="uid://cqgu8ge77h70t"
+run/main_scene="uid://bqlvycywdnwec"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 

@@ -284,7 +284,6 @@ func _get_random_vector(radius: float, center: Vector3) -> Vector3:
 
 
 func _spawn_warp_monument(center: Vector3):
-	#TODO
 	var m: WarpMonument = WARP_MONUMENT_SCENE.instantiate()
 	m.name = m.name + "%010d" % randi()
 	#var chunk = chunks.get_chunk(center)
