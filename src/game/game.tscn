@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://cqgu8ge77h70t"]
+[gd_scene load_steps=8 format=3 uid="uid://cqgu8ge77h70t"]
 
 [ext_resource type="Script" uid="uid://n01r8f0drw7s" path="res://src/game/game.gd" id="1_yarin"]
 [ext_resource type="PackedScene" uid="uid://hwslegxxru8h" path="res://src/world/world.tscn" id="2_jhw8o"]
 [ext_resource type="PackedScene" uid="uid://cdpdpwwn5voyq" path="res://src/server/server.tscn" id="3_n7s5x"]
 [ext_resource type="Script" uid="uid://c78dyt2pcfr7c" path="res://src/game/main_menu.gd" id="4_6kr85"]
 [ext_resource type="PackedScene" uid="uid://c70a50dqd5dfx" path="res://src/client/client.tscn" id="5_clwl7"]
+[ext_resource type="PackedScene" uid="uid://nwnomeygl26l" path="res://src/window/window.tscn" id="5_jhw8o"]
 [ext_resource type="Script" uid="uid://cx8p4ymd2lt8g" path="res://src/debug/debug_ui.gd" id="6_7r0dx"]
 
 [node name="Game" type="Node"]
@@ -22,10 +23,26 @@ visible = false
 unique_name_in_owner = true
 mouse_filter = 1
 
-[node name="MainMenu" type="Control" parent="."]
+[node name="MainMenu" parent="." instance=ExtResource("5_jhw8o")]
+unique_name_in_owner = true
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.25
+offset_top = -108.5
+offset_right = 95.0
+offset_bottom = 110.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+
+[node name="Control" type="Control" parent="MainMenu"]
 unique_name_in_owner = true
 z_index = 1
-layout_mode = 3
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -33,7 +50,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4_6kr85")
 
-[node name="MarginContainer" type="MarginContainer" parent="MainMenu"]
+[node name="MarginContainer" type="MarginContainer" parent="MainMenu/Control"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -43,49 +60,58 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="CenterContainer" type="CenterContainer" parent="MainMenu/MarginContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="MainMenu/Control/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu/MarginContainer/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu/Control/MarginContainer/CenterContainer"]
 layout_mode = 2
 
-[node name="DeleteDataButton" type="Button" parent="MainMenu/MarginContainer/CenterContainer/VBoxContainer"]
+[node name="DeleteDataButton" type="Button" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer"]
 layout_mode = 2
 text = "Reset Server"
 
-[node name="NewGameButton" type="Button" parent="MainMenu/MarginContainer/CenterContainer/VBoxContainer"]
+[node name="NewGameButton" type="Button" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer"]
 layout_mode = 2
 text = "Start Server"
 
-[node name="ShowFriendsButton" type="Button" parent="MainMenu/MarginContainer/CenterContainer/VBoxContainer"]
+[node name="ShowFriendsButton" type="Button" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer"]
 layout_mode = 2
 text = "Show Friends"
 
-[node name="JoinFriendsContainer" type="VBoxContainer" parent="MainMenu/MarginContainer/CenterContainer/VBoxContainer"]
+[node name="JoinFriendsContainer" type="VBoxContainer" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="LoadGameButton" type="Button" parent="MainMenu/MarginContainer/CenterContainer/VBoxContainer"]
+[node name="LoadGameButton" type="Button" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
 text = "Load Game"
 
-[node name="QuitButton" type="Button" parent="MainMenu/MarginContainer/CenterContainer/VBoxContainer"]
+[node name="QuitButton" type="Button" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer"]
 layout_mode = 2
 text = "Quit"
 
-[node name="Debug" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 285.0
-offset_bottom = 137.0
+[node name="Window2" parent="." instance=ExtResource("5_jhw8o")]
+offset_right = 276.0
+offset_bottom = 280.0
+
+[node name="Debug" type="Control" parent="Window2"]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 32.0
+offset_right = -32.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("6_7r0dx")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Debug"]
+[node name="RichTextLabel" type="RichTextLabel" parent="Window2/Debug"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -101,8 +127,8 @@ scroll_following = true
 scroll_following_visible_characters = true
 context_menu_enabled = true
 
-[connection signal="pressed" from="MainMenu/MarginContainer/CenterContainer/VBoxContainer/DeleteDataButton" to="MainMenu" method="_on_delete_data_button_pressed"]
-[connection signal="pressed" from="MainMenu/MarginContainer/CenterContainer/VBoxContainer/NewGameButton" to="MainMenu" method="_on_new_game_button_pressed"]
-[connection signal="pressed" from="MainMenu/MarginContainer/CenterContainer/VBoxContainer/ShowFriendsButton" to="MainMenu" method="_on_show_friends_button_pressed"]
-[connection signal="pressed" from="MainMenu/MarginContainer/CenterContainer/VBoxContainer/LoadGameButton" to="MainMenu" method="_on_load_game_button_pressed"]
-[connection signal="pressed" from="MainMenu/MarginContainer/CenterContainer/VBoxContainer/QuitButton" to="MainMenu" method="_on_quit_button_pressed"]
+[connection signal="pressed" from="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer/DeleteDataButton" to="MainMenu/Control" method="_on_delete_data_button_pressed"]
+[connection signal="pressed" from="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer/NewGameButton" to="MainMenu/Control" method="_on_new_game_button_pressed"]
+[connection signal="pressed" from="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer/ShowFriendsButton" to="MainMenu/Control" method="_on_show_friends_button_pressed"]
+[connection signal="pressed" from="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer/LoadGameButton" to="MainMenu/Control" method="_on_load_game_button_pressed"]
+[connection signal="pressed" from="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer/QuitButton" to="MainMenu/Control" method="_on_quit_button_pressed"]
