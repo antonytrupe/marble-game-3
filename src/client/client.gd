@@ -4,10 +4,9 @@ extends Control
 @onready var server: Server = $/root/Game/Server
 @onready var world: World = $/root/Game/World
 @onready var main_menu = $/root/Game/MainMenu
-
-#@onready var ui=%UI
+@onready var inventory: Inventory = %Inventory
 @onready var chat_text_edit: TextEdit = %ChatInput
-
+@onready var chat_window: MarbleWindow = %ChatWindow
 @export var current_character: MarbleCharacter
 
 var lobby_id: int
@@ -75,7 +74,13 @@ func _input(event: InputEvent) -> void:
 func _unhandled_input(event) -> void:
 	if current_character:
 		#only if we're not typing
-		if !chat_text_edit.visible:
+		if !chat_window.visible:
+
+#			inventory
+			if Input.is_action_pressed("inventory"):
+				inventory.visible=!inventory.visible
+
+
 			# Jump
 			if Input.is_action_just_pressed("jump") or \
 			current_character.flying and Input.is_action_pressed("jump"):
@@ -124,10 +129,10 @@ func _unhandled_input(event) -> void:
 		main_menu.visible = !main_menu.visible
 
 	if Input.is_action_just_pressed("command"):
-		chat_text_edit.visible = !chat_text_edit.visible
+		chat_window.visible = !chat_window.visible
 		#chat_mode = !chat_mode
 
-		if chat_text_edit.visible:
+		if chat_window.visible:
 			chat_text_edit.grab_focus()
 			chat_text_edit.text = "/"
 			chat_text_edit.set_caret_column(1)
@@ -135,9 +140,9 @@ func _unhandled_input(event) -> void:
 			chat_text_edit.release_focus()
 
 	if Input.is_action_just_pressed("chat"):
-		chat_text_edit.visible = !chat_text_edit.visible
+		chat_window.visible = !chat_window.visible
 		#chat_mode = !chat_mode
-		if chat_text_edit.visible:
+		if chat_window.visible:
 			chat_text_edit.grab_focus()
 		else:
 			chat_text_edit.release_focus()

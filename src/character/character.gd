@@ -121,7 +121,8 @@ func chat_bubble(message: String):
 
 @warning_ignore("shadowed_variable")
 func _start_turn(turn):
-	print('starting turn %.f'%turn)
+	#print('starting turn %.f'%turn)
+	pass
 
 
 func _physics_process(delta: float) -> void:

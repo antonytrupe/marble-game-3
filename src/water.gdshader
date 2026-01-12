@@ -1,14 +1,14 @@
 shader_type spatial;
 render_mode specular_toon;
 
-uniform float height_scale = 0.5;
+//uniform float height_scale = 0.5;
 uniform sampler2D noise;
-uniform sampler2D normalmap;
-uniform float calmness = 50.0; // 1 - 100
-uniform int num_of_additional_waves_in_x_direction = 2; // May be labeled as the wrong direction
-uniform int num_of_additional_waves_in_z_direction = 2; // May be labeled as the wrong direction
+//uniform sampler2D normalmap;
+//uniform float calmness = 1.0; // 1 - 100
+//uniform int num_of_additional_waves_in_x_direction = 0; // May be labeled as the wrong direction
+//uniform int num_of_additional_waves_in_z_direction = 0; // May be labeled as the wrong direction
 
-varying vec2 tex_position;
+//varying vec2 tex_position;
 
 float wave(vec2 position){
   position += texture(noise, position / 10.0).x * 2.0 - 1.0;
@@ -28,14 +28,6 @@ float height(vec2 position, float time) {
 void vertex() {
 	// Called for every vertex the material is visible on.
 
-	//Do I change the below to height(tex_position, TIME); ?
-	// Version - 1
-	//tex_position = VERTEX.xz / 5.0 + 0.5;
-	//float _height = texture(noise, tex_position).x;
-
-	//VERTEX.y += _height * height_scale;
-
-
 	vec2 pos = VERTEX.xz;
 	float k = height(pos, TIME);
 
@@ -43,8 +35,6 @@ void vertex() {
   	VERTEX.y = k;
 
 	NORMAL = normalize(vec3(k - height(pos + vec2(0.1, 0.0), TIME), 0.1, k - height(pos + vec2(0.0, 0.1), TIME)));
-
-
 }
 
 void fragment() {

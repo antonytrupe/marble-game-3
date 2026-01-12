@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://c70a50dqd5dfx"]
+[gd_scene load_steps=5 format=3 uid="uid://c70a50dqd5dfx"]
 
 [ext_resource type="Script" uid="uid://bm4xlm4n6hqkm" path="res://src/client/client.gd" id="1_lgb4g"]
 [ext_resource type="Script" uid="uid://jnoxhwe83f6c" path="res://src/client/chat_input.gd" id="2_1drpi"]
+[ext_resource type="PackedScene" uid="uid://nwnomeygl26l" path="res://src/window/window.tscn" id="3_40k8x"]
+[ext_resource type="PackedScene" uid="uid://ndv046sjn52g" path="res://src/inventory/inventory.tscn" id="3_78v8x"]
 
 [node name="Client" type="Control"]
 layout_mode = 3
@@ -12,31 +14,52 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_lgb4g")
 
-[node name="UI" type="Control" parent="."]
+[node name="Inventory" parent="." instance=ExtResource("3_78v8x")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -279.5
+offset_top = -223.0
+offset_right = 279.5
+offset_bottom = 223.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI"]
+[node name="ChatWindow" parent="." instance=ExtResource("3_40k8x")]
+unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -107.0
+offset_right = 0.0
+offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="Control" type="Control" parent="UI/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ChatWindow"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 27.0
+offset_top = 25.0
+offset_right = -26.0
+offset_bottom = -28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="ChatWindow/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="SystemMessages" type="RichTextLabel" parent="UI/VBoxContainer/Control"]
+[node name="SystemMessages" type="RichTextLabel" parent="ChatWindow/VBoxContainer/Control"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -46,9 +69,8 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 2
 
-[node name="ChatInput" type="TextEdit" parent="UI/VBoxContainer"]
+[node name="ChatInput" type="TextEdit" parent="ChatWindow/VBoxContainer"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

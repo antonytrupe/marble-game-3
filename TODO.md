@@ -14,6 +14,21 @@ TODO
 13. ~~show warp clock/calendar~~
 14. ~~warp zones~~
 15. make chat only show up if close enough
-16. click and drag/move items
+16. ~~click and drag/move items~~
 17. turn logic
 18. delete functionality
+19. cutting trees
+20. health
+21. hunger
+22. eating
+23. water
+24. inventory
+25. skills
+26. digging
+27. picking up stones
+28. saving terrain
+29. level of detail terrain
+30. rivers
+31. wells
+32. lakes
+33. clamp camera movement
