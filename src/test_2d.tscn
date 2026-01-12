@@ -5,3 +5,15 @@
 [node name="Node2D" type="CanvasLayer"]
 
 [node name="Window" parent="." instance=ExtResource("1_lcycu")]
+offset_right = 357.0
+offset_bottom = 332.0
+
+[node name="Button2" type="Button" parent="Window"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 32.0
+offset_right = 115.0
+offset_bottom = 63.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "BUTTON2"
