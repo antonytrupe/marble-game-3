@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bm4xlm4n6hqkm" path="res://src/client/client.gd" id="1_lgb4g"]
 [ext_resource type="Script" uid="uid://jnoxhwe83f6c" path="res://src/client/chat_input.gd" id="2_1drpi"]
 [ext_resource type="PackedScene" uid="uid://nwnomeygl26l" path="res://src/window/window.tscn" id="3_40k8x"]
-[ext_resource type="PackedScene" uid="uid://ndv046sjn52g" path="res://src/inventory/inventory.tscn" id="3_78v8x"]
+[ext_resource type="PackedScene" uid="uid://ndv046sjn52g" path="res://src/inventory_window/inventory.tscn" id="3_78v8x"]
 
 [node name="Client" type="Control"]
 layout_mode = 3
@@ -29,6 +29,19 @@ offset_right = 279.5
 offset_bottom = 223.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Inventory"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
 
 [node name="ChatWindow" parent="." instance=ExtResource("3_40k8x")]
 unique_name_in_owner = true

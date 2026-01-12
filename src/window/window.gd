@@ -1,6 +1,8 @@
 class_name MarbleWindow
 extends Control
 
+## add a child node margincontainer that has mouse filter set to "ignore"
+
 enum MODE {NONE,TOP_LEFT,TOP,TOP_RIGHT,RIGHT,BOTTOM_RIGHT,BOTTOM,BOTTOM_LEFT,LEFT}
 
 #signal drag_ended(value_changed: bool)

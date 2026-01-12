@@ -32,3 +32,9 @@ TODO
 31. wells
 32. lakes
 33. clamp camera movement
+34. aging/dying
+35. trees growing and dropping fruit
+36. bushes growing and dropping fruit
+37. picking fruit off ground
+38. picking fruit off trees/bushes
+39. granting items to characters

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://ndv046sjn52g"]
 
-[ext_resource type="Script" uid="uid://cwewc02nxsbi6" path="res://src/inventory/inventory.gd" id="1_qvk1e"]
+[ext_resource type="Script" uid="uid://cwewc02nxsbi6" path="res://src/inventory_window/inventory.gd" id="1_qvk1e"]
 [ext_resource type="PackedScene" uid="uid://nwnomeygl26l" path="res://src/window/window.tscn" id="2_3y8da"]
 
 [node name="Control" type="Control"]
@@ -12,6 +12,7 @@ size_flags_horizontal = 4
 script = ExtResource("1_qvk1e")
 
 [node name="Window" parent="." instance=ExtResource("2_3y8da")]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
