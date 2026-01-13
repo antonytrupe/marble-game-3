@@ -130,7 +130,6 @@ func chat_bubble(message: String):
 	chat_bubbles.add_child(bubble)
 
 
-@warning_ignore("shadowed_variable")
 func _start_turn(_turn):
 	#print('starting turn %.f'%turn)
 	pass
@@ -139,11 +138,10 @@ func _start_turn(_turn):
 func _physics_process(delta: float) -> void:
 	if is_server():
 		age = age + delta * warp_speed
-	@warning_ignore("shadowed_variable", "narrowing_conversion")
-	var turn: int = age / 6 + 1
-	for i in range(self.turn, turn):
+	var _turn: int = age / 6 + 1
+	for i in range(self.turn, _turn):
 		_start_turn(i)
-	self.turn = turn
+	self.turn = _turn
 	# Add the gravity.
 	if not is_on_floor():
 		if not flying:
