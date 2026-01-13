@@ -1,18 +1,6 @@
 class_name WarpMonument
 extends Node3D
 
-const MONTHS = [
-	"March", # 1
-	"April", # 2
-	"May", #
-	"June", #
-	"July", #
-	"August", # 6
-	"September", # 7
-	"October", # 8
-	"November", # 9
-	"December" # 10
-	]
 
 @export var age: float = Time.get_unix_time_from_system()
 @export var warp_speed: int = 1:
@@ -83,38 +71,38 @@ func _process(delta: float) -> void:
 		hour_hand.visible = true
 
 	#seconds hand
-	var seconds = int(age) % (60)
-	var sec_radians = seconds / 60.0 * PI * 2 + PI
+	var seconds = int(age) % (MarbleAge.SECONDS_IN_MINUTE)
+	var sec_radians = seconds / float(MarbleAge.SECONDS_IN_MINUTE) * PI * 2 + PI
 	second_hand.rotation = Vector3(0, sec_radians, 0)
 
 	#minutes hand
-	var minutes = int(age) % (60 * 60) / (60.0)
+	var minutes = int(age) % (MarbleAge.SECONDS_IN_HOUR) / float(MarbleAge.MINUTES_IN_HOUR)
 	var min_radians = minutes / (60.0) * PI * 2 + PI
 	minute_hand.rotation = Vector3(0, min_radians, 0)
 
 	#hours hand
-	var hours = int(age) % (60 * 60 * 12) / (60.0 * 60)
-	var hours_radians = hours / (12.0) * PI * 2 + PI
+	var hours = int(age) % (MarbleAge.SECONDS_IN_HOUR * int(MarbleAge.HOURS_IN_DAY / 2.0)) / float(MarbleAge.SECONDS_IN_HOUR)
+	var hours_radians = hours / int(MarbleAge.HOURS_IN_DAY / 2.0) * PI * 2 + PI
 	hour_hand.rotation = Vector3(0, hours_radians, 0)
 
 
 	label_3d.text = "%02d:%02d:%02d" % [hours, minutes, seconds]
 	#day of month
 	@warning_ignore("integer_division")
-	var day_of_month: int = int(age) % (60 * 60 * 24 * 28) / (60 * 60 * 24) + 1
+	var day_of_month: int = int(age) % (MarbleAge.SECONDS_IN_HOUR * MarbleAge.HOURS_IN_DAY * MarbleAge.DAYS_IN_MONTH) / (MarbleAge.SECONDS_IN_HOUR * MarbleAge.HOURS_IN_DAY) + 1
 	day_of_month_label.text = str(day_of_month)
 
-	var day_of_week = (day_of_month - 1) % 7
+	var day_of_week = (day_of_month - 1) % MarbleAge.DAYS_IN_WEEK
 
 	@warning_ignore("integer_division")
-	var week_of_month = (day_of_month - 1) / 7
+	var week_of_month = (day_of_month - 1) / MarbleAge.DAYS_IN_WEEK
 
-	day.position = Vector3(day_of_week / 7.0, -week_of_month / 4.0, 0)
+	day.position = Vector3(day_of_week / MarbleAge.DAYS_IN_WEEK, -week_of_month / MarbleAge.WEEKS_IN_MONTH, 0)
 
 	#month of year
 	@warning_ignore("integer_division")
-	var month_of_year: int = int(age) % (60 * 60 * 24 * 28 * 10) / (60 * 60 * 24 * 28)
-	month_of_year_label.text = MONTHS[month_of_year]
+	var month_of_year: int = int(age) % (MarbleAge.SECONDS_IN_HOUR * MarbleAge.HOURS_IN_DAY * MarbleAge.DAYS_IN_MONTH * MarbleAge.MONTHS_IN_YEAR) / (60 * 60 * 24 * 28)
+	month_of_year_label.text = MarbleAge.MONTHS[month_of_year]
 
 
 func _on_warp_slider_value_changed(value: float) -> void:
