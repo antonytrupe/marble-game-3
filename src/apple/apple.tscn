@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://cxp2l820hl2q8"]
+[gd_scene load_steps=6 format=3 uid="uid://cxp2l820hl2q8"]
 
 [ext_resource type="Script" uid="uid://dmr70y3w8hsrm" path="res://src/apple/apple.gd" id="1_pek8c"]
+[ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_5qehy"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_pek8c"]
 radius = 0.06
@@ -23,3 +24,6 @@ shape = SubResource("SphereShape3D_pek8c")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
 mesh = SubResource("SphereMesh_5qehy")
+
+[node name="WarpDetectorArea3D" parent="." instance=ExtResource("2_5qehy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.058287866, 0)

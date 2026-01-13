@@ -1,3 +1,4 @@
+#@tool
 class_name Apple
 extends Node3D
 
@@ -7,12 +8,15 @@ extends Node3D
 @export var age: MarbleAge = MarbleAge.new()
 @export var warp_speed: float = 1
 
+var turn = 0
+
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D
 
 func _process(_delta: float) -> void:
-	var r = float(age.age) / float(maturity)
-	var s = clampf(r, .001, 1.0)
-	scale = Vector3(s, s, s)
+	pass
+	#var r = float(age.age) / float(maturity)
+	#var s = clampf(r, .1, 1.0)
+	#scale = Vector3(s, s, s)
 
 #delta is in seconds
 func _physics_process(delta: float):
