@@ -139,7 +139,7 @@ func _physics_process(delta: float) -> void:
 	if is_server():
 		age = age + delta * warp_speed
 	@warning_ignore("narrowing_conversion")
-	var _turn: int = age / 6 + 1
+	var _turn: int = age / MarbleAge.SECONDS_IN_TURN + 1
 	for i in range(self.turn, _turn):
 		_start_turn(i)
 	self.turn = _turn

@@ -1,17 +1,18 @@
 #@tool
 class_name MarbleTree
-extends StaticBody3D
+extends Node3D
 
 const APPLE_SCENE = preload("res://src/apple/apple.tscn")
 
-@export var maturity: int = int(60 * 60 * 24 * 360 * (8))
+@export var maturity: int = int(MarbleAge.SECONDS_IN_YEAR * (8))
+#TODO figure out how to sync age
 @export var age: MarbleAge = MarbleAge.new()
 @export var warp_speed: float = 1
 var turn = 0
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D
 @onready var label_3d: Label3D = $Label3D
 @onready var left_leaves: MeshInstance3D = $Trunk/LeftLeaves
-
+@onready var flora = $/root/Game/World/Flora
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -27,7 +28,8 @@ func _process(_delta: float) -> void:
 func _physics_process(delta: float):
 	if is_server() or true:
 		age.age += delta * warp_speed
-	var _turn: int = age.age / 6 + 1
+	@warning_ignore("narrowing_conversion")
+	var _turn: int = age.age / MarbleAge.SECONDS_IN_TURN + 1
 	for i in range(self.turn, _turn):
 		_start_turn(i)
 	self.turn = _turn
@@ -41,20 +43,23 @@ func _start_turn(_turn):
 		if true or age.get_month() == 0:
 			var i = randi_range(1, 200)
 			if i == 1:
-				pass
+				# pass
 				_add_apple()
 
 
 func _add_apple():
-	#print("add apple")
+	print("add apple")
 	var x = - abs(randfn(0, 1))
 	var y = randfn(0, 1)
 	var z = randfn(0, 1)
 	var l = sqrt(x * x + y * y + z * z)
 	var apple: Apple = APPLE_SCENE.instantiate()
-	apple.position = Vector3(x / l, y / l, z / l) * 3
+	apple.name = apple.name + "%010d" % randi()
+	#apple.position = Vector3(x / l, y / l, z / l) * 3
 	#print(apple.position)
-	left_leaves.add_child(apple)
+	apple.position = left_leaves.global_position + Vector3(x / l, y / l, z / l) * 3
+	#left_leaves.add_child(apple)
+	flora.add_child(apple)
 
 func is_server() -> bool:
 	return multiplayer.is_server()
