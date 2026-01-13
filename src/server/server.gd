@@ -27,17 +27,7 @@ var lobby_id = 0
 func _steam_signals():
 	Steam.lobby_created.connect(_on_lobby_created)
 	# just for information
-	Steam.join_requested.connect(_on_lobby_join_requested)
-
-
-#just for info
-func _on_lobby_join_requested(this_lobby_id: int, friend_steam_id: int) -> void:
-	# Get the lobby owner's name
-	var friend_name: String = Steam.getFriendPersonaName(friend_steam_id)
-
-	#debug("%s joined lobby %s..." % friend_name, this_lobby_id)
-	var id := Steam.getLobbyOwner(this_lobby_id)
-	#debug("lobby owner %s" % id)
+	#Steam.join_requested.connect(_on_lobby_join_requested)
 
 
 func _multiplayer_signals():
