@@ -1,3 +1,4 @@
+#@tool
 class_name MarbleTree
 extends StaticBody3D
 
@@ -9,19 +10,22 @@ const APPLE_SCENE = preload("res://src/apple/apple.tscn")
 var turn = 0
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D
 @onready var label_3d: Label3D = $Label3D
+@onready var left_leaves: MeshInstance3D = $Trunk/LeftLeaves
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
+	#print('tool')
+	#age.age += _delta * warp_speed
 	var r = float(age.age) / float(maturity)
-	var s = clampf(r, .001, 1.0)
+	var s = clampf(r, .01, 1.0)
 	scale = Vector3(s, s, s)
 	label_3d.text = "Age:%.f\nWarp:%.f\nScale:%.2f" % [age.age, warp_speed, scale.x]
 
 
 #delta is in seconds
 func _physics_process(delta: float):
-	if is_server():
+	if is_server() or true:
 		age.age += delta * warp_speed
 	var _turn: int = age.age / 6 + 1
 	for i in range(self.turn, _turn):
@@ -34,20 +38,23 @@ func _start_turn(_turn):
 	#if the tree mature, then it can grow apples
 	if age.age > maturity:
 		#apples start growing in March
-		if age.get_month() == 0:
+		if true or age.get_month() == 0:
 			var i = randi_range(1, 200)
 			if i == 1:
-				print("add apple")
+				pass
 				_add_apple()
 
 
 func _add_apple():
-	var x = randf()
-	var y = randf()
-	var z = randf()
+	#print("add apple")
+	var x = - abs(randfn(0, 1))
+	var y = randfn(0, 1)
+	var z = randfn(0, 1)
 	var l = sqrt(x * x + y * y + z * z)
 	var apple: Apple = APPLE_SCENE.instantiate()
-	apple.position = Vector3(x / l, y / l, z / l)
+	apple.position = Vector3(x / l, y / l, z / l) * 3
+	#print(apple.position)
+	left_leaves.add_child(apple)
 
 func is_server() -> bool:
 	return multiplayer.is_server()

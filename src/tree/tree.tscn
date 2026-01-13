@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://c1e46m2pfqiji"]
+[gd_scene load_steps=13 format=3 uid="uid://c1e46m2pfqiji"]
 
 [ext_resource type="Script" uid="uid://duyhummlm0gr1" path="res://src/tree/tree.gd" id="1_2omd0"]
-[ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector_area_3d.tscn" id="2_e4g3r"]
+[ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_e4g3r"]
 [ext_resource type="PackedScene" uid="uid://cxp2l820hl2q8" path="res://src/apple/apple.tscn" id="2_kguxu"]
+[ext_resource type="Script" uid="uid://bajm6uk2gjcyi" path="res://src/age/age.gd" id="2_tqj8e"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_k6sc6"]
 resource_local_to_scene = true
@@ -27,6 +28,10 @@ height = 6.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_entft"]
 albedo_color = Color(0.0797826, 0.302502, 0.161847, 1)
+
+[sub_resource type="Resource" id="Resource_5lsbm"]
+script = ExtResource("2_tqj8e")
+age = 86.94999999999635
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cbetc"]
 properties/0/path = NodePath(".:maturity")
@@ -62,12 +67,9 @@ skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_staie")
 
 [node name="LeftLeaves" type="MeshInstance3D" parent="Trunk"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 6, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 6, 0)
 mesh = SubResource("SphereMesh_7felh")
 surface_material_override/0 = SubResource("StandardMaterial3D_entft")
-
-[node name="Apple" parent="Trunk/LeftLeaves" instance=ExtResource("2_kguxu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9139028, -0.84146976, 0)
 
 [node name="FrontLeaves" type="MeshInstance3D" parent="Trunk"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, -2.5)
@@ -85,14 +87,19 @@ mesh = SubResource("SphereMesh_7felh")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0)
 mesh = SubResource("SphereMesh_7felh")
 
+[node name="Apple" parent="Trunk/TopLeaves" instance=ExtResource("2_kguxu")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 3, 0)
+age = SubResource("Resource_5lsbm")
+
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_cbetc")
 
 [node name="Label3D" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 17.261553, 0)
 billboard = 1
-text = "Age:
-Warp:"
+text = "Age:248979801
+Warp:100
+Scale:1.00"
 font_size = 128
 
 [node name="WarpDetectorArea3D" parent="." instance=ExtResource("2_e4g3r")]
