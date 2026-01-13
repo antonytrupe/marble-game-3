@@ -7,6 +7,7 @@ const STONE_SCENE = preload("res://src/stone/stone.tscn")
 const ACORN_SCENE = preload("res://src/acorn/acorn.tscn")
 const BUSH_SCENE = preload("res://src/bush/bush.tscn")
 const TREE_SCENE = preload("res://src/tree/tree.tscn")
+const APPLE_SCENE = preload("res://src/apple/apple.tscn")
 const MOB_SCENE = preload("res://src/monster/monster.tscn")
 const WARP_MONUMENT_SCENE = preload("res://src/warp_monument/warp_monument.tscn")
 
@@ -40,6 +41,7 @@ func _persistance_signals():
 	Persistance.load_character.connect(_load_character)
 	Persistance.load_warp_monument.connect(_load_warp_monument)
 	Persistance.load_tree.connect(_load_tree)
+	Persistance.load_apple.connect(_load_apple)
 	Persistance.load_finished.connect(_load_finished)
 
 
@@ -59,6 +61,16 @@ func _load_tree(object_name, data: Dictionary):
 		t.transform = str_to_var(data.transform)
 	world.flora.add_child(t)
 
+
+func _load_apple(object_name, data: Dictionary):
+	var t: Apple = APPLE_SCENE.instantiate()
+	t.name = object_name
+
+	t.ready.connect(t.load_node.bind(data))
+
+	if data.has("transform"):
+		t.transform = str_to_var(data.transform)
+	world.flora.add_child(t)
 
 func _load_warp_monument(object_name, data: Dictionary):
 	var w: WarpMonument = WARP_MONUMENT_SCENE.instantiate()
@@ -85,25 +97,25 @@ func _load_character(character_name, data: Dictionary):
 func _persist():
 	players.keys().all(
 		func(player_id):
-			Persistance.persist.emit("Player", players[player_id])
+			Persistance.persist.emit(players[player_id])
 			return true
 	)
 
 	world.characters.get_children().all(
 		func(character):
-			Persistance.persist.emit("MarbleCharacter", character)
+			Persistance.persist.emit(character)
 			return true
 	)
 
 	world.warp_monuments.get_children().all(
 		func(w):
-			Persistance.persist.emit("WarpMonument", w)
+			Persistance.persist.emit(w)
 			return true
 	)
 
 	world.flora.get_children().all(
 		func(w):
-			Persistance.persist.emit("MarbleTree", w)
+			Persistance.persist.emit(w)
 			return true
 	)
 
