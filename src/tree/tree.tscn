@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://c1e46m2pfqiji"]
+[gd_scene load_steps=11 format=3 uid="uid://c1e46m2pfqiji"]
 
 [ext_resource type="Script" uid="uid://duyhummlm0gr1" path="res://src/tree/tree.gd" id="1_2omd0"]
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector_area_3d.tscn" id="2_e4g3r"]
+[ext_resource type="PackedScene" uid="uid://cxp2l820hl2q8" path="res://src/apple/apple.tscn" id="2_kguxu"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_k6sc6"]
 resource_local_to_scene = true
@@ -60,24 +61,27 @@ mesh = SubResource("CylinderMesh_an22n")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_staie")
 
-[node name="Leaves" type="MeshInstance3D" parent="Trunk"]
+[node name="LeftLeaves" type="MeshInstance3D" parent="Trunk"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 6, 0)
 mesh = SubResource("SphereMesh_7felh")
 surface_material_override/0 = SubResource("StandardMaterial3D_entft")
 
-[node name="Leaves2" type="MeshInstance3D" parent="Trunk"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 6, 0)
-mesh = SubResource("SphereMesh_7felh")
+[node name="Apple" parent="Trunk/LeftLeaves" instance=ExtResource("2_kguxu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9139028, -0.84146976, 0)
 
-[node name="Leaves3" type="MeshInstance3D" parent="Trunk"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 2.5)
-mesh = SubResource("SphereMesh_7felh")
-
-[node name="Leaves4" type="MeshInstance3D" parent="Trunk"]
+[node name="FrontLeaves" type="MeshInstance3D" parent="Trunk"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, -2.5)
 mesh = SubResource("SphereMesh_7felh")
 
-[node name="Leaves5" type="MeshInstance3D" parent="Trunk"]
+[node name="RightLeaves" type="MeshInstance3D" parent="Trunk"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 6, 0)
+mesh = SubResource("SphereMesh_7felh")
+
+[node name="BackLeaves" type="MeshInstance3D" parent="Trunk"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 2.5)
+mesh = SubResource("SphereMesh_7felh")
+
+[node name="TopLeaves" type="MeshInstance3D" parent="Trunk"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0)
 mesh = SubResource("SphereMesh_7felh")
 
