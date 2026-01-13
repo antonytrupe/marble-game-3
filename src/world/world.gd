@@ -8,10 +8,6 @@ extends Node3D
 @onready var warp_monuments: Node = %WarpMonuments
 
 
-func _ready() -> void:
-	pass
-
-
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		print("world quit")
@@ -27,6 +23,7 @@ func get_ground_y(x: float, z: float) -> float:
 	if result:
 		return result.position.y
 	return 0.0 # Default if nothing hit
+
 
 func underworld_raiser(nodes: Array[Node]):
 #	warp monuments
