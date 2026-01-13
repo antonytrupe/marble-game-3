@@ -1,10 +1,12 @@
 class_name Client
 extends Control
 
+signal current_character_updated(character: MarbleCharacter)
+
 @onready var server: Server = $/root/Game/Server
 @onready var world: World = $/root/Game/World
 @onready var main_menu = $/root/Game/MainMenu
-@onready var inventory: Inventory = %Inventory
+@onready var inventory: InventoryWindow = %Inventory
 @onready var chat_text_edit: TextEdit = %ChatInput
 @onready var chat_window: MarbleWindow = %ChatWindow
 @export var current_character: MarbleCharacter
@@ -75,11 +77,9 @@ func _unhandled_input(event) -> void:
 	if current_character:
 		#only if we're not typing
 		if !chat_window.visible:
-
 #			inventory
-			if Input.is_action_pressed("inventory"):
-				inventory.visible=!inventory.visible
-
+			if Input.is_action_just_pressed("inventory"):
+				inventory.visible = !inventory.visible
 
 			# Jump
 			if Input.is_action_just_pressed("jump") or \
@@ -155,18 +155,8 @@ func _unhandled_input(event) -> void:
 func set_current_character(character_id):
 	debug('set_current_character:', character_id)
 	current_character = world.characters.get_node(character_id)
-	#to get the warp ui to update
-	#TimeWarp.warp_change.emit(current_character.warp_speed)
-	#TimeWarp.warp_change.connect(set_current_character_warp_speed)
 	current_character.camera.current = true
-
-
-func set_current_character_warp_speed(value):
-	#current_character.warp_speed=value
-	if is_server():
-		current_character.server_warp(value)
-	else:
-		current_character.server_warp.rpc_id(1, value)
+	current_character_updated.emit(current_character)
 
 
 func _on_connected_to_server():

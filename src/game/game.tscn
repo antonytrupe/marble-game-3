@@ -122,11 +122,6 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-text = "debug
-debug
-debug
-debug
-"
 scroll_following = true
 scroll_following_visible_characters = true
 context_menu_enabled = true

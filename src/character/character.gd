@@ -1,6 +1,8 @@
 class_name MarbleCharacter
 extends CharacterBody3D
 
+signal inventory_updated
+
 enum MODE {
 	##half the walk distance
 	##usually 15ft/round
@@ -31,6 +33,10 @@ const MAX_CONTROLLED_WARP = 10
 @export var player_name: String
 
 @export var age: float = 0
+@export var inventory: Inventory:
+	set = _set_inventory
+
+
 var turn: int = 0:
 	set = _set_turn
 
@@ -60,6 +66,11 @@ var player_id: String
 @onready var chat_bubbles = %ChatBubbles
 @onready var client = $/root/Game/Client
 @onready var warp_detector: WarpDetector = $WarpDetector
+
+func _set_inventory(value):
+	inventory = value
+	inventory_updated.emit(inventory)
+
 
 func is_server() -> bool:
 	return multiplayer.is_server()
@@ -120,7 +131,7 @@ func chat_bubble(message: String):
 
 
 @warning_ignore("shadowed_variable")
-func _start_turn(turn):
+func _start_turn(_turn):
 	#print('starting turn %.f'%turn)
 	pass
 
@@ -217,6 +228,7 @@ func get_data() -> Dictionary:
 		"age": age,
 		"turn": turn,
 		"transform": var_to_str(transform),
+		"inventory": var_to_str(inventory)
 	}
 
 
@@ -234,6 +246,8 @@ func load_node(node_data):
 		age = node_data.age
 	if "turn" in node_data:
 		turn = node_data.turn
+	if "inventory" in node_data:
+		inventory = str_to_var(node_data.inventory)
 
 
 func _update_label():

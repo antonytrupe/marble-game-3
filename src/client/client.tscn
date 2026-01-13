@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bm4xlm4n6hqkm" path="res://src/client/client.gd" id="1_lgb4g"]
 [ext_resource type="Script" uid="uid://jnoxhwe83f6c" path="res://src/client/chat_input.gd" id="2_1drpi"]
 [ext_resource type="PackedScene" uid="uid://nwnomeygl26l" path="res://src/window/window.tscn" id="3_40k8x"]
-[ext_resource type="PackedScene" uid="uid://ndv046sjn52g" path="res://src/inventory_window/inventory.tscn" id="3_78v8x"]
+[ext_resource type="PackedScene" uid="uid://ndv046sjn52g" path="res://src/inventory/inventory_window.tscn" id="3_78v8x"]
 
 [node name="Client" type="Control"]
 layout_mode = 3
@@ -88,3 +88,5 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("2_1drpi")
+
+[connection signal="current_character_updated" from="." to="Inventory" method="_on_client_current_character_updated"]

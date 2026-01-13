@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bqlvycywdnwec"]
+[gd_scene load_steps=4 format=3 uid="uid://bqlvycywdnwec"]
 
 [ext_resource type="PackedScene" uid="uid://nwnomeygl26l" path="res://src/window/window.tscn" id="1_lcycu"]
-[ext_resource type="PackedScene" uid="uid://ndv046sjn52g" path="res://src/inventory_window/inventory.tscn" id="2_xx5fd"]
+[ext_resource type="PackedScene" uid="uid://ndv046sjn52g" path="res://src/inventory/inventory_window.tscn" id="2_xx5fd"]
+[ext_resource type="PackedScene" uid="uid://b4f3nuk5vp4rc" path="res://src/character/character.tscn" id="3_4d6kb"]
 
 [node name="Node2D" type="CanvasLayer"]
 
@@ -34,3 +35,5 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="Character" parent="." instance=ExtResource("3_4d6kb")]
