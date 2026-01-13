@@ -1,6 +1,6 @@
 extends Node
 
-signal persist(o_name, o)
+signal persist(o)
 signal load
 signal load_finished
 signal new
@@ -8,6 +8,7 @@ signal load_character(name, data)
 signal load_player(name, data)
 signal load_warp_monument(name, data)
 signal load_tree(name, data)
+signal load_apple(name, data)
 var _db: SQLite
 
 
@@ -65,6 +66,16 @@ func _load_trees():
 	_load_object(clazz_name, _load_tree)
 
 
+func _load_apples():
+	var instanced_class = Apple.new()
+	var clazz_name = instanced_class.get_script().get_global_name()
+
+	var _load_apple = func(r):
+			load_apple.emit(r.name, JSON.parse_string(r.data))
+			return true
+
+	_load_object(clazz_name, _load_apple)
+
 func _new():
 	_db = SQLite.new()
 	_db.path = "res://server.db"
@@ -74,13 +85,18 @@ func _new():
 	_db.drop_table("Player")
 	_db.drop_table("MarbleCharacter")
 	_db.drop_table("MarbleTree")
+	_db.drop_table("Apple")
 	_create_character_table()
 	_create_player_table()
+	_create_warp_monument_table()
 	_create_tree_table()
+	_create_apple_table()
 	_load_players()
 	_load_characters()
+	_load_warp_monuments()
 	_load_trees()
-
+	_load_apples()
+	load_finished.emit()
 
 func _load():
 	_db = SQLite.new()
@@ -91,16 +107,19 @@ func _load():
 	_create_character_table()
 	_create_player_table()
 	_create_warp_monument_table()
+	_create_tree_table()
+	_create_apple_table()
 	_load_players()
 	_load_characters()
 	_load_warp_monuments()
 	_load_trees()
+	_load_apples()
 	load_finished.emit()
 
 
-func _persist(clazz_name, o: Object):
+func _persist(o: Object):
+	var clazz_name = o.get_script().get_global_name()
 	Debug.debug.emit("persisting %s:%s" % [clazz_name, o.name])
-
 	_db.query_with_bindings(
 		(
 			"INSERT INTO %s (name, data) VALUES (?, ? ) ON CONFLICT (name) DO update set data=excluded.data"
@@ -148,6 +167,13 @@ func _create_player_table():
 
 func _create_tree_table():
 	var instanced_class = MarbleTree.new()
+	var clazz_name = instanced_class.get_script().get_global_name()
+
+	_create_table(clazz_name)
+
+
+func _create_apple_table():
+	var instanced_class = Apple.new()
 	var clazz_name = instanced_class.get_script().get_global_name()
 
 	_create_table(clazz_name)
