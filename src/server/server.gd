@@ -82,10 +82,7 @@ func _load_character(character_name, data: Dictionary):
 	world.characters.add_child(c)
 
 
-func quit():
-	world.visible = false
-	print("server quit")
-	Steam.leaveLobby(lobby_id)
+func _persist():
 	players.keys().all(
 		func(player_id):
 			Persistance.persist.emit("Player", players[player_id])
@@ -109,6 +106,13 @@ func quit():
 			Persistance.persist.emit("MarbleTree", w)
 			return true
 	)
+
+
+func quit():
+	world.visible = false
+	print("server quit")
+	Steam.leaveLobby(lobby_id)
+	_persist()
 
 
 func _notification(what):
@@ -199,6 +203,8 @@ func command(cmd: String, _player: Player, character: MarbleCharacter):
 		return
 	var parts: PackedStringArray = cmd.replace("/", "").split(" ")
 	match parts[0]:
+		"persist":
+			_persist()
 		"loc", "pos", "position", "location":
 			pass
 			print("%.f %.f %.f" % [character.position.x, character.position.y, character.position.z])
