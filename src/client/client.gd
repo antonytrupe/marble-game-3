@@ -29,8 +29,7 @@ func _ready() -> void:
 
 @warning_ignore("shadowed_variable")
 func join_lobby(lobby_id: int) -> void:
-	debug("Attempting to join lobby %s" % lobby_id)
-
+	#debug("Attempting to join lobby %s" % lobby_id)
 	# Make the lobby join request to Steam
 	Steam.joinLobby(lobby_id)
 	#ui.visible=true
@@ -38,7 +37,7 @@ func join_lobby(lobby_id: int) -> void:
 
 @warning_ignore("shadowed_variable")
 func _on_lobby_joined(lobby_id: int, _permissions: int, _locked: bool, _response: int) -> void:
-	debug("_on_lobby_joined")
+	#debug("_on_lobby_joined")
 	if Steam.getLobbyOwner(lobby_id) == Steam.getSteamID():
 		# We're probably hosting so we can ignore this
 		#debug('this is us')
@@ -153,7 +152,7 @@ func _unhandled_input(event) -> void:
 #this is for the server to tell this client who it's character is
 @rpc()
 func set_current_character(character_id):
-	debug('set_current_character:', character_id)
+	#debug('set_current_character:', character_id)
 	current_character = world.characters.get_node(character_id)
 	current_character.camera.current = true
 	current_character_updated.emit(current_character)
@@ -164,14 +163,14 @@ func _on_connected_to_server():
 	visible = true
 	world.visible = true
 
-	debug("_on_connected_to_server")
+	#debug("_on_connected_to_server")
 	# var steam_id = Steam.getSteamID()
 	#return "steam:"+str(steam_id)
 	#server.set_client_player_id.rpc_id(1,"steam:"+str(steam_id))
 
 
 func _server_disconnected():
-	debug("_server_disconnected")
+	#debug("_server_disconnected")
 	Steam.leaveLobby(lobby_id)
 	main_menu.visible = true
 	visible = false

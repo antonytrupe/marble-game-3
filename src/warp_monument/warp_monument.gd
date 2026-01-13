@@ -1,15 +1,6 @@
-#@tool
 class_name WarpMonument
 extends Node3D
 
-#[1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 60,
-								#300, 600, 1800, 3600,
-								#86400, 604800, 2419200, 24192000,
-								#]
-
-#const RADIUS_CUSTOM_VALUES: Array[int] = [1, 2, 3, 5, 10, 20, 60,
-								#300, 600,
-								#]
 const MONTHS = [
 	"March", # 1
 	"April", # 2

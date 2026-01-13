@@ -35,9 +35,9 @@ func _on_lobby_join_requested(this_lobby_id: int, friend_steam_id: int) -> void:
 	# Get the lobby owner's name
 	var friend_name: String = Steam.getFriendPersonaName(friend_steam_id)
 
-	debug("%s joined lobby %s..." % friend_name, this_lobby_id)
+	#debug("%s joined lobby %s..." % friend_name, this_lobby_id)
 	var id := Steam.getLobbyOwner(this_lobby_id)
-	debug("lobby owner %s" % id)
+	#debug("lobby owner %s" % id)
 
 
 func _multiplayer_signals():
@@ -143,7 +143,7 @@ func _on_lobby_created(result: int, lobby_id: int) -> void:
 
 		multiplayer.multiplayer_peer = peer
 		# Set the lobby ID
-		debug("Created a lobby: %s" % lobby_id)
+		#debug("Created a lobby: %s" % lobby_id)
 
 		# Set this lobby as joinable, just in case, though this should be done by default
 		Steam.setLobbyJoinable(lobby_id, true)
@@ -288,7 +288,7 @@ func _spawn_warp_monument(center: Vector3):
 	m.name = m.name + "%010d" % randi()
 	#var chunk = chunks.get_chunk(center)
 	var y = randf_range(0, PI)
-	print("y:", y) # Debug
+	#print("y:", y) # Debug
 
 	m.rotation.y = y
 	var p: Vector3 = _get_random_vector(10, center)
@@ -345,7 +345,7 @@ func _spawn_mob(count: int, center: Vector3):
 		mob.name = mob.name + "%010d" % randi()
 		#var chunk = chunks.get_chunk(center)
 		var y = randf_range(0, PI)
-		print("y:", y) # Debug
+		#print("y:", y) # Debug
 
 		mob.rotation.y = y
 		mob.position = _get_random_vector(10, center)
@@ -393,7 +393,7 @@ func _on_peer_connected(peer_id = 1):
 		steam_id = (multiplayer.multiplayer_peer as SteamMultiplayerPeer).get_steam_id_for_peer_id(peer_id)
 		#debug("steam id: %s" % steam_id)
 		friend_name = Steam.getFriendPersonaName(steam_id)
-		debug("friend_name: %s" % friend_name)
+		#debug("friend_name: %s" % friend_name)
 
 	var player_id = "Steam:" + str(steam_id)
 	# see if the player exists already
@@ -418,7 +418,7 @@ func _on_peer_connected(peer_id = 1):
 	c._update_label()
 
 func _on_peer_disconnected(peer_id):
-	debug("Peer disconnected with ID: %s" % peer_id)
+	#debug("Peer disconnected with ID: %s" % peer_id)
 	var p: Player = connected_players[peer_id]
 	var c: MarbleCharacter = world.characters.get_node(p.current_character_id)
 	#"clear" the player_name of the character
@@ -430,8 +430,7 @@ func _on_peer_disconnected(peer_id):
 
 
 func _create_character():
-	debug("_create_character")
-
+	#debug("_create_character")
 	var c: MarbleCharacter = CHARACTER_SCENE.instantiate()
 	c.name = str(randi())
 	c.position = Vector3(randf_range(-100, 100), 0, randf_range(-100, 100))

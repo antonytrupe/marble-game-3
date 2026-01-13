@@ -53,7 +53,7 @@ func read_text_file(path):
 	var file = FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		# Check for errors opening the file
-		print("Failed to open file: ", path, " Error code: ", FileAccess.get_open_error())
+		debug("Failed to open file: ", path, " Error code: ", FileAccess.get_open_error())
 		return ""
 
 	var content = file.get_as_text()
