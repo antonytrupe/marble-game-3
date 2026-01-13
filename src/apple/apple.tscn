@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://cxp2l820hl2q8"]
+
+[ext_resource type="Script" uid="uid://dmr70y3w8hsrm" path="res://src/apple/apple.gd" id="1_pek8c"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_pek8c"]
+radius = 0.06
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pek8c"]
+albedo_color = Color(0.54509807, 0.007843138, 0.007843138, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_5qehy"]
+material = SubResource("StandardMaterial3D_pek8c")
+radius = 0.06
+height = 0.12
+
+[node name="Apple" type="StaticBody3D"]
+script = ExtResource("1_pek8c")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+shape = SubResource("SphereShape3D_pek8c")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+mesh = SubResource("SphereMesh_5qehy")
