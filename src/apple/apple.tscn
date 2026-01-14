@@ -14,7 +14,12 @@ material = SubResource("StandardMaterial3D_pek8c")
 radius = 0.06
 height = 0.12
 
-[node name="Apple" type="StaticBody3D"]
+[node name="Apple" type="RigidBody3D"]
+collision_layer = 4
+collision_mask = 17
+can_sleep = false
+freeze = true
+freeze_mode = 1
 script = ExtResource("1_pek8c")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -26,4 +31,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
 mesh = SubResource("SphereMesh_5qehy")
 
 [node name="WarpDetectorArea3D" parent="." instance=ExtResource("2_5qehy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.058287866, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)

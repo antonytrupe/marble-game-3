@@ -2,8 +2,7 @@
 
 [ext_resource type="Script" uid="uid://duyhummlm0gr1" path="res://src/tree/tree.gd" id="1_2omd0"]
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_e4g3r"]
-[ext_resource type="PackedScene" uid="uid://cxp2l820hl2q8" path="res://src/apple/apple.tscn" id="2_kguxu"]
-[ext_resource type="Script" uid="uid://bajm6uk2gjcyi" path="res://src/age/age.gd" id="2_tqj8e"]
+[ext_resource type="Shader" uid="uid://0e2onyl67kre" path="res://src/select_outline.gdshader" id="3_kguxu"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_k6sc6"]
 resource_local_to_scene = true
@@ -29,28 +28,39 @@ height = 6.0
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_entft"]
 albedo_color = Color(0.0797826, 0.302502, 0.161847, 1)
 
-[sub_resource type="Resource" id="Resource_5lsbm"]
-script = ExtResource("2_tqj8e")
-age = 86.94999999999635
-
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cbetc"]
-properties/0/path = NodePath(".:maturity")
+properties/0/path = NodePath(".:age")
 properties/0/spawn = true
 properties/0/replication_mode = 2
-properties/1/path = NodePath(".:position")
+properties/1/path = NodePath(".:maturity")
 properties/1/spawn = true
 properties/1/replication_mode = 2
-properties/2/path = NodePath(".:rotation")
+properties/2/path = NodePath(".:position")
 properties/2/spawn = true
 properties/2/replication_mode = 2
-properties/3/path = NodePath(".:age")
+properties/3/path = NodePath(".:rotation")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 properties/4/path = NodePath(".:warp_speed")
 properties/4/spawn = true
 properties/4/replication_mode = 2
 
-[node name="Tree" type="StaticBody3D" groups=["flora", "persist"]]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tqj8e"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("3_kguxu")
+shader_parameter/highlight_color = Color(0, 0, 1, 1)
+shader_parameter/intensity = 0.0
+shader_parameter/outline_width = 0.1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_jrthf"]
+resource_local_to_scene = true
+material = SubResource("ShaderMaterial_tqj8e")
+top_radius = 0.8
+bottom_radius = 1.0
+height = 10.0
+
+[node name="Tree" type="RigidBody3D" groups=["flora", "persist"]]
 collision_layer = 4
 collision_mask = 31
 script = ExtResource("1_2omd0")
@@ -87,9 +97,7 @@ mesh = SubResource("SphereMesh_7felh")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0)
 mesh = SubResource("SphereMesh_7felh")
 
-[node name="Apple" parent="Trunk/TopLeaves" instance=ExtResource("2_kguxu")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 3, 0)
-age = SubResource("Resource_5lsbm")
+[node name="WarpDetectorArea3D" parent="." instance=ExtResource("2_e4g3r")]
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_cbetc")
@@ -102,4 +110,7 @@ Warp:100
 Scale:1.00"
 font_size = 128
 
-[node name="WarpDetectorArea3D" parent="." instance=ExtResource("2_e4g3r")]
+[node name="HighlightMeshInstance3D" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+mesh = SubResource("CylinderMesh_jrthf")
