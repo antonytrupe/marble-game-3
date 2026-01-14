@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://b4f3nuk5vp4rc"]
+[gd_scene load_steps=8 format=3 uid="uid://b4f3nuk5vp4rc"]
 
 [ext_resource type="Script" uid="uid://chjly557ici3u" path="res://src/character/character.gd" id="1_glpr6"]
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_2p3op"]
+[ext_resource type="Script" uid="uid://cv7le154j7bfo" path="res://src/character/ray_cast_3d.gd" id="2_8mo58"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vu45j"]
 resource_local_to_scene = true
@@ -68,13 +69,16 @@ text = "PlayerName (x6)"
 
 [node name="CameraPivot" type="Node3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, -0.4)
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
 unique_name_in_owner = true
 
 [node name="RayCast3D" type="RayCast3D" parent="CameraPivot/Camera3D"]
-collision_mask = 32
+target_position = Vector3(0, 0, -4)
+collision_mask = 31
+hit_from_inside = true
+script = ExtResource("2_8mo58")
 
 [node name="WarpDetector" parent="." instance=ExtResource("2_2p3op")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
