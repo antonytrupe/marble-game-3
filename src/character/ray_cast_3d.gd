@@ -20,7 +20,6 @@ func _process(_delta):
 
 
 func _set_highlight(mesh: MeshInstance3D, value: float):
-	#print('_set_highlight %s' % value)
 	# Use set_shader_parameter to toggle the effect
 	var mat = mesh.mesh.material as ShaderMaterial
 	#print(mat)

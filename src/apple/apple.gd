@@ -4,9 +4,9 @@ extends RigidBody3D
 
 #apples take 150 days to mature
 ##days
-@export var maturity: int = int(MarbleAge.SECONDS_IN_DAY * (150))
-@export var age: MarbleAge = MarbleAge.new()
+@export var maturity: int = MarbleAge.SECONDS_IN_DAY * 150
 @export var warp_speed: float = 1
+@onready var age: MarbleAge = $MarbleAge
 
 var turn = 0
 
@@ -28,14 +28,18 @@ func _physics_process(delta: float):
 	for i in range(self.turn, new_turn):
 		_start_turn(i)
 	self.turn = new_turn
+	#_fall()
 
+
+
+func _fall():
 	if freeze and age.age > maturity:
+		print('apple fall')
 		# pass
 #		turn on physics and let it drop to the ground
 		freeze = false
 		freeze_mode = RigidBody3D.FREEZE_MODE_KINEMATIC
 		# reparent(flora)
-
 
 func is_server() -> bool:
 	return multiplayer.is_server()

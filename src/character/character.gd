@@ -32,7 +32,7 @@ const MAX_CONTROLLED_WARP = 10
 	set = _set_warp_speed
 @export var player_name: String
 
-@export var age: float = 0
+@onready var age: MarbleAge = $MarbleAge
 @export var inventory: Inventory:
 	set = _set_inventory
 
@@ -137,9 +137,9 @@ func _start_turn(_turn):
 
 func _physics_process(delta: float) -> void:
 	if is_server():
-		age = age + delta * warp_speed
+		age.age = age.age + delta * warp_speed
 	@warning_ignore("narrowing_conversion")
-	var _turn: int = age / MarbleAge.SECONDS_IN_TURN + 1
+	var _turn: int = age.age / MarbleAge.SECONDS_IN_TURN + 1
 	for i in range(self.turn, _turn):
 		_start_turn(i)
 	self.turn = _turn
@@ -242,7 +242,7 @@ func load_node(node_data):
 	if "warp_speed" in node_data:
 		warp_speed = node_data.warp_speed
 	if "age" in node_data:
-		age = node_data.age
+		age.age = node_data.age
 	if "turn" in node_data:
 		turn = node_data.turn
 	if "inventory" in node_data:

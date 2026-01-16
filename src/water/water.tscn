@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://dg5pngnp7smv8"]
 
-[ext_resource type="Shader" uid="uid://by6nn2of3a1ig" path="res://src/water.gdshader" id="1_mxv3a"]
+[ext_resource type="Shader" uid="uid://by6nn2of3a1ig" path="res://src/water/water.gdshader" id="1_mxv3a"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_y2bxs"]
 

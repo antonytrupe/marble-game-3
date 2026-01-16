@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bod6lvq43qjsc" path="res://src/world/world.gd" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://bga3y3kuercqk" path="res://src/world/mesh_instance_3d.gd" id="2_bsf3i"]
-[ext_resource type="PackedScene" uid="uid://dg5pngnp7smv8" path="res://src/water.tscn" id="3_jte2u"]
+[ext_resource type="PackedScene" uid="uid://dg5pngnp7smv8" path="res://src/water/water.tscn" id="3_jte2u"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f3sb7"]
 properties/0/path = NodePath(".:visible")

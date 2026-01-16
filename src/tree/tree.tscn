@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://c1e46m2pfqiji"]
+[gd_scene load_steps=15 format=3 uid="uid://c1e46m2pfqiji"]
 
 [ext_resource type="Script" uid="uid://duyhummlm0gr1" path="res://src/tree/tree.gd" id="1_2omd0"]
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_e4g3r"]
-[ext_resource type="Shader" uid="uid://0e2onyl67kre" path="res://src/select_outline.gdshader" id="3_kguxu"]
+[ext_resource type="Script" uid="uid://bajm6uk2gjcyi" path="res://src/age/age.gd" id="2_tqj8e"]
+[ext_resource type="PackedScene" uid="uid://dhtfh7aumk85c" path="res://src/highlight/highlight.tscn" id="3_kguxu"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_k6sc6"]
 resource_local_to_scene = true
@@ -29,33 +30,49 @@ height = 6.0
 albedo_color = Color(0.0797826, 0.302502, 0.161847, 1)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cbetc"]
-properties/0/path = NodePath(".:age")
+properties/0/path = NodePath(".:maturity")
 properties/0/spawn = true
 properties/0/replication_mode = 2
-properties/1/path = NodePath(".:maturity")
+properties/1/path = NodePath(".:position")
 properties/1/spawn = true
 properties/1/replication_mode = 2
-properties/2/path = NodePath(".:position")
+properties/2/path = NodePath(".:rotation")
 properties/2/spawn = true
 properties/2/replication_mode = 2
-properties/3/path = NodePath(".:rotation")
+properties/3/path = NodePath(".:warp_speed")
 properties/3/spawn = true
 properties/3/replication_mode = 2
-properties/4/path = NodePath(".:warp_speed")
-properties/4/spawn = true
-properties/4/replication_mode = 2
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_tqj8e"]
+[sub_resource type="Shader" id="Shader_tqj8e"]
+resource_local_to_scene = true
+code = "shader_type spatial;
+render_mode cull_front, unshaded;
+
+uniform vec4 highlight_color : source_color = vec4(0.0, 0.0, 1.0, 1.0);
+uniform float intensity : hint_range(0, 1) = 0.0;
+uniform float outline_width : hint_range(0, 0.3) = 0.1; // Controlled by script
+
+void vertex() {
+    // Expand the mesh slightly along its normals to create the border
+    VERTEX += NORMAL * outline_width;
+}
+
+void fragment() {
+    ALBEDO = highlight_color.rgb;
+    ALPHA = intensity;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jrthf"]
 resource_local_to_scene = true
 render_priority = 0
-shader = ExtResource("3_kguxu")
+shader = SubResource("Shader_tqj8e")
 shader_parameter/highlight_color = Color(0, 0, 1, 1)
 shader_parameter/intensity = 0.0
 shader_parameter/outline_width = 0.1
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_jrthf"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_5lsbm"]
 resource_local_to_scene = true
-material = SubResource("ShaderMaterial_tqj8e")
+material = SubResource("ShaderMaterial_jrthf")
 top_radius = 0.8
 bottom_radius = 1.0
 height = 10.0
@@ -63,6 +80,8 @@ height = 10.0
 [node name="Tree" type="RigidBody3D" groups=["flora", "persist"]]
 collision_layer = 4
 collision_mask = 31
+mass = 102.651
+freeze = true
 script = ExtResource("1_2omd0")
 
 [node name="TrunkCollision" type="CollisionShape3D" parent="."]
@@ -110,7 +129,11 @@ Warp:100
 Scale:1.00"
 font_size = 128
 
-[node name="HighlightMeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="HighlightMeshInstance3D" parent="." instance=ExtResource("3_kguxu")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
-mesh = SubResource("CylinderMesh_jrthf")
+mesh = SubResource("CylinderMesh_5lsbm")
+
+[node name="MarbleAge" type="Node" parent="."]
+script = ExtResource("2_tqj8e")
+metadata/_custom_type_script = "uid://bajm6uk2gjcyi"

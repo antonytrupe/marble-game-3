@@ -4,9 +4,9 @@ extends Node3D
 
 const APPLE_SCENE = preload("res://src/apple/apple.tscn")
 
-@export var maturity: int = int(MarbleAge.SECONDS_IN_YEAR * (8))
+@export var maturity: int = MarbleAge.SECONDS_IN_YEAR * 8
 #TODO figure out how to sync age
-@export var age: MarbleAge = MarbleAge.new()
+@onready var age: MarbleAge = $MarbleAge
 @export var warp_speed: float = 1
 var turn = 0
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D

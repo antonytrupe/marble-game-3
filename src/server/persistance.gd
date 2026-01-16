@@ -86,6 +86,7 @@ func _new():
 	_db.drop_table("MarbleCharacter")
 	_db.drop_table("MarbleTree")
 	_db.drop_table("Apple")
+	_db.drop_table("WarpMonument")
 	_create_character_table()
 	_create_player_table()
 	_create_warp_monument_table()
