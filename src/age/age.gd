@@ -30,27 +30,31 @@ const MONTHS = [
 ## seconds since creation, taking warp bubbles into account
 @export var age: float = 0
 
-func get_month()->int:
+func get_month() -> int:
 	@warning_ignore("integer_division")
 	var month_of_year: int = int(age) % (MarbleAge.SECONDS_IN_HOUR * MarbleAge.HOURS_IN_DAY * MarbleAge.DAYS_IN_MONTH * MarbleAge.MONTHS_IN_YEAR) / (MarbleAge.SECONDS_IN_MONTH)
 
 	return month_of_year
 
-func get_day_of_week()->int:
-	var day_of_month=get_day_of_month()
-	var day_of_week:int = (day_of_month - 1) % MarbleAge.DAYS_IN_WEEK
+
+func get_day_of_week() -> int:
+	var day_of_month = get_day_of_month()
+	var day_of_week: int = (day_of_month - 1) % MarbleAge.DAYS_IN_WEEK
 	return day_of_week
 
-func get_day_of_month()->int:
+
+func get_day_of_month() -> int:
 	@warning_ignore("integer_division")
 	var day_of_month: int = int(age) % (MarbleAge.SECONDS_IN_MONTH) / (MarbleAge.SECONDS_IN_DAY) + 1
 	return day_of_month
 
-func get_week_of_month()->int:
-	var day_of_month=get_day_of_month()
+
+func get_week_of_month() -> int:
+	var day_of_month = get_day_of_month()
 	@warning_ignore("integer_division")
-	var week_of_month:int = (day_of_month - 1) / MarbleAge.DAYS_IN_WEEK
+	var week_of_month: int = (day_of_month - 1) / MarbleAge.DAYS_IN_WEEK
 	return week_of_month
 
-func get_years()->int:
+
+func get_years() -> int:
 	return 0
