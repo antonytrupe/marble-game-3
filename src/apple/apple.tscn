@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dmr70y3w8hsrm" path="res://src/apple/apple.gd" id="1_pek8c"]
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_5qehy"]
 [ext_resource type="PackedScene" uid="uid://dhtfh7aumk85c" path="res://src/highlight/highlight.tscn" id="3_yckcf"]
+[ext_resource type="Shader" uid="uid://0e2onyl67kre" path="res://src/highlight/select_outline.gdshader" id="4_c76jp"]
 [ext_resource type="Script" uid="uid://bajm6uk2gjcyi" path="res://src/age/age.gd" id="4_ygiwg"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_pek8c"]
@@ -16,39 +17,19 @@ material = SubResource("StandardMaterial3D_pek8c")
 radius = 0.06
 height = 0.12
 
-[sub_resource type="Shader" id="Shader_ygiwg"]
-resource_local_to_scene = true
-code = "shader_type spatial;
-render_mode cull_front, unshaded;
-
-uniform vec4 highlight_color : source_color = vec4(0.0, 0.0, 1.0, 1.0);
-uniform float intensity : hint_range(0, 1) = 0.0;
-uniform float outline_width : hint_range(0, 0.3) = 0.1; // Controlled by script
-
-void vertex() {
-    // Expand the mesh slightly along its normals to create the border
-    VERTEX += NORMAL * outline_width;
-}
-
-void fragment() {
-    ALBEDO = highlight_color.rgb;
-    ALPHA = intensity;
-}"
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_c76jp"]
 resource_local_to_scene = true
 render_priority = 0
-shader = SubResource("Shader_ygiwg")
+shader = ExtResource("4_c76jp")
 shader_parameter/highlight_color = Color(0, 0, 1, 1)
 shader_parameter/intensity = 0.0
-shader_parameter/outline_width = 0.1
+shader_parameter/outline_width = 0.30000001192093
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_pxyjr"]
+[sub_resource type="SphereMesh" id="SphereMesh_pxyjr"]
 resource_local_to_scene = true
 material = SubResource("ShaderMaterial_c76jp")
-top_radius = 0.8
-bottom_radius = 1.0
-height = 10.0
+radius = 0.07
+height = 0.14
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_yckcf"]
 properties/0/path = NodePath(".:maturity")
@@ -70,6 +51,8 @@ collision_mask = 17
 can_sleep = false
 freeze = true
 freeze_mode = 1
+continuous_cd = true
+angular_damp = 32.189
 script = ExtResource("1_pek8c")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -84,7 +67,9 @@ mesh = SubResource("SphereMesh_5qehy")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
 
 [node name="HighlightMeshInstance3D" parent="." instance=ExtResource("3_yckcf")]
-mesh = SubResource("CylinderMesh_pxyjr")
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+mesh = SubResource("SphereMesh_pxyjr")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_yckcf")

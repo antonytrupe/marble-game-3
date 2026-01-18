@@ -6,10 +6,10 @@ extends RigidBody3D
 ##days
 @export var maturity: int = MarbleAge.SECONDS_IN_DAY * 150
 @export var warp_speed: float = 1
-@onready var age: MarbleAge = $MarbleAge
 
 var turn = 0
 
+@onready var age: MarbleAge = $MarbleAge
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D
 @onready var flora = $/root/Game/World/Flora
 
@@ -28,8 +28,7 @@ func _physics_process(delta: float):
 	for i in range(self.turn, new_turn):
 		_start_turn(i)
 	self.turn = new_turn
-	#_fall()
-
+	_fall()
 
 
 func _fall():
@@ -41,6 +40,7 @@ func _fall():
 		freeze_mode = RigidBody3D.FREEZE_MODE_KINEMATIC
 		# reparent(flora)
 
+
 func is_server() -> bool:
 	return multiplayer.is_server()
 
@@ -48,6 +48,7 @@ func is_server() -> bool:
 func _start_turn(_turn):
 	#print('starting turn %.f'%turn)
 	pass
+
 
 func calculate_warp():
 	var closest: WarpMonument = null

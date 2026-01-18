@@ -38,3 +38,6 @@ TODO
 37. picking fruit off ground
 38. picking fruit off trees/bushes
 39. granting items to characters
+40. crafting
+41. xp
+42. spells

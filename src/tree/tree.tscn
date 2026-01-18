@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://dhtfh7aumk85c" path="res://src/highlight/highlight.tscn" id="3_kguxu"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_k6sc6"]
-resource_local_to_scene = true
 height = 10.0
 radius = 1.0
 

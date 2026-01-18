@@ -5,10 +5,11 @@ extends Node3D
 const APPLE_SCENE = preload("res://src/apple/apple.tscn")
 
 @export var maturity: int = MarbleAge.SECONDS_IN_YEAR * 8
-#TODO figure out how to sync age
-@onready var age: MarbleAge = $MarbleAge
 @export var warp_speed: float = 1
+
 var turn = 0
+
+@onready var age: MarbleAge = $MarbleAge
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D
 @onready var label_3d: Label3D = $Label3D
 @onready var left_leaves: MeshInstance3D = $Trunk/LeftLeaves
@@ -40,10 +41,10 @@ func _start_turn(_turn):
 	#if the tree mature, then it can grow apples
 	if age.age > maturity:
 		#apples start growing in March
-		if true or age.get_month() == 0:
+		if age.get_month() == 0:
 			var i = randi_range(1, 200)
 			if i == 1:
-				# pass
+				#pass
 				_add_apple()
 
 
@@ -60,6 +61,7 @@ func _add_apple():
 	apple.position = left_leaves.global_position + Vector3(x / l, y / l, z / l) * 3
 	#left_leaves.add_child(apple)
 	flora.add_child(apple)
+
 
 func is_server() -> bool:
 	return multiplayer.is_server()
@@ -83,6 +85,7 @@ func load_node(node_data):
 		warp_speed = node_data.warp_speed
 	if "turn" in node_data:
 		turn = node_data.turn
+
 
 func calculate_warp():
 	var closest: WarpMonument = null
