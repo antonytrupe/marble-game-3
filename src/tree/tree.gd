@@ -30,13 +30,12 @@ func _physics_process(delta: float):
 	if is_server():
 		age.age += delta * warp_speed
 		@warning_ignore("narrowing_conversion")
-		var _turn: int = age.age / MarbleAge.SECONDS_IN_TURN + 1
-		for i in range(self.turn, _turn):
-			_start_turn(i)
-		self.turn = _turn
+		var new_turn: int = age.age / MarbleAge.SECONDS_IN_TURN + 1
+		_start_turn(range(self.turn + 1, new_turn + 1))
+		self.turn = new_turn
 
 
-func _start_turn(_turn):
+func _start_turn(_turns):
 	#print('starting turn %.f'%turn)
 	#if the tree mature, then it can grow apples
 	if age.age > maturity:
@@ -44,12 +43,12 @@ func _start_turn(_turn):
 		if age.get_month() == 0:
 			var i = randi_range(1, 800)
 			if i == 1:
-				pass
-				#_add_apple()
+				#pass
+				_add_apple()
 
 
 func _add_apple():
-	print("add apple")
+	#print("add apple")
 	var x = - abs(randfn(0, 1))
 	var y = randfn(0, 1)
 	var z = randfn(0, 1)

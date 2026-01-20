@@ -278,7 +278,10 @@ func command(cmd: String, _player: Player, character: MarbleCharacter):
 					var count = 1
 					if parts.size() >= 3:
 						count = int(parts[2])
-					_spawn_trees(count, character.position)
+					var maturity_ratio: float = 0.0
+					if parts.size() >= 4:
+						maturity_ratio = float(parts[3])
+					_spawn_trees(count, character.position, maturity_ratio)
 
 				"apple", "apples":
 					var count = 1
@@ -331,13 +334,17 @@ func _spawn_bushes(count: int, center: Vector3):
 		world.flora.add_child(bush)
 
 
-func _spawn_trees(count: int, center: Vector3):
+func _spawn_trees(count: int, center: Vector3, maturity_ratio: float = 0.0):
 	count = clampi(count, 1, 100)
 	for i in count:
-		var tree = TREE_SCENE.instantiate()
+		var tree: MarbleTree = TREE_SCENE.instantiate()
 		tree.name = tree.name + "%010d" % randi()
 		#TODO do this more righter
 		tree.position = _get_random_vector(10, center)
+
+		tree.ready.connect(func():
+			tree.age.age = tree.maturity * maturity_ratio
+			)
 		#var chunk = chunks.get_chunk(tree.global_position)
 		world.flora.add_child(tree)
 

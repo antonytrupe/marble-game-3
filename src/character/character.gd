@@ -130,7 +130,7 @@ func chat_bubble(message: String):
 	chat_bubbles.add_child(bubble)
 
 
-func _start_turn(_turn):
+func _start_turn(_turns):
 	#print('starting turn %.f'%turn)
 	pass
 
@@ -138,11 +138,10 @@ func _start_turn(_turn):
 func _physics_process(delta: float) -> void:
 	if is_server():
 		age.age = age.age + delta * warp_speed
-	@warning_ignore("narrowing_conversion")
-	var _turn: int = age.age / MarbleAge.SECONDS_IN_TURN + 1
-	for i in range(self.turn, _turn):
-		_start_turn(i)
-	self.turn = _turn
+		@warning_ignore("narrowing_conversion")
+		var new_turn: int = age.age / MarbleAge.SECONDS_IN_TURN + 1
+		_start_turn(range(self.turn + 1, new_turn + 1))
+		self.turn = new_turn
 	# Add the gravity.
 	if not is_on_floor():
 		if not flying:
