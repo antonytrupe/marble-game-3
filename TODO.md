@@ -44,3 +44,4 @@ TODO
 43. limit high warp speeds to zoomed out
 44. npc dialogu(nobodywho?)
 45. ~~crosshairs~~
+46. able to drag things too big for inventory

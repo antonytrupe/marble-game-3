@@ -5,6 +5,7 @@ extends RigidBody3D
 #apples take 150 days to mature
 ##days
 @export var maturity: int = MarbleAge.SECONDS_IN_DAY * 1
+@export var longevity: int = MarbleAge.SECONDS_IN_DAY * 5
 @export var warp_speed: float = 1
 
 var turn = 0
@@ -35,13 +36,18 @@ func _physics_process(_delta: float) -> void:
 		#put it back to sleep when its done falling/rolling
 		if is_on_floor() and not freeze and linear_velocity.distance_squared_to(Vector3(0, 0, 0)) < .0001:
 			print('freezing')
-			#freeze=true
-			#sleeping=true
+			set_deferred("freeze", true)
+			set_deferred("sleeping", true)
 
 		@warning_ignore("narrowing_conversion")
 		var new_turn: int = age.age / MarbleAge.SECONDS_IN_TURN + 1
 		_start_turn(range(self.turn + 1, new_turn + 1))
 		self.turn = new_turn
+
+		if age.age > longevity:
+			set_deferred("freeze", true)
+			set_deferred("sleeping", true)
+			queue_free()
 
 		#var r = float(age.age) / float(maturity)
 		#var s = clampf(r, .1, 1.0)
@@ -57,9 +63,9 @@ func _set_scale(s):
 
 
 func _fall():
-	freeze = false
-	sleeping = false
-	freeze_mode = RigidBody3D.FREEZE_MODE_KINEMATIC
+	set_deferred("freeze", false)
+	set_deferred("sleeping", false)
+	set_deferred("freeze_mode", RigidBody3D.FREEZE_MODE_KINEMATIC)
 
 
 func is_server() -> bool:
