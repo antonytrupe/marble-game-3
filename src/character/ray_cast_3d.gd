@@ -2,8 +2,13 @@ extends RayCast3D
 
 var last_target: MeshInstance3D = null
 
+@onready var client :Client= $/root/Game/Client
+@onready var character: MarbleCharacter = $"../../.."
+
+
 func _process(_delta):
-	if is_colliding():
+	#client.current_character and client.current_character==character and
+	if  is_colliding():
 		var collider = get_collider()
 		# Find the MeshInstance3D child if the collider is a PhysicsBody
 		var mesh = collider.get_node_or_null("HighlightMeshInstance3D")
