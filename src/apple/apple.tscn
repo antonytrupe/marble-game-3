@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_5qehy"]
 [ext_resource type="PackedScene" uid="uid://dhtfh7aumk85c" path="res://src/highlight/highlight.tscn" id="3_yckcf"]
 [ext_resource type="Shader" uid="uid://0e2onyl67kre" path="res://src/highlight/select_outline.gdshader" id="4_c76jp"]
-[ext_resource type="Script" uid="uid://bajm6uk2gjcyi" path="res://src/age/age.gd" id="4_ygiwg"]
+[ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/age.tscn" id="5_c76jp"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_pek8c"]
 radius = 0.06
@@ -44,6 +44,9 @@ properties/2/replication_mode = 2
 properties/3/path = NodePath(".:rotation")
 properties/3/spawn = true
 properties/3/replication_mode = 2
+properties/4/path = NodePath(".:longevity")
+properties/4/spawn = true
+properties/4/replication_mode = 2
 
 [node name="Apple" type="RigidBody3D"]
 collision_layer = 4
@@ -76,6 +79,4 @@ mesh = SubResource("SphereMesh_pxyjr")
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_yckcf")
 
-[node name="MarbleAge" type="Node" parent="."]
-script = ExtResource("4_ygiwg")
-metadata/_custom_type_script = "uid://bajm6uk2gjcyi"
+[node name="Age" parent="." instance=ExtResource("5_c76jp")]

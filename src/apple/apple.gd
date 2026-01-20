@@ -14,7 +14,7 @@ var _is_on_floor = false
 @onready var collision_shape_3d: CollisionShape3D = %CollisionShape3D
 @onready var mesh_instance_3d: MeshInstance3D = $MeshInstance3D
 @onready var highlight_mesh_instance_3d: MeshInstance3D = %HighlightMeshInstance3D
-@onready var age: MarbleAge = $MarbleAge
+@onready var age: MarbleAge = $Age
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D
 @onready var flora = $/root/Game/World/Flora
 

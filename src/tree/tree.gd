@@ -9,7 +9,7 @@ const APPLE_SCENE = preload("res://src/apple/apple.tscn")
 
 var turn = 0
 
-@onready var age: MarbleAge = $MarbleAge
+@onready var age: MarbleAge = $Age
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D
 @onready var label_3d: Label3D = $Label3D
 @onready var left_leaves: MeshInstance3D = $Trunk/LeftLeaves

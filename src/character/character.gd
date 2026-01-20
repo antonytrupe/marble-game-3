@@ -32,7 +32,7 @@ const MAX_CONTROLLED_WARP = 10
 	set = _set_warp_speed
 @export var player_name: String
 
-@onready var age: MarbleAge = $MarbleAge
+@onready var age: MarbleAge = $Age
 @export var inventory: Inventory:
 	set = _set_inventory
 
