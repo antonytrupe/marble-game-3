@@ -114,8 +114,14 @@ func _persist():
 	)
 
 	world.flora.get_children().all(
-		func(w):
-			Persistance.persist.emit(w)
+		func(f):
+			Persistance.persist.emit(f)
+			return true
+	)
+
+	world.fauna.get_children().all(
+		func(f):
+			Persistance.persist.emit(f)
 			return true
 	)
 

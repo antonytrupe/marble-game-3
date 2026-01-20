@@ -55,6 +55,7 @@ sleeping = true
 freeze = true
 freeze_mode = 1
 continuous_cd = true
+angular_damp = 30.0
 script = ExtResource("1_pek8c")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

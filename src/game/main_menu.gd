@@ -80,6 +80,8 @@ func _on_load_game_button_pressed() -> void:
 
 
 func _on_quit_button_pressed() -> void:
+	#client.quit()
+	server.quit()
 	get_tree().quit(0)
 
 

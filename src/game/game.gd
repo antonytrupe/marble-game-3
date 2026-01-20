@@ -19,6 +19,7 @@ func _notification(what):
 
 
 func _ready():
+	get_tree().auto_accept_quit = false
 	if Steam.isSteamRunning():
 		debug("steam is running")
 	else:
