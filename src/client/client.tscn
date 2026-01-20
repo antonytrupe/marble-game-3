@@ -1,9 +1,22 @@
-[gd_scene load_steps=5 format=3 uid="uid://c70a50dqd5dfx"]
+[gd_scene load_steps=7 format=3 uid="uid://c70a50dqd5dfx"]
 
 [ext_resource type="Script" uid="uid://bm4xlm4n6hqkm" path="res://src/client/client.gd" id="1_lgb4g"]
 [ext_resource type="Script" uid="uid://jnoxhwe83f6c" path="res://src/client/chat_input.gd" id="2_1drpi"]
 [ext_resource type="PackedScene" uid="uid://nwnomeygl26l" path="res://src/window/window.tscn" id="3_40k8x"]
 [ext_resource type="PackedScene" uid="uid://ndv046sjn52g" path="res://src/inventory/inventory_window.tscn" id="3_78v8x"]
+[ext_resource type="Shader" uid="uid://dgingokxm04i5" path="res://src/client/crosshairs.gdshader" id="5_c8hrx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qlar1"]
+shader = ExtResource("5_c8hrx")
+shader_parameter/center_enabled = true
+shader_parameter/legs_enabled = true
+shader_parameter/inverted = false
+shader_parameter/crosshair_color = Color(0, 1, 0, 1)
+shader_parameter/center_radius = 0.002
+shader_parameter/width = 0.003
+shader_parameter/len = 0.03
+shader_parameter/spacing = 0.008
+shader_parameter/spread = 1.0
 
 [node name="Client" type="Control"]
 layout_mode = 3
@@ -89,5 +102,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("2_1drpi")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_qlar1")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [connection signal="current_character_updated" from="." to="Inventory" method="_on_client_current_character_updated"]

@@ -33,7 +33,7 @@ TODO
 32. lakes
 33. clamp camera movement
 34. aging/dying
-35. trees growing and dropping fruit
+35. ~~trees growing and dropping fruit~~
 36. bushes growing and dropping fruit
 37. picking fruit off ground
 38. picking fruit off trees/bushes
@@ -43,3 +43,4 @@ TODO
 42. spells
 43. limit high warp speeds to zoomed out
 44. npc dialogu(nobodywho?)
+45. ~~crosshairs~~
