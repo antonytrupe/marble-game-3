@@ -62,7 +62,7 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 24.362373, 0)
 
 [node name="FloraSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://c1e46m2pfqiji", "uid://damvmfs7dqebu")
+_spawnable_scenes = PackedStringArray("uid://c1e46m2pfqiji", "uid://damvmfs7dqebu", "uid://cxp2l820hl2q8")
 spawn_path = NodePath("../Flora")
 
 [node name="Fauna" type="Node3D" parent="."]

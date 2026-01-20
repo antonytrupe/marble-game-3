@@ -26,7 +26,6 @@ func _ready():
 
 
 func _process(delta: float) -> void:
-	pass
 	if is_server():
 		age.age += delta * warp_speed
 
