@@ -48,22 +48,24 @@ properties/3/replication_mode = 2
 [node name="Apple" type="RigidBody3D"]
 collision_layer = 4
 collision_mask = 17
-can_sleep = false
+sleeping = true
 freeze = true
 freeze_mode = 1
 continuous_cd = true
-angular_damp = 32.189
 script = ExtResource("1_pek8c")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
 shape = SubResource("SphereShape3D_pek8c")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
 mesh = SubResource("SphereMesh_5qehy")
 
 [node name="WarpDetectorArea3D" parent="." instance=ExtResource("2_5qehy")]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
 
 [node name="HighlightMeshInstance3D" parent="." instance=ExtResource("3_yckcf")]

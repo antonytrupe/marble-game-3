@@ -27,13 +27,13 @@ func _process(_delta: float) -> void:
 
 #delta is in seconds
 func _physics_process(delta: float):
-	if is_server() or true:
+	if is_server():
 		age.age += delta * warp_speed
-	@warning_ignore("narrowing_conversion")
-	var _turn: int = age.age / MarbleAge.SECONDS_IN_TURN + 1
-	for i in range(self.turn, _turn):
-		_start_turn(i)
-	self.turn = _turn
+		@warning_ignore("narrowing_conversion")
+		var _turn: int = age.age / MarbleAge.SECONDS_IN_TURN + 1
+		for i in range(self.turn, _turn):
+			_start_turn(i)
+		self.turn = _turn
 
 
 func _start_turn(_turn):
@@ -42,10 +42,10 @@ func _start_turn(_turn):
 	if age.age > maturity:
 		#apples start growing in March
 		if age.get_month() == 0:
-			var i = randi_range(1, 200)
+			var i = randi_range(1, 800)
 			if i == 1:
-				#pass
-				_add_apple()
+				pass
+				#_add_apple()
 
 
 func _add_apple():

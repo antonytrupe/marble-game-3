@@ -41,3 +41,5 @@ TODO
 40. crafting
 41. xp
 42. spells
+43. limit high warp speeds to zoomed out
+44. npc dialogu(nobodywho?)

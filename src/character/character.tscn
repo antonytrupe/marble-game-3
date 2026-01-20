@@ -74,6 +74,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, -0.4)
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
 unique_name_in_owner = true
+far = 512.0
 
 [node name="RayCast3D" type="RayCast3D" parent="CameraPivot/Camera3D"]
 target_position = Vector3(0, 0, -4)

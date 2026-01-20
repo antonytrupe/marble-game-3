@@ -1,6 +1,6 @@
 extends Node
 
-@onready var l = %RichTextLabel
+@onready var l: RichTextLabel = %DebugRichText
 
 
 func _ready():

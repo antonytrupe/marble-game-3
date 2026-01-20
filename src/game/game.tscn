@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cqgu8ge77h70t"]
+[gd_scene load_steps=9 format=3 uid="uid://cqgu8ge77h70t"]
 
 [ext_resource type="Script" uid="uid://n01r8f0drw7s" path="res://src/game/game.gd" id="1_yarin"]
 [ext_resource type="PackedScene" uid="uid://hwslegxxru8h" path="res://src/world/world.tscn" id="2_jhw8o"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://c70a50dqd5dfx" path="res://src/client/client.tscn" id="5_clwl7"]
 [ext_resource type="PackedScene" uid="uid://nwnomeygl26l" path="res://src/window/window.tscn" id="5_jhw8o"]
 [ext_resource type="Script" uid="uid://cx8p4ymd2lt8g" path="res://src/debug/debug_ui.gd" id="6_7r0dx"]
+[ext_resource type="Script" uid="uid://cf63o2sa2jlie" path="res://src/game/rich_text_label.gd" id="7_jhw8o"]
 
 [node name="Game" type="Node"]
 script = ExtResource("1_yarin")
@@ -94,30 +95,19 @@ layout_mode = 2
 text = "Quit"
 
 [node name="Window" parent="." instance=ExtResource("5_jhw8o")]
-offset_right = 276.0
-offset_bottom = 280.0
+offset_right = 255.0
+offset_bottom = 299.0
 
-[node name="Debug" type="Control" parent="Window"]
+[node name="DebugRichText" type="RichTextLabel" parent="Window"]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 26.0
 offset_top = 27.0
-offset_right = -29.0
-offset_bottom = -27.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("6_7r0dx")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="Window/Debug"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+offset_right = -27.0
+offset_bottom = -29.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -125,6 +115,30 @@ size_flags_vertical = 3
 scroll_following = true
 scroll_following_visible_characters = true
 context_menu_enabled = true
+script = ExtResource("6_7r0dx")
+
+[node name="FPSWindow" parent="." instance=ExtResource("5_jhw8o")]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -106.0
+offset_right = 0.0
+grow_horizontal = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="FPSWindow"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 26.0
+offset_top = 19.0
+offset_right = -23.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "FPS:0"
+vertical_alignment = 1
+script = ExtResource("7_jhw8o")
 
 [connection signal="pressed" from="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer/DeleteDataButton" to="MainMenu/Control" method="_on_delete_data_button_pressed"]
 [connection signal="pressed" from="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer/NewGameButton" to="MainMenu/Control" method="_on_new_game_button_pressed"]

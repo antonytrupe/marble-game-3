@@ -280,6 +280,12 @@ func command(cmd: String, _player: Player, character: MarbleCharacter):
 						count = int(parts[2])
 					_spawn_trees(count, character.position)
 
+				"apple", "apples":
+					var count = 1
+					if parts.size() >= 3:
+						count = int(parts[2])
+					_spawn_apples(count, character.position)
+
 
 func _get_random_vector(radius: float, center: Vector3) -> Vector3:
 	#var rng = RandomNumberGenerator.new()
@@ -334,6 +340,18 @@ func _spawn_trees(count: int, center: Vector3):
 		tree.position = _get_random_vector(10, center)
 		#var chunk = chunks.get_chunk(tree.global_position)
 		world.flora.add_child(tree)
+
+
+func _spawn_apples(count: int, center: Vector3):
+	count = clampi(count, 1, 100)
+	for i in count:
+		var apple = APPLE_SCENE.instantiate()
+		apple.name = apple.name + "%010d" % randi()
+		#TODO do this more righter
+		apple.position = _get_random_vector(10, center)
+		apple.position.y = 15
+		#var chunk = chunks.get_chunk(tree.global_position)
+		world.flora.add_child(apple)
 
 
 func _spawn_stones(quantity: int, p: Vector3):
