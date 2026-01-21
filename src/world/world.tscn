@@ -10,6 +10,7 @@ properties/0/spawn = true
 properties/0/replication_mode = 2
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tcf2h"]
+sky_top_color = Color(0.14901961, 0.4392157, 0.81960785, 1)
 
 [sub_resource type="Sky" id="Sky_4717r"]
 sky_material = SubResource("ProceduralSkyMaterial_tcf2h")
@@ -17,7 +18,10 @@ sky_material = SubResource("ProceduralSkyMaterial_tcf2h")
 [sub_resource type="Environment" id="Environment_h5o24"]
 background_mode = 2
 sky = SubResource("Sky_4717r")
-ambient_light_color = Color(0.7750634, 0.7750634, 0.7750634, 1)
+ambient_light_color = Color(0.61584127, 0.7443546, 0.97678906, 1)
+fog_enabled = true
+fog_sky_affect = 0.1
+volumetric_fog_enabled = true
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_gv5m4"]
 resource_local_to_scene = true

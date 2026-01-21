@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://b4f3nuk5vp4rc"]
+[gd_scene load_steps=10 format=3 uid="uid://b4f3nuk5vp4rc"]
 
 [ext_resource type="Script" uid="uid://chjly557ici3u" path="res://src/character/character.gd" id="1_glpr6"]
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_2p3op"]
@@ -35,6 +35,8 @@ properties/4/replication_mode = 2
 properties/5/path = NodePath("CameraPivot:position")
 properties/5/spawn = true
 properties/5/replication_mode = 2
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_k8eue"]
 
 [node name="Character" type="CharacterBody3D" groups=["persist"]]
 collision_layer = 2
@@ -74,9 +76,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, -0.4)
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
 unique_name_in_owner = true
-far = 512.0
+attributes = SubResource("CameraAttributesPractical_k8eue")
 
 [node name="RayCast3D" type="RayCast3D" parent="CameraPivot/Camera3D"]
+unique_name_in_owner = true
 target_position = Vector3(0, 0, -4)
 collision_mask = 31
 hit_from_inside = true

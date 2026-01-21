@@ -53,7 +53,7 @@ func _load_finished():
 
 func _load_tree(object_name, data: Dictionary):
 	var t: MarbleTree = TREE_SCENE.instantiate()
-	t.name = object_name
+	t.name = object_name.validate_node_name()
 
 	t.ready.connect(t.load_node.bind(data))
 
@@ -64,7 +64,7 @@ func _load_tree(object_name, data: Dictionary):
 
 func _load_apple(object_name, data: Dictionary):
 	var t: Apple = APPLE_SCENE.instantiate()
-	t.name = object_name
+	t.name = object_name.validate_node_name()
 
 	t.ready.connect(t.load_node.bind(data))
 
@@ -74,7 +74,7 @@ func _load_apple(object_name, data: Dictionary):
 
 func _load_warp_monument(object_name, data: Dictionary):
 	var w: WarpMonument = WARP_MONUMENT_SCENE.instantiate()
-	w.name = object_name
+	w.name = object_name.validate_node_name()
 
 	w.ready.connect(w.load_node.bind(data))
 
@@ -83,9 +83,9 @@ func _load_warp_monument(object_name, data: Dictionary):
 	world.warp_monuments.add_child(w)
 
 
-func _load_character(character_name, data: Dictionary):
+func _load_character(character_name: String, data: Dictionary):
 	var c: MarbleCharacter = CHARACTER_SCENE.instantiate()
-	c.name = character_name
+	c.name = character_name.validate_node_name()
 
 	c.ready.connect(c.load_node.bind(data))
 
@@ -95,6 +95,8 @@ func _load_character(character_name, data: Dictionary):
 
 
 func _persist():
+	print('persisting')
+	debug('persisting')
 	players.keys().all(
 		func(player_id):
 			Persistance.persist.emit(players[player_id])

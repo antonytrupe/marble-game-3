@@ -9,7 +9,7 @@ signal current_character_updated(character: MarbleCharacter)
 @onready var inventory: InventoryWindow = %Inventory
 @onready var chat_text_edit: TextEdit = %ChatInput
 @onready var chat_window: MarbleWindow = %ChatWindow
-@export var current_character: MarbleCharacter
+var current_character: MarbleCharacter
 
 var lobby_id: int
 
@@ -76,6 +76,13 @@ func _unhandled_input(event) -> void:
 	if current_character:
 		#only if we're not typing
 		if !chat_window.visible:
+			#interact
+			if Input.is_action_just_pressed("interact"):
+				if is_server():
+					current_character.interact()
+				else:
+					current_character.interact.rpc_id(1)
+
 #			inventory
 			if Input.is_action_just_pressed("inventory"):
 				inventory.visible = !inventory.visible

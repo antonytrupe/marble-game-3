@@ -32,9 +32,10 @@ const MAX_CONTROLLED_WARP = 10
 	set = _set_warp_speed
 @export var player_name: String
 
-@export var inventory: Inventory:
-	set = _set_inventory
-
+@export var inventory: Inventory = Inventory.new()
+	#set = _set_inventory
+@export var current_turn_actions = {"move": null, "action": null}:
+	set = _set_action
 
 var turn: int = 0:
 	set = _set_turn
@@ -66,14 +67,80 @@ var player_id: String
 @onready var client = $/root/Game/Client
 @onready var warp_detector: WarpDetector = $WarpDetector
 @onready var age: MarbleAge = $Age
+@onready var raycast: RayCast3D = %RayCast3D
 
 func _set_inventory(value):
 	inventory = value
 	inventory_updated.emit(inventory)
 
 
+#setter, don't call directly
+func _set_action(value):
+	current_turn_actions = value
+	#Signals.Actions.emit(player_id, current_turn_actions)
+
+
 func is_server() -> bool:
 	return multiplayer.is_server()
+
+
+func get_target():
+	var entity = raycast.get_collider()
+	return entity
+
+
+@rpc("any_peer")
+func interact():
+	if !is_server():
+		return
+
+	#if trading:
+		#cancel_trade()
+		#return
+	if raycast.is_colliding():
+		var entity = get_target()
+
+		if entity.has_method("start_trade"):
+			pass
+			#start_trade(entity)
+			#entity.start_trade(self)
+
+		if entity.has_method("pick_berry"):
+			pass
+			#var action = "pick_berry"
+			## make actions.action always a string
+			#if current_turn_actions.action != null and current_turn_actions.action != action:
+				#return
+			#var loot = entity.pick_berry()
+			#_add_to_inventory(loot)
+			#set_action({"action": "pick_berry"})
+
+		if entity.has_method("pick_up"):
+			var action = "pick_up"
+			# make actions.action always a string
+			#if current_turn_actions.action != null and current_turn_actions.action != action:
+				#return
+			var loot = entity.pick_up()
+			_add_to_inventory(loot)
+			set_action({"action": action})
+
+
+# use reset_actions to clear this and skip internal logic
+func set_action(value: Dictionary):
+	if value.has("action") and value.action:
+		current_turn_actions.action = value.action
+	# only update move if we went faster
+	if (
+		value.has("move")
+		and (current_turn_actions.move == null or value.move > current_turn_actions.move)
+	):
+		current_turn_actions.move = value.move
+
+func _add_to_inventory(loot: Array[MarbleItem]):
+	if !is_server():
+		return
+	for item in loot:
+		inventory.items[item.name] = item
 
 
 func _set_turn(value):
@@ -226,7 +293,7 @@ func get_data() -> Dictionary:
 		"age": age,
 		"turn": turn,
 		"transform": var_to_str(transform),
-		"inventory": var_to_str(inventory)
+		"inventory": var_to_str(inventory.items)
 	}
 
 
@@ -245,7 +312,7 @@ func load_node(node_data):
 	if "turn" in node_data:
 		turn = node_data.turn
 	if "inventory" in node_data:
-		inventory = str_to_var(node_data.inventory)
+		inventory.items = str_to_var(node_data.inventory)
 
 
 func _update_label():

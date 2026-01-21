@@ -1,13 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://ndv046sjn52g"]
+[gd_scene load_steps=4 format=3 uid="uid://ndv046sjn52g"]
 
 [ext_resource type="Script" uid="uid://cwewc02nxsbi6" path="res://src/inventory/inventory_window.gd" id="1_qvk1e"]
 [ext_resource type="PackedScene" uid="uid://nwnomeygl26l" path="res://src/window/window.tscn" id="2_3y8da"]
-[ext_resource type="Script" uid="uid://ffd8is3exnw8" path="res://src/inventory/item.gd" id="2_7amuu"]
-[ext_resource type="Script" uid="uid://bcip5eblmxfyu" path="res://src/inventory/inventory.gd" id="3_jeu0n"]
-
-[sub_resource type="Resource" id="Resource_roil6"]
-script = ExtResource("3_jeu0n")
-metadata/_custom_type_script = "uid://bcip5eblmxfyu"
+[ext_resource type="PackedScene" uid="uid://m1ran7tnm8h4" path="res://src/apple/apple_2d.tscn" id="3_lboor"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -16,7 +11,6 @@ offset_right = 559.0
 offset_bottom = 446.0
 size_flags_horizontal = 4
 script = ExtResource("1_qvk1e")
-items = SubResource("Resource_roil6")
 
 [node name="Window" parent="." instance=ExtResource("2_3y8da")]
 unique_name_in_owner = true
@@ -24,7 +18,28 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 0.0
-offset_bottom = 0.0
+offset_right = -47.0
+offset_bottom = 66.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Window"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 23.0
+offset_top = 22.0
+offset_right = -26.0
+offset_bottom = -29.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Apple2D" parent="." instance=ExtResource("3_lboor")]
+position = Vector2(167, 157)
+
+[node name="Apple2D2" parent="." instance=ExtResource("3_lboor")]
+position = Vector2(248, 141)
+
+[node name="Apple2D3" parent="." instance=ExtResource("3_lboor")]
+position = Vector2(186, 68)

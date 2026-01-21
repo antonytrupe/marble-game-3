@@ -53,6 +53,14 @@ func _physics_process(_delta: float) -> void:
 		#_set_scale( Vector3(s, s, s))
 
 
+func pick_up()->Array[MarbleItem]:
+	print('pick up')
+	queue_free()
+	var i= MarbleItem.new()
+	i.name="Apple"
+	return [i]
+
+
 func _set_scale(s):
 	#TODO this doesn't work
 	collision_shape_3d.scale = s

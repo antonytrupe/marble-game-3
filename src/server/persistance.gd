@@ -120,7 +120,7 @@ func _load():
 
 func _persist(o: Object):
 	var clazz_name = o.get_script().get_global_name()
-	Debug.debug.emit("persisting %s:%s" % [clazz_name, o.name])
+	#Debug.debug.emit("persisting %s:%s" % [clazz_name, o.name])
 	_db.query_with_bindings(
 		(
 			"INSERT INTO %s (name, data) VALUES (?, ? ) ON CONFLICT (name) DO update set data=excluded.data"
@@ -132,7 +132,7 @@ func _persist(o: Object):
 
 func _create_table(clazz_name: String):
 	var r = _db.select_rows("sqlite_master", "type='table' and name='%s'" % [clazz_name], ["name"])
-	Debug.debug.emit(r)
+	#Debug.debug.emit(r)
 	if r.size() > 0:
 		return
 
