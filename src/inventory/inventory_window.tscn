@@ -7,9 +7,10 @@
 [node name="Control" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 559.0
-offset_bottom = 446.0
+offset_right = 512.0
+offset_bottom = 512.0
 size_flags_horizontal = 4
+mouse_filter = 1
 script = ExtResource("1_qvk1e")
 
 [node name="Window" parent="." instance=ExtResource("2_3y8da")]
@@ -18,8 +19,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -47.0
-offset_bottom = 66.0
+offset_right = 0.0
+offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -34,6 +35,7 @@ offset_right = -26.0
 offset_bottom = -29.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 
 [node name="Apple2D" parent="." instance=ExtResource("3_lboor")]
 position = Vector2(167, 157)
@@ -43,3 +45,22 @@ position = Vector2(248, 141)
 
 [node name="Apple2D3" parent="." instance=ExtResource("3_lboor")]
 position = Vector2(186, 68)
+
+[node name="RigidBody2D" type="StaticBody2D" parent="."]
+collision_layer = 32
+collision_mask = 0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RigidBody2D"]
+position = Vector2(256.0001, 329.70425)
+polygon = PackedVector2Array(-250.0001, 177.29573, 250.9999, 177.29573, 250.9999, -327.70425, 228.9999, -327.70425, 230.9999, 157.29573, -231.0001, 157.29573, -231.0001, -329.70425, -251.0001, -329.70425)
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 32
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="Area2D"]
+position = Vector2(254.1196, 147.56256)
+polygon = PackedVector2Array(-247.1196, 359.43744, 249.8804, 358.43744, 252.8804, -145.56256, 203.8804, -272.56256, 108.880394, -394.56256, -0.11960572, -432.56256, -112.119606, -400.56256, -196.1196, -299.56256, -251.1196, -151.56256)
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
