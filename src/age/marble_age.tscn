@@ -1,14 +1,14 @@
 [gd_scene load_steps=3 format=3 uid="uid://d4h758w873o1j"]
 
-[ext_resource type="Script" uid="uid://bajm6uk2gjcyi" path="res://src/age/age.gd" id="1_8xlo8"]
+[ext_resource type="Script" uid="uid://bajm6uk2gjcyi" path="res://src/age/marble_age.gd" id="1_4teec"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_8xlo8"]
 properties/0/path = NodePath(".:age")
 properties/0/spawn = true
 properties/0/replication_mode = 2
 
-[node name="Age" type="Node"]
-script = ExtResource("1_8xlo8")
+[node name="MarbleAge" type="Node"]
+script = ExtResource("1_4teec")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_8xlo8")

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://chjly557ici3u" path="res://src/character/character.gd" id="1_glpr6"]
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_2p3op"]
 [ext_resource type="Script" uid="uid://cv7le154j7bfo" path="res://src/character/ray_cast_3d.gd" id="2_8mo58"]
-[ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/age.tscn" id="4_k8eue"]
+[ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/marble_age.tscn" id="4_k8eue"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vu45j"]
 resource_local_to_scene = true

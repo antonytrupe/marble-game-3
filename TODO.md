@@ -39,9 +39,18 @@ TODO
 38. picking fruit off trees/bushes
 39. granting items to characters
 40. crafting
-41. xp
-42. spells
-43. limit high warp speeds to zoomed out
-44. npc dialogu(nobodywho?)
-45. ~~crosshairs~~
-46. able to drag things too big for inventory
+    1.  making tools
+    2.  making lumber
+    3.  making walls/buildings
+41. mining
+42. making fire
+43. smelting
+44. xp
+45. spells
+46. limit high warp speeds to zoomed out
+47. npc dialogu(nobodywho?)
+48. ~~crosshairs~~
+49. able to drag things too big for inventory
+50. combat
+51. factions
+52. morale

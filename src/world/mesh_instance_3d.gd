@@ -11,8 +11,8 @@ func _ready() -> void:
 	randomize()
 	noise.seed = 1 # randi()
 	noise.noise_type = FastNoiseLite.TYPE_CELLULAR
-	noise.fractal_octaves = 8
-	noise.domain_warp_fractal_lacunarity = 1.0
+	noise.fractal_octaves = 3
+	noise.domain_warp_fractal_lacunarity = 6.0
 	position.x -= size / 2.0
 	position.z -= size / 2.0
 	generateMap()

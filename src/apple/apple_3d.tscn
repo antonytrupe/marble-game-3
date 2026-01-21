@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_wnbc6"]
 [ext_resource type="PackedScene" uid="uid://dhtfh7aumk85c" path="res://src/highlight/highlight.tscn" id="3_o25wh"]
 [ext_resource type="Shader" uid="uid://0e2onyl67kre" path="res://src/highlight/select_outline.gdshader" id="4_iw03a"]
-[ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/age.tscn" id="5_k2b4a"]
+[ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/marble_age.tscn" id="5_k2b4a"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_pek8c"]
 radius = 0.06
@@ -17,7 +17,7 @@ material = SubResource("StandardMaterial3D_pek8c")
 radius = 0.06
 height = 0.12
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_idfhd"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k0cf5"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("4_iw03a")
@@ -25,9 +25,9 @@ shader_parameter/highlight_color = Color(0, 0, 1, 1)
 shader_parameter/intensity = 0.0
 shader_parameter/outline_width = 0.30000001192093
 
-[sub_resource type="SphereMesh" id="SphereMesh_gle7f"]
+[sub_resource type="SphereMesh" id="SphereMesh_wnbc6"]
 resource_local_to_scene = true
-material = SubResource("ShaderMaterial_idfhd")
+material = SubResource("ShaderMaterial_k0cf5")
 radius = 0.07
 height = 0.14
 
@@ -48,7 +48,7 @@ properties/4/path = NodePath(".:longevity")
 properties/4/spawn = true
 properties/4/replication_mode = 2
 
-[node name="Apple" type="RigidBody3D"]
+[node name="Apple3D" type="RigidBody3D"]
 collision_layer = 4
 collision_mask = 17
 sleeping = true
@@ -75,7 +75,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
 [node name="HighlightMeshInstance3D" parent="." instance=ExtResource("3_o25wh")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
-mesh = SubResource("SphereMesh_gle7f")
+mesh = SubResource("SphereMesh_wnbc6")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_yckcf")
