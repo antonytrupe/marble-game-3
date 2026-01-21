@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://ndv046sjn52g"]
+[gd_scene load_steps=3 format=3 uid="uid://ndv046sjn52g"]
 
 [ext_resource type="Script" uid="uid://cwewc02nxsbi6" path="res://src/inventory/inventory_window.gd" id="1_qvk1e"]
 [ext_resource type="PackedScene" uid="uid://nwnomeygl26l" path="res://src/window/window.tscn" id="2_3y8da"]
-[ext_resource type="PackedScene" uid="uid://m1ran7tnm8h4" path="res://src/apple/apple_2d.tscn" id="3_lboor"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -36,15 +35,6 @@ offset_bottom = -29.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
-
-[node name="Apple2D" parent="." instance=ExtResource("3_lboor")]
-position = Vector2(167, 157)
-
-[node name="Apple2D2" parent="." instance=ExtResource("3_lboor")]
-position = Vector2(248, 141)
-
-[node name="Apple2D3" parent="." instance=ExtResource("3_lboor")]
-position = Vector2(186, 68)
 
 [node name="RigidBody2D" type="StaticBody2D" parent="."]
 collision_layer = 32
