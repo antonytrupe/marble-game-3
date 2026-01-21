@@ -1,10 +1,10 @@
 [gd_scene load_steps=12 format=3 uid="uid://cxp2l820hl2q8"]
 
-[ext_resource type="Script" uid="uid://dmr70y3w8hsrm" path="res://src/apple/apple.gd" id="1_pek8c"]
-[ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_5qehy"]
-[ext_resource type="PackedScene" uid="uid://dhtfh7aumk85c" path="res://src/highlight/highlight.tscn" id="3_yckcf"]
-[ext_resource type="Shader" uid="uid://0e2onyl67kre" path="res://src/highlight/select_outline.gdshader" id="4_c76jp"]
-[ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/age.tscn" id="5_c76jp"]
+[ext_resource type="Script" uid="uid://dmr70y3w8hsrm" path="res://src/apple/apple_3d.gd" id="1_k0cf5"]
+[ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_wnbc6"]
+[ext_resource type="PackedScene" uid="uid://dhtfh7aumk85c" path="res://src/highlight/highlight.tscn" id="3_o25wh"]
+[ext_resource type="Shader" uid="uid://0e2onyl67kre" path="res://src/highlight/select_outline.gdshader" id="4_iw03a"]
+[ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/age.tscn" id="5_k2b4a"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_pek8c"]
 radius = 0.06
@@ -17,17 +17,17 @@ material = SubResource("StandardMaterial3D_pek8c")
 radius = 0.06
 height = 0.12
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_c76jp"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_idfhd"]
 resource_local_to_scene = true
 render_priority = 0
-shader = ExtResource("4_c76jp")
+shader = ExtResource("4_iw03a")
 shader_parameter/highlight_color = Color(0, 0, 1, 1)
 shader_parameter/intensity = 0.0
 shader_parameter/outline_width = 0.30000001192093
 
-[sub_resource type="SphereMesh" id="SphereMesh_pxyjr"]
+[sub_resource type="SphereMesh" id="SphereMesh_gle7f"]
 resource_local_to_scene = true
-material = SubResource("ShaderMaterial_c76jp")
+material = SubResource("ShaderMaterial_idfhd")
 radius = 0.07
 height = 0.14
 
@@ -56,7 +56,7 @@ freeze = true
 freeze_mode = 1
 continuous_cd = true
 angular_damp = 30.0
-script = ExtResource("1_pek8c")
+script = ExtResource("1_k0cf5")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 unique_name_in_owner = true
@@ -68,16 +68,16 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
 mesh = SubResource("SphereMesh_5qehy")
 
-[node name="WarpDetectorArea3D" parent="." instance=ExtResource("2_5qehy")]
+[node name="WarpDetectorArea3D" parent="." instance=ExtResource("2_wnbc6")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
 
-[node name="HighlightMeshInstance3D" parent="." instance=ExtResource("3_yckcf")]
+[node name="HighlightMeshInstance3D" parent="." instance=ExtResource("3_o25wh")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
-mesh = SubResource("SphereMesh_pxyjr")
+mesh = SubResource("SphereMesh_gle7f")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_yckcf")
 
-[node name="Age" parent="." instance=ExtResource("5_c76jp")]
+[node name="Age" parent="." instance=ExtResource("5_k2b4a")]

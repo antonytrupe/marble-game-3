@@ -2,7 +2,7 @@
 class_name MarbleTree
 extends Node3D
 
-const APPLE_SCENE = preload("res://src/apple/apple.tscn")
+const APPLE_SCENE = preload("res://src/apple/apple_3d.tscn")
 
 @export var maturity: int = MarbleAge.SECONDS_IN_YEAR * 8
 @export var warp_speed: float = 1
@@ -53,7 +53,7 @@ func _add_apple():
 	var y = randfn(0, 1)
 	var z = randfn(0, 1)
 	var l = sqrt(x * x + y * y + z * z)
-	var apple: Apple = APPLE_SCENE.instantiate()
+	var apple: Apple3D = APPLE_SCENE.instantiate()
 	apple.name = apple.name + "%010d" % randi()
 	#apple.position = Vector3(x / l, y / l, z / l) * 3
 	#print(apple.position)

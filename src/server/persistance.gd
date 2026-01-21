@@ -67,7 +67,7 @@ func _load_trees():
 
 
 func _load_apples():
-	var instanced_class = Apple.new()
+	var instanced_class = Apple3D.new()
 	var clazz_name = instanced_class.get_script().get_global_name()
 
 	var _load_apple = func(r):
@@ -81,11 +81,13 @@ func _new():
 	_db.path = "res://server.db"
 	_db.open_db()
 
+	for i in persist.get_connections():
+		persist.disconnect(i.callable)
 	persist.connect(_persist)
 	_db.drop_table("Player")
 	_db.drop_table("MarbleCharacter")
 	_db.drop_table("MarbleTree")
-	_db.drop_table("Apple")
+	_db.drop_table("Apple3D")
 	_db.drop_table("WarpMonument")
 	_create_character_table()
 	_create_player_table()
@@ -104,6 +106,8 @@ func _load():
 	_db.path = "res://server.db"
 	_db.open_db()
 
+	for i in persist.get_connections():
+		persist.disconnect(i.callable)
 	persist.connect(_persist)
 	_create_character_table()
 	_create_player_table()
@@ -174,7 +178,7 @@ func _create_tree_table():
 
 
 func _create_apple_table():
-	var instanced_class = Apple.new()
+	var instanced_class = Apple3D.new()
 	var clazz_name = instanced_class.get_script().get_global_name()
 
 	_create_table(clazz_name)

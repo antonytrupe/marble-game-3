@@ -7,7 +7,7 @@ const STONE_SCENE = preload("res://src/stone/stone.tscn")
 const ACORN_SCENE = preload("res://src/acorn/acorn.tscn")
 const BUSH_SCENE = preload("res://src/bush/bush.tscn")
 const TREE_SCENE = preload("res://src/tree/tree.tscn")
-const APPLE_SCENE = preload("res://src/apple/apple.tscn")
+const APPLE_SCENE = preload("res://src/apple/apple_3d.tscn")
 const MOB_SCENE = preload("res://src/monster/monster.tscn")
 const WARP_MONUMENT_SCENE = preload("res://src/warp_monument/warp_monument.tscn")
 
@@ -63,7 +63,7 @@ func _load_tree(object_name, data: Dictionary):
 
 
 func _load_apple(object_name, data: Dictionary):
-	var t: Apple = APPLE_SCENE.instantiate()
+	var t: Apple3D = APPLE_SCENE.instantiate()
 	t.name = object_name.validate_node_name()
 
 	t.ready.connect(t.load_node.bind(data))
@@ -417,7 +417,7 @@ func _create_player(peer_id, player_id) -> Player:
 	p.characters.append(c.name)
 	p.current_character_id = c.name
 	#c.set_multiplayer_authority(peer_id)
-	Persistance.persist.emit("Player", p)
+	Persistance.persist.emit(p)
 
 	players[player_id] = p
 	connected_players[peer_id] = p
@@ -476,5 +476,5 @@ func _create_character():
 	c.name = str(randi())
 	c.position = Vector3(randf_range(-100, 100), 0, randf_range(-100, 100))
 	world.characters.add_child(c)
-	Persistance.persist.emit("MarbleCharacter", c)
+	Persistance.persist.emit(c)
 	return c

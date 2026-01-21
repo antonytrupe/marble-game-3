@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://b4f3nuk5vp4rc" path="res://src/character/character.tscn" id="4_ly8po"]
 [ext_resource type="PackedScene" uid="uid://c1e46m2pfqiji" path="res://src/tree/tree.tscn" id="5_ly8po"]
 [ext_resource type="Script" uid="uid://bajm6uk2gjcyi" path="res://src/age/age.gd" id="6_b15xh"]
-[ext_resource type="PackedScene" uid="uid://cxp2l820hl2q8" path="res://src/apple/apple.tscn" id="7_fy1rd"]
+[ext_resource type="PackedScene" uid="uid://cxp2l820hl2q8" path="res://src/apple/apple_3d.tscn" id="7_fy1rd"]
 
 [sub_resource type="Environment" id="Environment_gwkrg"]
 

@@ -1,7 +1,6 @@
 class_name Apple2D
 extends RigidBody2D
 
-
 var is_dragging = false
 var is_dropping = false
 
@@ -12,7 +11,7 @@ func _input(event: InputEvent):
 			is_dragging = false
 
 
-func _on_input_event(viewport, event, shape_idx):
+func _on_input_event(_viewport, event, _shape_idx):
 	print('_on_input_event')
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
@@ -32,10 +31,6 @@ func _on_input_event(viewport, event, shape_idx):
 				# Optionally "throw" the object on release by applying a small impulse
 				# apply_central_impulse(Vector2(randf_range(-50, 50), randf_range(-50, 50))) # Example throw
 
-#func _process(delta):
-	#if is_dragging:
-		## Move body to mouse position plus the offset
-		#global_position = get_global_mouse_position() + mouse_offset
 
 func _physics_process(_delta):
 	if is_dragging:

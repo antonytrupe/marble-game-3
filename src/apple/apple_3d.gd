@@ -1,5 +1,5 @@
 #@tool
-class_name Apple
+class_name Apple3D
 extends RigidBody3D
 
 #apples take 150 days to mature
@@ -53,11 +53,11 @@ func _physics_process(_delta: float) -> void:
 		#_set_scale( Vector3(s, s, s))
 
 
-func pick_up()->Array[MarbleItem]:
+func pick_up() -> Array[MarbleItem]:
 	print('pick up')
 	queue_free()
-	var i= MarbleItem.new()
-	i.name="Apple"
+	var i = MarbleItem.new()
+	i.name = "Apple"
 	return [i]
 
 
