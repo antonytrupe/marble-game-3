@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_wnbc6"]
 [ext_resource type="PackedScene" uid="uid://dhtfh7aumk85c" path="res://src/highlight/highlight.tscn" id="3_o25wh"]
 [ext_resource type="Shader" uid="uid://0e2onyl67kre" path="res://src/highlight/select_outline.gdshader" id="4_iw03a"]
-[ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/marble_age.tscn" id="5_k2b4a"]
+[ext_resource type="PackedScene" uid="uid://dgxgm8v8tpc6w" path="res://src/inventory/marble_item.tscn" id="5_k0cf5"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_pek8c"]
 radius = 0.06
@@ -80,4 +80,4 @@ mesh = SubResource("SphereMesh_wnbc6")
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_yckcf")
 
-[node name="Age" parent="." instance=ExtResource("5_k2b4a")]
+[node name="MarbleItem" parent="." instance=ExtResource("5_k0cf5")]

@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://m1ran7tnm8h4"]
+[gd_scene load_steps=5 format=3 uid="uid://m1ran7tnm8h4"]
 
 [ext_resource type="Script" uid="uid://cq53fys5w4au1" path="res://src/apple/apple_2d.gd" id="1_sn4jx"]
 [ext_resource type="Texture2D" uid="uid://b7wbn01tbndfd" path="res://src/apple/image.png" id="1_wfsha"]
+[ext_resource type="PackedScene" uid="uid://dgxgm8v8tpc6w" path="res://src/inventory/marble_item.tscn" id="3_5rtl6"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_67jyn"]
 radius = 16.0
@@ -22,5 +23,8 @@ visible = false
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_wfsha")
+
+[node name="MarbleItem" parent="." instance=ExtResource("3_5rtl6")]
+unique_name_in_owner = true
 
 [connection signal="input_event" from="." to="." method="_on_input_event"]

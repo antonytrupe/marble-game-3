@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://dgxgm8v8tpc6w"]
+
+[ext_resource type="Script" uid="uid://ffd8is3exnw8" path="res://src/inventory/marble_item.gd" id="1_j5ypy"]
+[ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/marble_age.tscn" id="2_u4t8v"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_u4t8v"]
+properties/0/path = NodePath(".:mass")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:volume")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:scene_2d")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:scene_3d")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath(".:warp_speed")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+
+[node name="MarbleItem" type="Node"]
+script = ExtResource("1_j5ypy")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_u4t8v")
+
+[node name="MarbleAge" parent="." instance=ExtResource("2_u4t8v")]
+unique_name_in_owner = true

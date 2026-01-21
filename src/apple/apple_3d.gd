@@ -6,7 +6,7 @@ extends RigidBody3D
 ##days
 @export var maturity: int = MarbleAge.SECONDS_IN_DAY * 1
 @export var longevity: int = MarbleAge.SECONDS_IN_DAY * 5
-@export var warp_speed: float = 1
+#@export var warp_speed: float = 1
 
 var turn = 0
 var _is_on_floor = false
@@ -14,20 +14,16 @@ var _is_on_floor = false
 @onready var collision_shape_3d: CollisionShape3D = %CollisionShape3D
 @onready var mesh_instance_3d: MeshInstance3D = $MeshInstance3D
 @onready var highlight_mesh_instance_3d: MeshInstance3D = %HighlightMeshInstance3D
-@onready var age: MarbleAge = $Age
+#@onready var age: MarbleAge = $Age
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D
 @onready var flora = $/root/Game/World/Flora
+@onready var item: MarbleItem = $MarbleItem
 
 func _ready():
 	pass
 	#timer.wait_time=MarbleAge.SECONDS_IN_TURN/warp_speed
 	#timer.start()
 	#timer.stop()
-
-
-func _process(delta: float) -> void:
-	if is_server():
-		age.age += delta * warp_speed
 
 
 func _physics_process(_delta: float) -> void:
@@ -39,11 +35,11 @@ func _physics_process(_delta: float) -> void:
 			set_deferred("sleeping", true)
 
 		@warning_ignore("narrowing_conversion")
-		var new_turn: int = age.age / MarbleAge.SECONDS_IN_TURN + 1
+		var new_turn: int = item.age.age / MarbleAge.SECONDS_IN_TURN + 1
 		_start_turn(range(self.turn + 1, new_turn + 1))
 		self.turn = new_turn
 
-		if age.age > longevity:
+		if item.age.age > longevity:
 			set_deferred("freeze", true)
 			set_deferred("sleeping", true)
 			queue_free()
@@ -82,7 +78,7 @@ func is_server() -> bool:
 func _start_turn(_turns):
 	#print("apple._start_turn")
 	#
-	if not is_on_floor() and age.age > maturity:
+	if not is_on_floor() and item.age.age > maturity:
 		#print('apple fall')
 		_fall()
 
@@ -116,17 +112,17 @@ func calculate_warp():
 			closest = w
 			#closest_distance=distance
 	if closest:
-		warp_speed = closest.warp_speed
+		item.warp_speed = closest.warp_speed
 	else:
-		warp_speed = 1
+		item.warp_speed = 1
 
 
 func get_data():
 	var save_dict = {
 		"transform": var_to_str(transform),
-		"age": age.age,
+		"age": item.age.age,
 		"turn": turn,
-		"warp_speed": warp_speed,
+		"warp_speed": item.warp_speed,
 	}
 	return save_dict
 
@@ -134,8 +130,8 @@ func get_data():
 func load_node(node_data):
 	#transform = str_to_var(node_data["transform"])
 	if "age" in node_data:
-		age.age = node_data.age
+		item.age.age = node_data.age
 	if "warp_speed" in node_data:
-		warp_speed = node_data.warp_speed
+		item.warp_speed = node_data.warp_speed
 	if "turn" in node_data:
 		turn = node_data.turn

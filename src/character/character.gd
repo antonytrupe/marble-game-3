@@ -136,6 +136,7 @@ func set_action(value: Dictionary):
 	):
 		current_turn_actions.move = value.move
 
+
 func _add_to_inventory(loot: Array[MarbleItem]):
 	if !is_server():
 		return

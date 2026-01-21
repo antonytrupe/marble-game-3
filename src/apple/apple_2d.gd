@@ -4,6 +4,8 @@ extends RigidBody2D
 var is_dragging = false
 var is_dropping = false
 
+@onready var item: MarbleItem = %MarbleItem
+
 func _input(event: InputEvent):
 	# Stop dragging when the mouse button is released anywhere
 	if is_dragging and event is InputEventMouseButton:
