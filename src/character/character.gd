@@ -47,7 +47,7 @@ var mode: MODE = MODE.WALK # :
 
 var speed = 30.0
 
-var flying: bool = false
+@export var flying: bool = false
 
 #var warp_monuments = {}
 
@@ -121,7 +121,7 @@ func interact():
 			#if current_turn_actions.action != null and current_turn_actions.action != action:
 				#return
 			var loot = entity.pick_up()
-			_add_to_inventory(loot)
+			_add_to_inventory.rpc(loot)
 			set_action({"action": action})
 
 
@@ -136,7 +136,7 @@ func set_action(value: Dictionary):
 	):
 		current_turn_actions.move = value.move
 
-
+@rpc("call_remote")
 func _add_to_inventory(loot: Array[MarbleItem]):
 	if !is_server():
 		return

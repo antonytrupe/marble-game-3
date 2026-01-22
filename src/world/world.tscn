@@ -21,7 +21,6 @@ sky = SubResource("Sky_4717r")
 ambient_light_color = Color(0.61584127, 0.7443546, 0.97678906, 1)
 fog_enabled = true
 fog_sky_affect = 0.1
-volumetric_fog_enabled = true
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_gv5m4"]
 resource_local_to_scene = true

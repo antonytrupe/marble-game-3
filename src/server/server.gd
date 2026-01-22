@@ -348,7 +348,7 @@ func _spawn_trees(count: int, center: Vector3, maturity_ratio: float = 0.0):
 		var tree: MarbleTree = TREE_SCENE.instantiate()
 		tree.name = tree.name + "%010d" % randi()
 		#TODO do this more righter
-		tree.position = _get_random_vector(10, center)
+		tree.position = _get_random_vector(10+count, center)
 
 		tree.ready.connect(func():
 			tree.age.age = tree.maturity * maturity_ratio
@@ -425,7 +425,7 @@ func _create_player(peer_id, player_id) -> Player:
 	return p
 
 
-## peer_id from multiplayer_pee, 1 for host
+## peer_id from multiplayer_peer, 1 for host
 func _on_peer_connected(peer_id = 1):
 	#debug("Peer connected with ID: %s" % peer_id)
 	var steam_id: int
@@ -464,7 +464,7 @@ func _on_peer_disconnected(peer_id):
 	var c: MarbleCharacter = world.characters.get_node(p.current_character_id)
 	#"clear" the player_name of the character
 	c.player_name = "(%s)" % c.player_name
-	Persistance.persist.emit("MarbleCharacter", c)
+	Persistance.persist.emit( c)
 	c._update_label()
 
 	connected_players.erase(peer_id)
@@ -474,7 +474,7 @@ func _create_character():
 	#debug("_create_character")
 	var c: MarbleCharacter = CHARACTER_SCENE.instantiate()
 	c.name = str(randi())
-	c.position = Vector3(randf_range(-100, 100), 0, randf_range(-100, 100))
+	c.position = Vector3(randf_range(-100, 100), 20, randf_range(-100, 100))
 	world.characters.add_child(c)
 	Persistance.persist.emit(c)
 	return c

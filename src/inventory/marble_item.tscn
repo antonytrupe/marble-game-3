@@ -10,18 +10,13 @@ properties/0/replication_mode = 2
 properties/1/path = NodePath(".:volume")
 properties/1/spawn = true
 properties/1/replication_mode = 2
-properties/2/path = NodePath(".:scene_2d")
+properties/2/path = NodePath(".:warp_speed")
 properties/2/spawn = true
 properties/2/replication_mode = 2
-properties/3/path = NodePath(".:scene_3d")
-properties/3/spawn = true
-properties/3/replication_mode = 2
-properties/4/path = NodePath(".:warp_speed")
-properties/4/spawn = true
-properties/4/replication_mode = 2
 
 [node name="MarbleItem" type="Node"]
 script = ExtResource("1_j5ypy")
+metadata/_custom_type_script = "uid://ffd8is3exnw8"
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_u4t8v")

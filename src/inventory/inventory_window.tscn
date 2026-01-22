@@ -11,6 +11,7 @@ offset_bottom = 512.0
 size_flags_horizontal = 4
 mouse_filter = 1
 script = ExtResource("1_qvk1e")
+metadata/_custom_type_script = "uid://cwewc02nxsbi6"
 
 [node name="Window" parent="." instance=ExtResource("2_3y8da")]
 unique_name_in_owner = true

@@ -159,6 +159,7 @@ func _unhandled_input(event) -> void:
 #this is for the server to tell this client who it's character is
 @rpc()
 func set_current_character(character_id):
+	debug('set_current_character: %s' %character_id)
 	#debug('set_current_character:', character_id)
 	current_character = world.characters.get_node(character_id)
 	current_character.camera.current = true
@@ -181,3 +182,5 @@ func _server_disconnected():
 	Steam.leaveLobby(lobby_id)
 	main_menu.visible = true
 	visible = false
+	world.visible = false
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
