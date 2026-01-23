@@ -12,7 +12,7 @@ func debug(...args: Array):
 
 
 func _on_new_game_button_pressed() -> void:
-	#debug.debug.emit('_on_new_game_button_pressed')
+	#debug('_on_new_game_button_pressed')
 	if not server.start():
 		main_menu.visible = false
 		client.visible = true
@@ -40,7 +40,7 @@ func get_friends_in_game():
 					 "lobby_id": game_info.get("lobby", 0) # Get lobby ID if available
 					})
 
-	debug(friends_playing_this_game)
+	#debug(friends_playing_this_game)
 	return friends_playing_this_game
 
 
@@ -69,13 +69,13 @@ func _on_show_friends_button_pressed() -> void:
 
 
 func _on_join_friend_button_pressed(friend: Dictionary):
-	debug(friend)
+	#debug(friend)
 	var lobby_id = int(friend.lobby_id)
 	client.join_lobby(lobby_id)
 
 
 func _on_load_game_button_pressed() -> void:
-	Debug.debug.emit("_on_load_game_button_pressed")
+	debug("_on_load_game_button_pressed")
 	#TODO
 
 

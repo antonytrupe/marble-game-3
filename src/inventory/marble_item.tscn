@@ -16,10 +16,13 @@ properties/2/replication_mode = 2
 
 [node name="MarbleItem" type="Node"]
 script = ExtResource("1_j5ypy")
-metadata/_custom_type_script = "uid://ffd8is3exnw8"
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_u4t8v")
 
 [node name="MarbleAge" parent="." instance=ExtResource("2_u4t8v")]
 unique_name_in_owner = true
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://d4h758w873o1j")
+spawn_path = NodePath("..")

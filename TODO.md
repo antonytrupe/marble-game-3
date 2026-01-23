@@ -59,3 +59,4 @@ TODO
 55. fishing
     1.  fish
     2.  fishing rods
+56. put persisting in its own thread

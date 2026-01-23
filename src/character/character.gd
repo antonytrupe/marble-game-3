@@ -36,6 +36,7 @@ const MAX_CONTROLLED_WARP = 10
 	#set = _set_inventory
 @export var current_turn_actions = {"move": null, "action": null}:
 	set = _set_action
+@export var flying: bool = false
 
 var turn: int = 0:
 	set = _set_turn
@@ -46,10 +47,6 @@ var mode: MODE = MODE.WALK # :
 #set = _set_mode
 
 var speed = 30.0
-
-@export var flying: bool = false
-
-#var warp_monuments = {}
 
 ##target warp speed
 var target_warp_speed = 1

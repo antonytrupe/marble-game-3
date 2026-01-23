@@ -159,7 +159,6 @@ func _unhandled_input(event) -> void:
 #this is for the server to tell this client who it's character is
 @rpc()
 func set_current_character(character_id):
-	debug('set_current_character: %s' %character_id)
 	#debug('set_current_character:', character_id)
 	current_character = world.characters.get_node(character_id)
 	current_character.camera.current = true
