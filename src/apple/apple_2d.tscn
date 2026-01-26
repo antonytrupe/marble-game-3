@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://m1ran7tnm8h4"]
+[gd_scene format=3 uid="uid://m1ran7tnm8h4"]
 
 [ext_resource type="Script" uid="uid://cq53fys5w4au1" path="res://src/apple/apple_2d.gd" id="1_sn4jx"]
 [ext_resource type="Texture2D" uid="uid://b7wbn01tbndfd" path="res://src/apple/image.png" id="1_wfsha"]
@@ -7,7 +7,7 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_67jyn"]
 radius = 16.0
 
-[node name="Apple2D" type="RigidBody2D"]
+[node name="Apple2D" type="RigidBody2D" unique_id=848685177]
 collision_layer = 32
 collision_mask = 32
 input_pickable = true
@@ -16,16 +16,16 @@ freeze_mode = 1
 script = ExtResource("1_sn4jx")
 metadata/_custom_type_script = "uid://cq53fys5w4au1"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1403284041]
 shape = SubResource("CircleShape2D_67jyn")
 
-[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+[node name="MeshInstance2D" type="MeshInstance2D" parent="." unique_id=1859268792]
 visible = false
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1705247816]
 texture = ExtResource("1_wfsha")
 
-[node name="MarbleItem" parent="." instance=ExtResource("3_5rtl6")]
+[node name="MarbleItem" parent="." unique_id=985256837 instance=ExtResource("3_5rtl6")]
 unique_name_in_owner = true
 
 [connection signal="input_event" from="." to="." method="_on_input_event"]

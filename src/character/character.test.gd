@@ -21,7 +21,7 @@ func after_test() -> void:
 	other.queue_free()
 
 
-func test_vector_to_array():
+func test_vector_to_array() -> void:
 	var v = Vector3(1, 2, 3)
 	var s = var_to_str(v)
 	assert_str(s).is_equal('"(1.0, 2.0, 3.0)"')

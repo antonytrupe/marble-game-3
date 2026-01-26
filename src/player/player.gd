@@ -7,7 +7,7 @@ var characters: Array = []
 ## from multiplayer_peer
 var peer_id: int
 var current_character_id: String
-var steam_name
+var steam_name: String
 
 ## for serializing
 func get_data() -> Dictionary:

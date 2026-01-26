@@ -23,20 +23,20 @@ const WARP_MONUMENT_SCENE = preload("res://src/warp_monument/warp_monument.tscn"
 @onready var client: Client = $/root/Game/Client
 
 
-var lobby_id = 0
+var lobby_id: int = 0
 
-func _steam_signals():
+func _steam_signals() -> void:
 	Steam.lobby_created.connect(_on_lobby_created)
 	# just for information
 	#Steam.join_requested.connect(_on_lobby_join_requested)
 
 
-func _multiplayer_signals():
+func _multiplayer_signals() -> void:
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
 
-func _persistance_signals():
+func _persistance_signals() -> void:
 	Persistance.load_player.connect(_load_player)
 	Persistance.load_character.connect(_load_character)
 	Persistance.load_warp_monument.connect(_load_warp_monument)
@@ -45,13 +45,13 @@ func _persistance_signals():
 	Persistance.load_finished.connect(_load_finished)
 
 
-func _load_finished():
+func _load_finished() -> void:
 	world.underworld_raiser(world.characters.get_children())
 	world.underworld_raiser(world.warp_monuments.get_children())
 	world.visible = true
 
 
-func _load_tree(object_name, data: Dictionary):
+func _load_tree(object_name, data: Dictionary) -> void:
 	var t: MarbleTree = TREE_SCENE.instantiate()
 	t.name = object_name.validate_node_name()
 
@@ -62,7 +62,7 @@ func _load_tree(object_name, data: Dictionary):
 	world.flora.add_child(t)
 
 
-func _load_apple(object_name, data: Dictionary):
+func _load_apple(object_name, data: Dictionary) -> void:
 	var t: Apple3D = APPLE_SCENE.instantiate()
 	t.name = object_name.validate_node_name()
 
@@ -72,7 +72,7 @@ func _load_apple(object_name, data: Dictionary):
 		t.transform = str_to_var(data.transform)
 	world.flora.add_child(t)
 
-func _load_warp_monument(object_name, data: Dictionary):
+func _load_warp_monument(object_name, data: Dictionary) -> void:
 	var w: WarpMonument = WARP_MONUMENT_SCENE.instantiate()
 	w.name = object_name.validate_node_name()
 
@@ -83,7 +83,7 @@ func _load_warp_monument(object_name, data: Dictionary):
 	world.warp_monuments.add_child(w)
 
 
-func _load_character(character_name: String, data: Dictionary):
+func _load_character(character_name: String, data: Dictionary) -> void:
 	var c: MarbleCharacter = CHARACTER_SCENE.instantiate()
 	c.name = character_name.validate_node_name()
 
@@ -94,57 +94,57 @@ func _load_character(character_name: String, data: Dictionary):
 	world.characters.add_child(c)
 
 
-func _persist():
+func _persist() -> void:
 	print('persisting')
 	debug('persisting')
 	players.keys().all(
-		func(player_id):
+		func(player_id) -> bool:
 			Persistance.persist.emit(players[player_id])
 			return true
 	)
 
 	world.characters.get_children().all(
-		func(character):
+		func(character) -> bool:
 			Persistance.persist.emit(character)
 			return true
 	)
 
 	world.warp_monuments.get_children().all(
-		func(w):
+		func(w) -> bool:
 			Persistance.persist.emit(w)
 			return true
 	)
 
 	world.flora.get_children().all(
-		func(f):
+		func(f) -> bool:
 			Persistance.persist.emit(f)
 			return true
 	)
 
 	world.fauna.get_children().all(
-		func(f):
+		func(f) -> bool:
 			Persistance.persist.emit(f)
 			return true
 	)
 
 
-func quit():
+func quit() -> void:
 	world.visible = false
 	print("server quit")
 	Steam.leaveLobby(lobby_id)
 	_persist()
 
 
-func _notification(what):
+func _notification(what) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		quit()
 
 
-func hide():
+func hide() -> void:
 	ui.visible = false
 
 
-func debug(...args: Array):
+func debug(...args: Array) -> void:
 	Debug.debug.emit(args)
 
 
@@ -172,7 +172,7 @@ func _on_lobby_created(result: int, lobby_id: int) -> void:
 		_on_peer_connected(multiplayer.get_unique_id())
 
 
-func start():
+func start() -> void:
 	_multiplayer_signals()
 	_persistance_signals()
 	_steam_signals()
@@ -189,7 +189,7 @@ func start():
 
 
 @rpc("any_peer", "call_local")
-func chat(message):
+func chat(message) -> void:
 	debug(message)
 	#find the character that sent
 	var peer_id = multiplayer.get_remote_sender_id()
@@ -216,7 +216,7 @@ func chat(message):
 		#client_chat.rpc(message)
 
 
-func command(cmd: String, _player: Player, character: MarbleCharacter):
+func command(cmd: String, _player: Player, character: MarbleCharacter) -> void:
 	print(cmd)
 	if !multiplayer.is_server():
 		print("not server")
@@ -308,7 +308,7 @@ func _get_random_vector(radius: float, center: Vector3) -> Vector3:
 	return Vector3(x, y, z)
 
 
-func _spawn_warp_monument(center: Vector3):
+func _spawn_warp_monument(center: Vector3) -> void:
 	var m: WarpMonument = WARP_MONUMENT_SCENE.instantiate()
 	m.name = m.name + "%010d" % randi()
 	#var chunk = chunks.get_chunk(center)
@@ -322,7 +322,7 @@ func _spawn_warp_monument(center: Vector3):
 	world.warp_monuments.add_child(m)
 
 
-func _spawn_acorns(count: int, center: Vector3):
+func _spawn_acorns(count: int, center: Vector3) -> void:
 	count = clampi(count, 1, 100)
 	for i in count:
 		var acorn = ACORN_SCENE.instantiate()
@@ -332,7 +332,7 @@ func _spawn_acorns(count: int, center: Vector3):
 		world.flora.add_child(acorn)
 
 
-func _spawn_bushes(count: int, center: Vector3):
+func _spawn_bushes(count: int, center: Vector3) -> void:
 	count = clampi(count, 1, 100)
 	for i in count:
 		var bush = BUSH_SCENE.instantiate()
@@ -342,13 +342,13 @@ func _spawn_bushes(count: int, center: Vector3):
 		world.flora.add_child(bush)
 
 
-func _spawn_trees(count: int, center: Vector3, maturity_ratio: float = 0.0):
+func _spawn_trees(count: int, center: Vector3, maturity_ratio: float = 0.0) -> void:
 	count = clampi(count, 1, 100)
 	for i in count:
 		var tree: MarbleTree = TREE_SCENE.instantiate()
 		tree.name = tree.name + "%010d" % randi()
 		#TODO do this more righter
-		tree.position = _get_random_vector(10+count, center)
+		tree.position = _get_random_vector(10 + count, center)
 
 		tree.ready.connect(func():
 			tree.age.age = tree.maturity * maturity_ratio
@@ -357,7 +357,7 @@ func _spawn_trees(count: int, center: Vector3, maturity_ratio: float = 0.0):
 		world.flora.add_child(tree)
 
 
-func _spawn_apples(count: int, center: Vector3):
+func _spawn_apples(count: int, center: Vector3) -> void:
 	count = clampi(count, 1, 100)
 	for i in count:
 		var apple = APPLE_SCENE.instantiate()
@@ -369,7 +369,7 @@ func _spawn_apples(count: int, center: Vector3):
 		world.flora.add_child(apple)
 
 
-func _spawn_stones(quantity: int, p: Vector3):
+func _spawn_stones(quantity: int, p: Vector3) -> void:
 	print('_spawn_stones')
 	quantity = clampi(quantity, 1, 100)
 	for i in quantity:
@@ -380,7 +380,7 @@ func _spawn_stones(quantity: int, p: Vector3):
 		world.terra.add_child(stone)
 
 
-func _spawn_mob(count: int, center: Vector3):
+func _spawn_mob(count: int, center: Vector3) -> void:
 	for i in count:
 		var mob = MOB_SCENE.instantiate()
 		mob.name = mob.name + "%010d" % randi()
@@ -395,7 +395,7 @@ func _spawn_mob(count: int, center: Vector3):
 		#print("After rotation:", mob.rotation.y) # Debug
 
 
-func _load_player(player_name, data: Dictionary):
+func _load_player(player_name, data: Dictionary) -> void:
 	var p = PLAYER_SCENE.new()
 	p.name = player_name
 
@@ -426,7 +426,7 @@ func _create_player(peer_id, player_id) -> Player:
 
 
 ## peer_id from multiplayer_peer, 1 for host
-func _on_peer_connected(peer_id = 1):
+func _on_peer_connected(peer_id = 1) -> void:
 	#debug("Peer connected with ID: %s" % peer_id)
 	var steam_id: int
 	var friend_name: String
@@ -458,19 +458,19 @@ func _on_peer_connected(peer_id = 1):
 	c.player_name = friend_name
 	c._update_label()
 
-func _on_peer_disconnected(peer_id):
+func _on_peer_disconnected(peer_id) -> void:
 	#debug("Peer disconnected with ID: %s" % peer_id)
 	var p: Player = connected_players[peer_id]
 	var c: MarbleCharacter = world.characters.get_node(p.current_character_id)
 	#"clear" the player_name of the character
 	c.player_name = "(%s)" % c.player_name
-	Persistance.persist.emit( c)
+	Persistance.persist.emit(c)
 	c._update_label()
 
 	connected_players.erase(peer_id)
 
 
-func _create_character():
+func _create_character() -> MarbleCharacter:
 	#debug("_create_character")
 	var c: MarbleCharacter = CHARACTER_SCENE.instantiate()
 	c.name = str(randi())

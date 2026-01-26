@@ -14,7 +14,7 @@ const DAYS_IN_WEEK: int = 7
 const WEEKS_IN_MONTH: int = 4
 const DAYS_IN_MONTH: int = DAYS_IN_WEEK * WEEKS_IN_MONTH
 const MONTHS_IN_YEAR: int = 10
-const MONTHS = [
+const MONTHS: Array = [
 	"March", # 1
 	"April", # 2
 	"May", #
@@ -38,7 +38,7 @@ func get_month() -> int:
 
 
 func get_day_of_week() -> int:
-	var day_of_month = get_day_of_month()
+	var day_of_month: int = get_day_of_month()
 	var day_of_week: int = (day_of_month - 1) % MarbleAge.DAYS_IN_WEEK
 	return day_of_week
 
@@ -50,7 +50,7 @@ func get_day_of_month() -> int:
 
 
 func get_week_of_month() -> int:
-	var day_of_month = get_day_of_month()
+	var day_of_month: int = get_day_of_month()
 	@warning_ignore("integer_division")
 	var week_of_month: int = (day_of_month - 1) / MarbleAge.DAYS_IN_WEEK
 	return week_of_month

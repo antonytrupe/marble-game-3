@@ -1,8 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://hwslegxxru8h"]
+[gd_scene load_steps=14 format=3 uid="uid://hwslegxxru8h"]
 
 [ext_resource type="Script" uid="uid://bod6lvq43qjsc" path="res://src/world/world.gd" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://bga3y3kuercqk" path="res://src/world/mesh_instance_3d.gd" id="2_bsf3i"]
-[ext_resource type="PackedScene" uid="uid://dg5pngnp7smv8" path="res://src/water/water.tscn" id="3_jte2u"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f3sb7"]
 properties/0/path = NodePath(".:visible")
@@ -24,6 +23,20 @@ fog_sky_affect = 0.1
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_gv5m4"]
 resource_local_to_scene = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_6fy3g"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6fy3g"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jte2u"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_bsf3i"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_43c6p"]
+albedo_color = Color(0, 0, 1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_l0av5"]
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_f3sb7")
@@ -77,5 +90,30 @@ unique_name_in_owner = true
 _spawnable_scenes = PackedStringArray("uid://bdkw10fdrlljw")
 spawn_path = NodePath("../WarpMonuments")
 
-[node name="water" parent="." instance=ExtResource("3_jte2u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 95, 0, 3)
+[node name="ConeTwistJoint3D" type="ConeTwistJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
+node_b = NodePath("../B")
+exclude_nodes_from_collision = false
+swing_span = 0.2617994
+
+[node name="A" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.329619, 13, 0)
+freeze = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="A"]
+mesh = SubResource("BoxMesh_6fy3g")
+surface_material_override/0 = SubResource("StandardMaterial3D_6fy3g")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="A"]
+shape = SubResource("BoxShape3D_jte2u")
+
+[node name="B" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.91594064, 13, 0)
+sleeping = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="B"]
+mesh = SubResource("BoxMesh_bsf3i")
+surface_material_override/0 = SubResource("StandardMaterial3D_43c6p")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="B"]
+shape = SubResource("BoxShape3D_l0av5")

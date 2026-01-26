@@ -3,7 +3,7 @@ extends Area3D
 
 #@export var nearby_bodies: Dictionary = {}
 #@export var body: Node3D = owner
-var warp_monuments = {}
+var warp_monuments: Dictionary = {}
 
 func _on_body_entered(_b: Node3D) -> void:
 	pass

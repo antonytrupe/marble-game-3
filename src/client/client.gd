@@ -5,7 +5,7 @@ signal current_character_updated(character: MarbleCharacter)
 
 @onready var server: Server = $/root/Game/Server
 @onready var world: World = $/root/Game/World
-@onready var main_menu = $/root/Game/MainMenu
+@onready var main_menu: MainMenu = $/root/Game/MainMenu
 @onready var inventory: InventoryWindow = %Inventory
 @onready var chat_text_edit: TextEdit = %ChatInput
 @onready var chat_window: MarbleWindow = %ChatWindow
@@ -13,11 +13,11 @@ var current_character: MarbleCharacter
 
 var lobby_id: int
 
-func debug(...args: Array):
+func debug(...args: Array) -> void:
 	Debug.debug.emit(args)
 
 
-func _steam_signals():
+func _steam_signals() -> void:
 	Steam.lobby_joined.connect(_on_lobby_joined)
 
 
@@ -45,7 +45,7 @@ func _on_lobby_joined(lobby_id: int, _permissions: int, _locked: bool, _response
 
 
 	# But if we're joining
-	var peer := SteamMultiplayerPeer.new()
+	var peer: SteamMultiplayerPeer = SteamMultiplayerPeer.new()
 	peer.debug_level = SteamMultiplayerPeer.DEBUG_LEVEL_PEER # <- optional, adds info to log
 	peer.connect_to_lobby(lobby_id)
 	multiplayer.multiplayer_peer = peer
@@ -72,7 +72,7 @@ func _input(event: InputEvent) -> void:
 				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 
-func _unhandled_input(event) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	if current_character:
 		#only if we're not typing
 		if !chat_window.visible:
@@ -115,7 +115,7 @@ func _unhandled_input(event) -> void:
 		if event is InputEventMouseButton:
 			#handle moving the camera forward
 			if (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP)):
-				var scroll_amount = - event.factor if event.factor else -1.0
+				var scroll_amount: float = - event.factor if event.factor else -1.0
 				if is_server():
 					current_character.server_camera_zoom(scroll_amount)
 				else:
@@ -123,7 +123,7 @@ func _unhandled_input(event) -> void:
 
 			#handle moving the camera backwards
 			if (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN)):
-				var scroll_amount = event.factor if event.factor else 1.0
+				var scroll_amount: float = event.factor if event.factor else 1.0
 				if is_server():
 					current_character.server_camera_zoom(scroll_amount)
 				else:
@@ -158,14 +158,14 @@ func _unhandled_input(event) -> void:
 
 #this is for the server to tell this client who it's character is
 @rpc()
-func set_current_character(character_id):
+func set_current_character(character_id: String) -> void:
 	#debug('set_current_character:', character_id)
 	current_character = world.characters.get_node(character_id)
 	current_character.camera.current = true
 	current_character_updated.emit(current_character)
 
 
-func _on_connected_to_server():
+func _on_connected_to_server() -> void:
 	main_menu.visible = false
 	visible = true
 	world.visible = true
@@ -176,7 +176,7 @@ func _on_connected_to_server():
 	#server.set_client_player_id.rpc_id(1,"steam:"+str(steam_id))
 
 
-func _server_disconnected():
+func _server_disconnected() -> void:
 	#debug("_server_disconnected")
 	Steam.leaveLobby(lobby_id)
 	main_menu.visible = true

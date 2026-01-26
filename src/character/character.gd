@@ -17,62 +17,63 @@ enum MODE {
 	RUN = 6,
 }
 
-const STRINGS = {
+const STRINGS: Dictionary[int, String] = {
 	MODE.CROUCH: "CROUCH",
 	MODE.WALK: "WALK",
 	MODE.HUSTLE: "HUSTLE",
 	MODE.RUN: "RUN",
 }
 
-const SPEED_MULTIPLIER = 1.0 / 24.0
-const JUMP_VELOCITY = 5.0
-const MAX_CONTROLLED_WARP = 10
+const SPEED_MULTIPLIER: float = 1.0 / 24.0
+const JUMP_VELOCITY: float = 5.0
+const MAX_CONTROLLED_WARP: int = 10
 ## current actual warp speed
-@export var warp_speed = 1:
+@export var warp_speed: int = 1:
 	set = _set_warp_speed
 @export var player_name: String
 
-@export var inventory: Inventory = Inventory.new()
-	#set = _set_inventory
-@export var current_turn_actions = {"move": null, "action": null}:
+@export var current_turn_actions: Dictionary = {"move": null, "action": null}:
 	set = _set_action
 @export var flying: bool = false
 
 var turn: int = 0:
 	set = _set_turn
 
-var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 var mode: MODE = MODE.WALK # :
 #set = _set_mode
 
-var speed = 30.0
+var speed: float = 30.0
 
 ##target warp speed
-var target_warp_speed = 1
+var target_warp_speed: int = 1
 ##allowed maximum warp speed
-var max_warp_speed = 5000
+var max_warp_speed: int = 5000
 ##allowed minimum warp speed
-var min_warp_speed = 1
+var min_warp_speed: int = 1
 
 var player_id: String
 
 @onready var label: Label3D = $Label3D
-@onready var camera_pivot = %CameraPivot
-@onready var camera = %Camera3D
-@onready var chat_bubbles = %ChatBubbles
-@onready var client = $/root/Game/Client
+@onready var camera_pivot: Node3D = %CameraPivot
+@onready var camera: Camera3D = %Camera3D
+@onready var chat_bubbles: Node3D = %ChatBubbles
+@onready var client: Client = $/root/Game/Client
 @onready var warp_detector: WarpDetector = $WarpDetector
 @onready var age: MarbleAge = $Age
 @onready var raycast: RayCast3D = %RayCast3D
-
-func _set_inventory(value):
-	inventory = value
-	inventory_updated.emit(inventory)
+#@onready var inventory: Inventory = $Inventory
+@onready var inventory_right: PinJoint3D = %InventoryRight
+@onready var inventory_left: PinJoint3D = %InventoryLeft
+#@onready var flora: Node3D = $/root/Game/World/Flora
+#func _set_inventory(value):
+	#inventory = value
+	#inventory_updated.emit(inventory)
 
 
 #setter, don't call directly
-func _set_action(value):
+func _set_action(value: Dictionary) -> void:
 	current_turn_actions = value
 	#Signals.Actions.emit(player_id, current_turn_actions)
 
@@ -81,26 +82,35 @@ func is_server() -> bool:
 	return multiplayer.is_server()
 
 
-func get_target():
-	var entity = raycast.get_collider()
+func get_target() -> Object:
+	var entity: Object = raycast.get_collider()
 	return entity
 
 
 @rpc("any_peer")
-func interact():
+func interact() -> void:
 	if !is_server():
 		return
 
 	#if trading:
 		#cancel_trade()
 		#return
+
+	if inventory_right.node_b:
+		var b: Node = get_node(inventory_right.node_b)
+		if b is RigidBody3D:
+			#b.freeze=false
+			#b.sleeping=false
+			inventory_right.node_b = ""
+
 	if raycast.is_colliding():
-		var entity = get_target()
+		var entity: Object = get_target()
 
 		if entity.has_method("start_trade"):
 			pass
 			#start_trade(entity)
 			#entity.start_trade(self)
+
 
 		if entity.has_method("pick_berry"):
 			pass
@@ -113,17 +123,22 @@ func interact():
 			#set_action({"action": "pick_berry"})
 
 		if entity.has_method("pick_up"):
-			var action = "pick_up"
+			var action: String = "pick_up"
 			# make actions.action always a string
 			#if current_turn_actions.action != null and current_turn_actions.action != action:
 				#return
-			var loot = entity.pick_up()
-			_add_to_inventory.rpc(loot)
+			#var loot = entity.pick_up()
+			if entity is RigidBody3D:
+				entity.freeze = true
+				entity.sleeping = true
+				entity.global_position = inventory_right.global_position
+				#entity.freeze=false
+				inventory_right.node_b = entity.get_path()
 			set_action({"action": action})
 
 
 # use reset_actions to clear this and skip internal logic
-func set_action(value: Dictionary):
+func set_action(value: Dictionary) -> void:
 	if value.has("action") and value.action:
 		current_turn_actions.action = value.action
 	# only update move if we went faster
@@ -133,24 +148,17 @@ func set_action(value: Dictionary):
 	):
 		current_turn_actions.move = value.move
 
-@rpc("call_remote")
-func _add_to_inventory(loot: Array[MarbleItem]):
-	if !is_server():
-		return
-	for item in loot:
-		inventory.items[item.name] = item
 
-
-func _set_turn(value):
+func _set_turn(value: int) -> void:
 	if label and value != turn:
 		_update_label()
 	turn = value
 
-func calculate_warp():
+func calculate_warp() -> void:
 	var closest: WarpMonument = null
 	#var closest_distance=0
 	for w: WarpMonument in warp_detector.warp_monuments.values():
-		var distance = w.position.distance_to(position)
+		var distance: float = w.position.distance_to(position)
 		if !closest or distance < closest.position.distance_to(position):
 			closest = w
 			#closest_distance=distance
@@ -163,7 +171,7 @@ func calculate_warp():
 
 
 @rpc("any_peer")
-func server_jump():
+func server_jump() -> void:
 	if !is_server():
 		return
 	if is_on_floor() and warp_speed <= MAX_CONTROLLED_WARP:
@@ -172,7 +180,7 @@ func server_jump():
 		velocity.y = JUMP_VELOCITY * min(warp_speed, MAX_CONTROLLED_WARP)
 
 @rpc("any_peer")
-func server_fly():
+func server_fly() -> void:
 	if !is_server():
 		return
 	#stop flying
@@ -189,13 +197,13 @@ func server_fly():
 
 #this the function that runs on all the peers that only the server can call
 @rpc("authority", "call_local", "reliable", 1)
-func chat_bubble(message: String):
+func chat_bubble(message: String) -> void:
 	var bubble: Bubble = load("res://src/chat_bubble/ChatBubble.tscn").instantiate()
 	bubble.text = message
 	chat_bubbles.add_child(bubble)
 
 
-func _start_turn(_turns):
+func _start_turn(_turns: Array) -> void:
 	#print('starting turn %.f'%turn)
 	pass
 
@@ -218,10 +226,10 @@ func _physics_process(delta: float) -> void:
 
 
 @rpc("any_peer")
-func server_move(d: Vector2):
+func server_move(d: Vector2) -> void:
 	if !is_server():
 		return
-	var direction = (transform.basis * Vector3(d.x, 0, d.y)).normalized()
+	var direction: Vector3 = (transform.basis * Vector3(d.x, 0, d.y)).normalized()
 
 	#m*SPEED_MULTIPLIER*speed
 	if direction:
@@ -245,20 +253,20 @@ func server_move(d: Vector2):
 
 
 @rpc("any_peer")
-func server_warp(value: int):
+func server_warp(value: int) -> void:
 	if !is_server():
 		return
 	warp_speed = value
 	Persistance.persist.emit("MarbleCharacter", self)
 
 
-func _set_warp_speed(w):
+func _set_warp_speed(w: int) -> void:
 	warp_speed = w
 	_update_label()
 
 
 @rpc("any_peer")
-func server_turn(value: Vector2):
+func server_turn(value: Vector2) -> void:
 	if !is_server():
 		return
 	rotate_y(-value.x * .005)
@@ -266,19 +274,19 @@ func server_turn(value: Vector2):
 
 
 @rpc("any_peer")
-func server_camera_zoom(scroll_amount):
+func server_camera_zoom(scroll_amount: float) -> void:
 	if !is_server():
 		return
-	var direction = camera_pivot.transform.basis.z
+	var direction: Vector3 = camera_pivot.transform.basis.z
 	camera_pivot.position += direction * scroll_amount * .1
 
 
-func _rotate_camera(value: Vector2):
+func _rotate_camera(value: Vector2) -> void:
 	camera_pivot.rotate_x(-value.y * .005)
 	camera_pivot.rotation.x = clamp(camera_pivot.rotation.x, -PI / 2, PI / 2)
 
 
-func _ready():
+func _ready() -> void:
 	_update_label()
 
 
@@ -291,11 +299,11 @@ func get_data() -> Dictionary:
 		"age": age,
 		"turn": turn,
 		"transform": var_to_str(transform),
-		"inventory": var_to_str(inventory.items)
+		#"inventory": var_to_str(inventory.items)
 	}
 
 
-func load_node(node_data):
+func load_node(node_data: Dictionary) -> void:
 	#transform = str_to_var(node_data["transform"])
 	#if "transform" in node_data:
 		#transform = str_to_var(node_data.transform)
@@ -309,10 +317,10 @@ func load_node(node_data):
 		age.age = node_data.age
 	if "turn" in node_data:
 		turn = node_data.turn
-	if "inventory" in node_data:
-		inventory.items = str_to_var(node_data.inventory)
+	#if "inventory" in node_data:
+		#inventory.items = str_to_var(node_data.inventory)
 
 
-func _update_label():
+func _update_label() -> void:
 	if label:
 		label.text = "%s (x%.f)\n turn %.f" % [player_name, warp_speed, turn]

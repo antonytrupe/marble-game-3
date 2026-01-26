@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cqgu8ge77h70t"]
+[gd_scene format=3 uid="uid://cqgu8ge77h70t"]
 
 [ext_resource type="Script" uid="uid://n01r8f0drw7s" path="res://src/game/game.gd" id="1_yarin"]
 [ext_resource type="PackedScene" uid="uid://hwslegxxru8h" path="res://src/world/world.tscn" id="2_jhw8o"]
@@ -9,22 +9,22 @@
 [ext_resource type="Script" uid="uid://cx8p4ymd2lt8g" path="res://src/debug/debug_ui.gd" id="6_7r0dx"]
 [ext_resource type="Script" uid="uid://cf63o2sa2jlie" path="res://src/game/rich_text_label.gd" id="7_jhw8o"]
 
-[node name="Game" type="Node"]
+[node name="Game" type="Node" unique_id=1009684545]
 script = ExtResource("1_yarin")
 
-[node name="Client" parent="." instance=ExtResource("5_clwl7")]
+[node name="Client" parent="." unique_id=585245444 instance=ExtResource("5_clwl7")]
 unique_name_in_owner = true
 visible = false
 mouse_filter = 1
 
-[node name="World" parent="." instance=ExtResource("2_jhw8o")]
+[node name="World" parent="." unique_id=107267436 instance=ExtResource("2_jhw8o")]
 visible = false
 
-[node name="Server" parent="." instance=ExtResource("3_n7s5x")]
+[node name="Server" parent="." unique_id=2110552324 instance=ExtResource("3_n7s5x")]
 unique_name_in_owner = true
 mouse_filter = 1
 
-[node name="MainMenu" parent="." instance=ExtResource("5_jhw8o")]
+[node name="MainMenu" parent="." unique_id=2004564897 instance=ExtResource("5_jhw8o")]
 unique_name_in_owner = true
 anchors_preset = 8
 anchor_left = 0.5
@@ -40,7 +40,7 @@ grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 6
 
-[node name="Control" type="Control" parent="MainMenu"]
+[node name="Control" type="Control" parent="MainMenu" unique_id=1819219565]
 unique_name_in_owner = true
 z_index = 1
 layout_mode = 1
@@ -51,7 +51,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4_6kr85")
 
-[node name="MarginContainer" type="MarginContainer" parent="MainMenu/Control"]
+[node name="MarginContainer" type="MarginContainer" parent="MainMenu/Control" unique_id=1015660888]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -61,44 +61,44 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="CenterContainer" type="CenterContainer" parent="MainMenu/Control/MarginContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="MainMenu/Control/MarginContainer" unique_id=683923027]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu/Control/MarginContainer/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu/Control/MarginContainer/CenterContainer" unique_id=1771117338]
 layout_mode = 2
 
-[node name="DeleteDataButton" type="Button" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer"]
+[node name="DeleteDataButton" type="Button" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer" unique_id=1033479839]
 layout_mode = 2
 text = "Reset Server"
 
-[node name="NewGameButton" type="Button" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer"]
+[node name="NewGameButton" type="Button" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer" unique_id=1595962444]
 layout_mode = 2
 text = "Start Server"
 
-[node name="ShowFriendsButton" type="Button" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer"]
+[node name="ShowFriendsButton" type="Button" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer" unique_id=2123750204]
 layout_mode = 2
 text = "Show Friends"
 
-[node name="JoinFriendsContainer" type="VBoxContainer" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer"]
+[node name="JoinFriendsContainer" type="VBoxContainer" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer" unique_id=905605755]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="LoadGameButton" type="Button" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer"]
+[node name="LoadGameButton" type="Button" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer" unique_id=2076403702]
 visible = false
 layout_mode = 2
 text = "Load Game"
 
-[node name="QuitButton" type="Button" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer"]
+[node name="QuitButton" type="Button" parent="MainMenu/Control/MarginContainer/CenterContainer/VBoxContainer" unique_id=1067472018]
 layout_mode = 2
 text = "Quit"
 
-[node name="Window" parent="." instance=ExtResource("5_jhw8o")]
+[node name="Window" parent="." unique_id=643911105 instance=ExtResource("5_jhw8o")]
 offset_right = 255.0
 offset_bottom = 299.0
 
-[node name="DebugRichText" type="RichTextLabel" parent="Window"]
+[node name="DebugRichText" type="RichTextLabel" parent="Window" unique_id=940584392]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -117,7 +117,7 @@ scroll_following_visible_characters = true
 context_menu_enabled = true
 script = ExtResource("6_7r0dx")
 
-[node name="FPSWindow" parent="." instance=ExtResource("5_jhw8o")]
+[node name="FPSWindow" parent="." unique_id=184972269 instance=ExtResource("5_jhw8o")]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -125,7 +125,7 @@ offset_left = -106.0
 offset_right = 0.0
 grow_horizontal = 0
 
-[node name="RichTextLabel" type="RichTextLabel" parent="FPSWindow"]
+[node name="RichTextLabel" type="RichTextLabel" parent="FPSWindow" unique_id=1084982890]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

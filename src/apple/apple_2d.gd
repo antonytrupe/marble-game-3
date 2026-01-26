@@ -1,19 +1,19 @@
 class_name Apple2D
 extends RigidBody2D
 
-var is_dragging = false
-var is_dropping = false
+var is_dragging: bool = false
+var is_dropping: bool = false
 
 @onready var item: MarbleItem = %MarbleItem
 
-func _input(event: InputEvent):
+func _input(event: InputEvent) -> void:
 	# Stop dragging when the mouse button is released anywhere
 	if is_dragging and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 			is_dragging = false
 
 
-func _on_input_event(_viewport, event, _shape_idx):
+func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	print('_on_input_event')
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
@@ -34,11 +34,11 @@ func _on_input_event(_viewport, event, _shape_idx):
 				# apply_central_impulse(Vector2(randf_range(-50, 50), randf_range(-50, 50))) # Example throw
 
 
-func _physics_process(_delta):
+func _physics_process(_delta: float) -> void:
 	if is_dragging:
-		var target_pos = get_global_mouse_position()
-		var direction = global_position.direction_to(target_pos)
-		var distance = global_position.distance_to(target_pos)
+		var target_pos: Vector2 = get_global_mouse_position()
+		var direction: Vector2 = global_position.direction_to(target_pos)
+		var distance: float = global_position.distance_to(target_pos)
 		# Apply a force proportional to the distance to pull it toward the mouse
 		apply_central_force(direction * distance * 100)
 		# Add dampening to prevent orbiting the cursor

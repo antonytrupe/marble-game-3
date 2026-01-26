@@ -1,20 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://b4f3nuk5vp4rc"]
+[gd_scene format=3 uid="uid://b4f3nuk5vp4rc"]
 
 [ext_resource type="Script" uid="uid://chjly557ici3u" path="res://src/character/character.gd" id="1_glpr6"]
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_2p3op"]
 [ext_resource type="Script" uid="uid://cv7le154j7bfo" path="res://src/character/ray_cast_3d.gd" id="2_8mo58"]
 [ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/marble_age.tscn" id="4_k8eue"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vu45j"]
-resource_local_to_scene = true
-height = 1.9
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_glpr6"]
-height = 1.9
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_2p3op"]
-radius = 0.1
-height = 0.2
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_glpr6"]
 properties/0/path = NodePath(".:position")
@@ -39,60 +28,101 @@ properties/6/path = NodePath(".:flying")
 properties/6/spawn = true
 properties/6/replication_mode = 2
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vu45j"]
+resource_local_to_scene = true
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_glpr6"]
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_2p3op"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_tntuy"]
+radius = 0.1
+height = 0.7
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_k8eue"]
+
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_k8eue"]
 
-[node name="Character" type="CharacterBody3D" groups=["persist"]]
+[node name="Character" type="CharacterBody3D" unique_id=959185743 groups=["persist"]]
 collision_layer = 2
 collision_mask = 31
 script = ExtResource("1_glpr6")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=2147316321]
+replication_config = SubResource("SceneReplicationConfig_glpr6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1497872601]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_vu45j")
 debug_fill = false
 
-[node name="BodyMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+[node name="BodyMesh" type="MeshInstance3D" parent="." unique_id=1233194481]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 mesh = SubResource("CapsuleMesh_glpr6")
 
-[node name="LeftEyeMesh" type="MeshInstance3D" parent="BodyMesh"]
+[node name="LeftEyeMesh" type="MeshInstance3D" parent="BodyMesh" unique_id=2105364078]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18112521, 0.66667503, -0.41810125)
 mesh = SubResource("CapsuleMesh_2p3op")
 skeleton = NodePath("../RightEyeMesh")
 
-[node name="RightEyeMesh" type="MeshInstance3D" parent="BodyMesh"]
+[node name="RightEyeMesh" type="MeshInstance3D" parent="BodyMesh" unique_id=1642321390]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16165185, 0.6219916, -0.4194979)
 mesh = SubResource("CapsuleMesh_2p3op")
 skeleton = NodePath("../..")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_glpr6")
+[node name="LeftArmMesh" type="MeshInstance3D" parent="BodyMesh" unique_id=1840549596]
+transform = Transform3D(1, 0, 0, 0, 0.34202015, -0.9396926, 0, 0.9396926, 0.34202015, -0.55, 0.2, -0.25)
+mesh = SubResource("CapsuleMesh_tntuy")
 
-[node name="Label3D" type="Label3D" parent="."]
+[node name="RightArmMesh" type="MeshInstance3D" parent="BodyMesh" unique_id=1623668904]
+transform = Transform3D(1, 0, 0, 0, 0.34202015, -0.9396926, 0, 0.9396926, 0.34202015, 0.55, 0.2, -0.25)
+mesh = SubResource("CapsuleMesh_tntuy")
+
+[node name="Skeleton3D" type="Skeleton3D" parent="BodyMesh" unique_id=626508635]
+
+[node name="PhysicalBone3D" type="PhysicalBone3D" parent="BodyMesh/Skeleton3D" unique_id=1811817086]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BodyMesh/Skeleton3D/PhysicalBone3D" unique_id=50397773]
+shape = SubResource("CapsuleShape3D_k8eue")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=244575978]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 billboard = 1
 text = "PlayerName (x6)"
 
-[node name="CameraPivot" type="Node3D" parent="."]
+[node name="CameraPivot" type="Node3D" parent="." unique_id=2078229616]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, -0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.5)
 
-[node name="Camera3D" type="Camera3D" parent="CameraPivot"]
+[node name="Camera3D" type="Camera3D" parent="CameraPivot" unique_id=1590937061]
 unique_name_in_owner = true
 attributes = SubResource("CameraAttributesPractical_k8eue")
 
-[node name="RayCast3D" type="RayCast3D" parent="CameraPivot/Camera3D"]
+[node name="RayCast3D" type="RayCast3D" parent="CameraPivot/Camera3D" unique_id=917288751]
 unique_name_in_owner = true
 target_position = Vector3(0, 0, -4)
 collision_mask = 31
 hit_from_inside = true
 script = ExtResource("2_8mo58")
 
-[node name="WarpDetector" parent="." instance=ExtResource("2_2p3op")]
+[node name="WarpDetector" parent="." unique_id=249574357 instance=ExtResource("2_2p3op")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
 
-[node name="ChatBubbles" type="Node3D" parent="."]
+[node name="ChatBubbles" type="Node3D" parent="." unique_id=72391166]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
-[node name="Age" parent="." instance=ExtResource("4_k8eue")]
+[node name="Age" parent="." unique_id=781584009 instance=ExtResource("4_k8eue")]
+
+[node name="InventoryRight" type="PinJoint3D" parent="." unique_id=1710293340]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5576246, 0.93172884, -0.6380893)
+node_a = NodePath("..")
+
+[node name="InventoryLeft" type="PinJoint3D" parent="." unique_id=104929261]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55891776, 0.93172884, -0.6380893)

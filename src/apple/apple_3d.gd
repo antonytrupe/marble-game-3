@@ -8,18 +8,18 @@ extends RigidBody3D
 @export var longevity: int = MarbleAge.SECONDS_IN_DAY * 5
 #@export var warp_speed: float = 1
 
-var turn = 0
-var _is_on_floor = false
+var turn: int = 0
+var _is_on_floor: bool = false
 
 @onready var collision_shape_3d: CollisionShape3D = %CollisionShape3D
 @onready var mesh_instance_3d: MeshInstance3D = $MeshInstance3D
 @onready var highlight_mesh_instance_3d: MeshInstance3D = %HighlightMeshInstance3D
 #@onready var age: MarbleAge = $Age
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D
-@onready var flora = $/root/Game/World/Flora
+@onready var flora: Node = $/root/Game/World/Flora
 @onready var item: MarbleItem = $MarbleItem
 
-func _ready():
+func _ready() -> void:
 	pass
 	#timer.wait_time=MarbleAge.SECONDS_IN_TURN/warp_speed
 	#timer.start()
@@ -52,12 +52,12 @@ func _physics_process(_delta: float) -> void:
 func pick_up() -> Array[MarbleItem]:
 	print('pick up')
 	queue_free()
-	var i = MarbleItem.new()
+	var i: MarbleItem = MarbleItem.new()
 	i.name = "Apple"
 	return [i]
 
 
-func _set_scale(s):
+func _set_scale(s: Vector3) -> void:
 	#TODO this doesn't work
 	collision_shape_3d.scale = s
 	mesh_instance_3d.scale = s
@@ -65,7 +65,7 @@ func _set_scale(s):
 	highlight_mesh_instance_3d.scale = s
 
 
-func _fall():
+func _fall() -> void:
 	set_deferred("freeze", false)
 	set_deferred("sleeping", false)
 	set_deferred("freeze_mode", RigidBody3D.FREEZE_MODE_KINEMATIC)
@@ -75,7 +75,7 @@ func is_server() -> bool:
 	return multiplayer.is_server()
 
 
-func _start_turn(_turns):
+func _start_turn(_turns: Array) -> void:
 	#print("apple._start_turn")
 	#
 	if not is_on_floor() and item.age.age > maturity:
@@ -91,9 +91,9 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	#print('_integrate_forces')
 	_is_on_floor = false
 
-	for i in range(state.get_contact_count()):
+	for i: int in range(state.get_contact_count()):
 		# Local normal points from the collider toward this RigidBody
-		var normal = state.get_contact_local_normal(i)
+		var normal: Vector3 = state.get_contact_local_normal(i)
 
 		# In 3D, a normal pointing UP (Vector3.UP) indicates a floor.
 		# Use a dot product to allow for slopes (e.g., > 0.7 for ~45 degrees).
@@ -103,11 +103,11 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 			break
 
 
-func calculate_warp():
+func calculate_warp() -> void:
 	var closest: WarpMonument = null
 	#var closest_distance=0
 	for w: WarpMonument in warp_detector.warp_monuments.values():
-		var distance = w.position.distance_to(position)
+		var distance: float = w.position.distance_to(position)
 		if !closest or distance < closest.position.distance_to(position):
 			closest = w
 			#closest_distance=distance
@@ -117,8 +117,8 @@ func calculate_warp():
 		item.warp_speed = 1
 
 
-func get_data():
-	var save_dict = {
+func get_data() -> Dictionary:
+	var save_dict: Dictionary = {
 		"transform": var_to_str(transform),
 		"age": item.age.age,
 		"turn": turn,
@@ -127,7 +127,7 @@ func get_data():
 	return save_dict
 
 
-func load_node(node_data):
+func load_node(node_data: Dictionary) -> void:
 	#transform = str_to_var(node_data["transform"])
 	if "age" in node_data:
 		item.age.age = node_data.age

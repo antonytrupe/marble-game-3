@@ -3,16 +3,16 @@ extends Control
 
 ## add a child node margincontainer that has mouse filter set to "ignore"
 
-enum MODE {NONE,TOP_LEFT,TOP,TOP_RIGHT,RIGHT,BOTTOM_RIGHT,BOTTOM,BOTTOM_LEFT,LEFT}
+enum MODE {NONE, TOP_LEFT, TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT, LEFT}
 
 #signal drag_ended(value_changed: bool)
 #signal drag_started()
 
 var drag_mode: MODE = MODE.NONE
 
-func _input(event: InputEvent):
+func _input(event: InputEvent) -> void:
 	# Stop dragging when the mouse button is released anywhere
-	if drag_mode!=MODE.NONE and event is InputEventMouseButton:
+	if drag_mode != MODE.NONE and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 			drag_mode = MODE.NONE
 			#drag_ended.emit()
@@ -25,28 +25,28 @@ func _input(event: InputEvent):
 			MODE.TOP_LEFT:
 				#update_position_to_mouse()
 				#print(event.relative)
-				position+=event.relative
-				size-=event.relative
+				position += event.relative
+				size -= event.relative
 			MODE.TOP:
-				position+=event.relative
+				position += event.relative
 			MODE.TOP_RIGHT:
-				position.y+=event.relative.y
-				size.x+=event.relative.x
-				size.y-=event.relative.y
+				position.y += event.relative.y
+				size.x += event.relative.x
+				size.y -= event.relative.y
 			MODE.RIGHT:
-				size.x+=event.relative.x
+				size.x += event.relative.x
 			MODE.BOTTOM_RIGHT:
-				size.x+=event.relative.x
-				size.y+=event.relative.y
+				size.x += event.relative.x
+				size.y += event.relative.y
 			MODE.BOTTOM:
-				size.y+=event.relative.y
+				size.y += event.relative.y
 			MODE.BOTTOM_LEFT:
-				size.y+=event.relative.y
-				position.x+=event.relative.x
-				size.x-=event.relative.x
+				size.y += event.relative.y
+				position.x += event.relative.x
+				size.x -= event.relative.x
 			MODE.LEFT:
-				position.x+=event.relative.x
-				size.x-=event.relative.x
+				position.x += event.relative.x
+				size.x -= event.relative.x
 			_:
 				print('missing a mode')
 

@@ -6,7 +6,7 @@ var last_target: MeshInstance3D = null
 @onready var character: MarbleCharacter = $"../../.."
 
 
-func _process(_delta):
+func _process(_delta) -> void:
 	#client.current_character and client.current_character==character and
 	if is_colliding():
 		var collider = get_collider()

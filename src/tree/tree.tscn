@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c1e46m2pfqiji"]
+[gd_scene format=3 uid="uid://c1e46m2pfqiji"]
 
 [ext_resource type="Script" uid="uid://duyhummlm0gr1" path="res://src/tree/tree.gd" id="1_2omd0"]
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_e4g3r"]
@@ -42,7 +42,7 @@ properties/3/path = NodePath(".:warp_speed")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
-[sub_resource type="Shader" id="Shader_jrthf"]
+[sub_resource type="Shader" id="Shader_tqj8e"]
 resource_local_to_scene = true
 code = "shader_type spatial;
 render_mode cull_front, unshaded;
@@ -64,7 +64,7 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jrthf"]
 resource_local_to_scene = true
 render_priority = 0
-shader = SubResource("Shader_jrthf")
+shader = SubResource("Shader_tqj8e")
 shader_parameter/highlight_color = Color(0, 0, 1, 1)
 shader_parameter/intensity = 0.0
 shader_parameter/outline_width = 0.1
@@ -76,51 +76,51 @@ top_radius = 0.8
 bottom_radius = 1.0
 height = 10.0
 
-[node name="Tree" type="RigidBody3D" groups=["flora", "persist"]]
+[node name="Tree" type="RigidBody3D" unique_id=1659524965 groups=["flora", "persist"]]
 collision_layer = 4
 collision_mask = 31
 mass = 102.651
 freeze = true
 script = ExtResource("1_2omd0")
 
-[node name="TrunkCollision" type="CollisionShape3D" parent="."]
+[node name="TrunkCollision" type="CollisionShape3D" parent="." unique_id=1224660995]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
 shape = SubResource("CylinderShape3D_k6sc6")
 debug_fill = false
 
-[node name="Trunk" type="MeshInstance3D" parent="."]
+[node name="Trunk" type="MeshInstance3D" parent="." unique_id=1354311427]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
 mesh = SubResource("CylinderMesh_an22n")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_staie")
 
-[node name="LeftLeaves" type="MeshInstance3D" parent="Trunk"]
+[node name="LeftLeaves" type="MeshInstance3D" parent="Trunk" unique_id=100127190]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 6, 0)
 mesh = SubResource("SphereMesh_7felh")
 surface_material_override/0 = SubResource("StandardMaterial3D_entft")
 
-[node name="FrontLeaves" type="MeshInstance3D" parent="Trunk"]
+[node name="FrontLeaves" type="MeshInstance3D" parent="Trunk" unique_id=1942172905]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, -2.5)
 mesh = SubResource("SphereMesh_7felh")
 
-[node name="RightLeaves" type="MeshInstance3D" parent="Trunk"]
+[node name="RightLeaves" type="MeshInstance3D" parent="Trunk" unique_id=674477800]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 6, 0)
 mesh = SubResource("SphereMesh_7felh")
 
-[node name="BackLeaves" type="MeshInstance3D" parent="Trunk"]
+[node name="BackLeaves" type="MeshInstance3D" parent="Trunk" unique_id=882120366]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 2.5)
 mesh = SubResource("SphereMesh_7felh")
 
-[node name="TopLeaves" type="MeshInstance3D" parent="Trunk"]
+[node name="TopLeaves" type="MeshInstance3D" parent="Trunk" unique_id=513317713]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0)
 mesh = SubResource("SphereMesh_7felh")
 
-[node name="WarpDetectorArea3D" parent="." instance=ExtResource("2_e4g3r")]
+[node name="WarpDetectorArea3D" parent="." unique_id=1771521341 instance=ExtResource("2_e4g3r")]
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=998563156]
 replication_config = SubResource("SceneReplicationConfig_cbetc")
 
-[node name="Label3D" type="Label3D" parent="."]
+[node name="Label3D" type="Label3D" parent="." unique_id=822432463]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 17.261553, 0)
 billboard = 1
 text = "Age:248979801
@@ -128,9 +128,9 @@ Warp:100
 Scale:1.00"
 font_size = 128
 
-[node name="HighlightMeshInstance3D" parent="." instance=ExtResource("3_kguxu")]
+[node name="HighlightMeshInstance3D" parent="." unique_id=973307759 instance=ExtResource("3_kguxu")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
 mesh = SubResource("CylinderMesh_5lsbm")
 
-[node name="Age" parent="." instance=ExtResource("4_tqj8e")]
+[node name="Age" parent="." unique_id=1655969799 instance=ExtResource("4_tqj8e")]

@@ -6,16 +6,12 @@ extends MarbleWindow
 @onready var window: MarbleWindow = %Window
 
 func _on_client_current_character_updated(c: MarbleCharacter) -> void:
-	items = c.inventory
+	#items = c.inventory
 	print(c.player_name)
-	print(c.inventory.items)
-	for item in items.items.values():
-		add_item(item)
+	#print(c.inventory.items)
+	#for item in items.items.values():
+		#add_item(item)
 
-func add_item(item: MarbleItem):
-	#var scene = load(item.scene)
-	#scene.item = item
-	pass
 
 func _on_area_2d_body_exited(body: Node2D) -> void:
 	print('dropping')
