@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://cdpdpwwn5voyq"]
+[gd_scene format=3 uid="uid://cdpdpwwn5voyq"]
 
 [ext_resource type="Script" uid="uid://bm31urffujefa" path="res://src/server/server.gd" id="1_ob30c"]
 
-[node name="Server" type="Control" groups=["persist"]]
+[node name="Server" type="Control" unique_id=1733335357 groups=["persist"]]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -12,16 +12,16 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ob30c")
 
-[node name="UI" type="Control" parent="."]
+[node name="UI" type="Control" parent="." unique_id=1327689186]
 unique_name_in_owner = true
 visible = false
 anchors_preset = 0
 
-[node name="Node3D" type="Node3D" parent="."]
+[node name="Node3D" type="Node3D" parent="." unique_id=1484187763]
 transform = Transform3D(1, 0, 0, 0, 0.5985204, -0.8011076, 0, 0.8011076, 0.5985204, 0, 104.11303, 0.27034378)
 visible = false
 
-[node name="Camera3D" type="Camera3D" parent="Node3D"]
+[node name="Camera3D" type="Camera3D" parent="Node3D" unique_id=1047329782]
 transform = Transform3D(1, 0, 0, 0, -0.4549699, 0.89050686, 0, -0.89050686, -0.4549699, 0, 122.80051, 45.043297)
 visible = false
 current = true

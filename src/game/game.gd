@@ -5,7 +5,7 @@ extends Node
 #live app id: 4041660
 
 @onready var client: Client = %Client
-@onready var main_menu: MainMenu = %MainMenu
+@onready var main_menu: MarbleWindow = %MainMenu
 
 
 func debug(...args: Array) -> void:

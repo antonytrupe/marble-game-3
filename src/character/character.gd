@@ -1,5 +1,5 @@
 class_name MarbleCharacter
-extends CharacterBody3D
+extends Node
 
 signal inventory_updated
 
@@ -55,17 +55,21 @@ var min_warp_speed: int = 1
 
 var player_id: String
 
-@onready var label: Label3D = $Label3D
+@onready var label: Label3D = %Label3D
 @onready var camera_pivot: Node3D = %CameraPivot
 @onready var camera: Camera3D = %Camera3D
 @onready var chat_bubbles: Node3D = %ChatBubbles
 @onready var client: Client = $/root/Game/Client
-@onready var warp_detector: WarpDetector = $WarpDetector
-@onready var age: MarbleAge = $Age
+@onready var warp_detector: WarpDetector = %WarpDetector
+@onready var age: MarbleAge = %Age
 @onready var raycast: RayCast3D = %RayCast3D
 #@onready var inventory: Inventory = $Inventory
 @onready var inventory_right: PinJoint3D = %InventoryRight
 @onready var inventory_left: PinJoint3D = %InventoryLeft
+#@onready var character: MarbleCharacter = $"."
+#@onready var character: CharacterBody3D = %Character
+@onready var character: MarbleCharacter = $"."
+
 #@onready var flora: Node3D = $/root/Game/World/Flora
 #func _set_inventory(value):
 	#inventory = value
@@ -158,8 +162,8 @@ func calculate_warp() -> void:
 	var closest: WarpMonument = null
 	#var closest_distance=0
 	for w: WarpMonument in warp_detector.warp_monuments.values():
-		var distance: float = w.position.distance_to(position)
-		if !closest or distance < closest.position.distance_to(position):
+		var distance: float = w.position.distance_to(character.position)
+		if !closest or distance < closest.position.distance_to(character.position):
 			closest = w
 			#closest_distance=distance
 	if closest:
@@ -174,10 +178,10 @@ func calculate_warp() -> void:
 func server_jump() -> void:
 	if !is_server():
 		return
-	if is_on_floor() and warp_speed <= MAX_CONTROLLED_WARP:
-		velocity.y = JUMP_VELOCITY * min(warp_speed, MAX_CONTROLLED_WARP)
+	if character.is_on_floor() and warp_speed <= MAX_CONTROLLED_WARP:
+		character.velocity.y = JUMP_VELOCITY * min(warp_speed, MAX_CONTROLLED_WARP)
 	elif flying:
-		velocity.y = JUMP_VELOCITY * min(warp_speed, MAX_CONTROLLED_WARP)
+		character.velocity.y = JUMP_VELOCITY * min(warp_speed, MAX_CONTROLLED_WARP)
 
 @rpc("any_peer")
 func server_fly() -> void:
@@ -188,7 +192,7 @@ func server_fly() -> void:
 		flying = false
 		return
 
-	if not is_on_floor() and warp_speed <= MAX_CONTROLLED_WARP:
+	if not character.is_on_floor() and warp_speed <= MAX_CONTROLLED_WARP:
 		if not flying:
 			flying = true
 
@@ -216,31 +220,31 @@ func _physics_process(delta: float) -> void:
 		_start_turn(range(self.turn + 1, new_turn + 1))
 		self.turn = new_turn
 	# Add the gravity.
-	if not is_on_floor():
+	if not character.is_on_floor():
 		if not flying:
-			velocity.y -= gravity * delta * min(warp_speed, MAX_CONTROLLED_WARP) * min(warp_speed, MAX_CONTROLLED_WARP)
+			character.velocity.y -= gravity * delta * min(warp_speed, MAX_CONTROLLED_WARP) * min(warp_speed, MAX_CONTROLLED_WARP)
 		#not on floor and flying
 		else:
-			velocity.y = 0
-	move_and_slide()
+			character.velocity.y = 0
+	character.move_and_slide()
 
 
 @rpc("any_peer")
 func server_move(d: Vector2) -> void:
 	if !is_server():
 		return
-	var direction: Vector3 = (transform.basis * Vector3(d.x, 0, d.y)).normalized()
+	var direction: Vector3 = (character.transform.basis * Vector3(d.x, 0, d.y)).normalized()
 
 	#m*SPEED_MULTIPLIER*speed
 	if direction:
-		velocity.x = direction.x * mode * SPEED_MULTIPLIER * speed * min(warp_speed, MAX_CONTROLLED_WARP)
-		velocity.z = direction.z * mode * SPEED_MULTIPLIER * speed * min(warp_speed, MAX_CONTROLLED_WARP)
+		character.velocity.x = direction.x * mode * SPEED_MULTIPLIER * speed * min(warp_speed, MAX_CONTROLLED_WARP)
+		character.velocity.z = direction.z * mode * SPEED_MULTIPLIER * speed * min(warp_speed, MAX_CONTROLLED_WARP)
 	else:
-		velocity.x = move_toward(
-			velocity.x, 0, mode * SPEED_MULTIPLIER * speed * min(warp_speed, MAX_CONTROLLED_WARP)
+		character.velocity.x = move_toward(
+			character.velocity.x, 0, mode * SPEED_MULTIPLIER * speed * min(warp_speed, MAX_CONTROLLED_WARP)
 		)
-		velocity.z = move_toward(
-			velocity.z, 0, mode * SPEED_MULTIPLIER * speed * min(warp_speed, MAX_CONTROLLED_WARP)
+		character.velocity.z = move_toward(
+			character.velocity.z, 0, mode * SPEED_MULTIPLIER * speed * min(warp_speed, MAX_CONTROLLED_WARP)
 		)
 	#if !is_zero_approx(velocity.x) or !is_zero_approx(velocity.z):
 	#set_action({"move": mode})
@@ -269,7 +273,7 @@ func _set_warp_speed(w: int) -> void:
 func server_turn(value: Vector2) -> void:
 	if !is_server():
 		return
-	rotate_y(-value.x * .005)
+	character.rotate_y(-value.x * .005)
 	_rotate_camera(value)
 
 
@@ -298,15 +302,15 @@ func get_data() -> Dictionary:
 		"warp_speed": warp_speed,
 		"age": age,
 		"turn": turn,
-		"transform": var_to_str(transform),
+		"transform": var_to_str(character.transform),
 		#"inventory": var_to_str(inventory.items)
 	}
 
 
 func load_node(node_data: Dictionary) -> void:
 	#transform = str_to_var(node_data["transform"])
-	#if "transform" in node_data:
-		#transform = str_to_var(node_data.transform)
+	if "transform" in node_data:
+		character.transform = str_to_var(node_data.transform)
 	if "player_id" in node_data:
 		player_id = node_data.player_id
 	if "player_name" in node_data:

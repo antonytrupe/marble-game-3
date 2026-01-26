@@ -8,7 +8,7 @@ extends Node3D
 @export var radius: int = 1:
 	set = _set_radius
 
-var bodies = {}
+var bodies: Dictionary = {}
 
 @onready var hour_hand: Node3D = %HourHand
 @onready var second_hand: Node3D = %SecondHand
@@ -23,16 +23,16 @@ var bodies = {}
 @onready var scanner_shape: CollisionShape3D = %ScannerShape
 
 
-func _set_warp_speed(value):
+func _set_warp_speed(value: int) -> void:
 	if value != warp_speed:
 		warp_speed = value
-		for body in bodies.values():
+		for body: Node in bodies.values():
 			body.calculate_warp()
 		if warp_slider:
 			warp_slider.value = value
 
 
-func _set_radius(value):
+func _set_radius(value: int) -> void:
 	if value != radius:
 		radius = value
 		_update_radius()
@@ -40,7 +40,7 @@ func _set_radius(value):
 			radius_slider.value = value
 
 
-func _update_radius():
+func _update_radius() -> void:
 	if sphere:
 		sphere.mesh.radius = radius
 		sphere.mesh.height = radius * 2
@@ -67,18 +67,21 @@ func _process(delta: float) -> void:
 		hour_hand.visible = true
 
 	#seconds hand
-	var seconds = int(age.age) % (MarbleAge.SECONDS_IN_MINUTE)
-	var sec_radians = seconds / float(MarbleAge.SECONDS_IN_MINUTE) * PI * 2 + PI
+	var seconds: int = int(age.age) % (MarbleAge.SECONDS_IN_MINUTE)
+	var sec_radians: float = seconds / float(MarbleAge.SECONDS_IN_MINUTE) * PI * 2 + PI
 	second_hand.rotation = Vector3(0, sec_radians, 0)
 
 	#minutes hand
-	var minutes = int(age.age) % (MarbleAge.SECONDS_IN_HOUR) / float(MarbleAge.MINUTES_IN_HOUR)
-	var min_radians = minutes / (60.0) * PI * 2 + PI
+	@warning_ignore("narrowing_conversion")
+	var minutes: int = int(age.age) % (MarbleAge.SECONDS_IN_HOUR) / float(MarbleAge.MINUTES_IN_HOUR)
+	var min_radians: float = minutes / (60.0) * PI * 2 + PI
 	minute_hand.rotation = Vector3(0, min_radians, 0)
 
 	#hours hand
-	var hours = int(age.age) % int(MarbleAge.SECONDS_IN_DAY / 2.0) / float(MarbleAge.SECONDS_IN_HOUR)
-	var hours_radians = hours / int(MarbleAge.HOURS_IN_DAY / 2.0) * PI * 2 + PI
+	@warning_ignore("narrowing_conversion")
+	var hours: int = int(age.age) % int(MarbleAge.SECONDS_IN_DAY / 2.0) / float(MarbleAge.SECONDS_IN_HOUR)
+	@warning_ignore("integer_division")
+	var hours_radians: float = hours / int(MarbleAge.HOURS_IN_DAY / 2.0) * PI * 2 + PI
 	hour_hand.rotation = Vector3(0, hours_radians, 0)
 
 	label_3d.text = "%02d:%02d:%02d" % [hours, minutes, seconds]
@@ -87,15 +90,15 @@ func _process(delta: float) -> void:
 	var day_of_month: int = age.get_day_of_month()
 	day_of_month_label.text = str(day_of_month)
 
-	var day_of_week:int = age.get_day_of_week()
+	var day_of_week: int = age.get_day_of_week()
 
-	var week_of_month:int = age.get_week_of_month()
+	var week_of_month: int = age.get_week_of_month()
 
 	day.position = Vector3(day_of_week / float(MarbleAge.DAYS_IN_WEEK), -week_of_month / float(MarbleAge.WEEKS_IN_MONTH), 0)
 
 	#month of year
 	@warning_ignore("integer_division")
-	var month_of_year: int = int(age.age) % (MarbleAge.SECONDS_IN_HOUR * MarbleAge.HOURS_IN_DAY * MarbleAge.DAYS_IN_MONTH * MarbleAge.MONTHS_IN_YEAR) / (MarbleAge.SECONDS_IN_MONTH)
+	var month_of_year: int = int(age.age) % (MarbleAge.SECONDS_IN_YEAR) / (MarbleAge.SECONDS_IN_MONTH)
 	month_of_year_label.text = MarbleAge.MONTHS[month_of_year]
 
 
@@ -135,11 +138,11 @@ func get_data() -> Dictionary:
 		"warp_speed": warp_speed,
 		"radius": radius,
 		"transform": var_to_str(transform),
-		"age":age.age
+		"age": age.age
 	}
 
 
-func load_node(node_data):
+func load_node(node_data: Dictionary) -> void:
 	#transform = str_to_var(node_data["transform"])
 	if "age" in node_data:
 		age.age = node_data.age

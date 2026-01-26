@@ -5,7 +5,7 @@ signal current_character_updated(character: MarbleCharacter)
 
 @onready var server: Server = $/root/Game/Server
 @onready var world: World = $/root/Game/World
-@onready var main_menu: MainMenu = $/root/Game/MainMenu
+@onready var main_menu: MarbleWindow = $/root/Game/MainMenu
 @onready var inventory: InventoryWindow = %Inventory
 @onready var chat_text_edit: TextEdit = %ChatInput
 @onready var chat_window: MarbleWindow = %ChatWindow

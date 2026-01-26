@@ -1,3 +1,4 @@
+class_name Acorn
 extends Node3D
 
 

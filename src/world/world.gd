@@ -25,7 +25,7 @@ func get_ground_y(x: float, z: float) -> float:
 	return 0.0 # Default if nothing hit
 
 
-func underworld_raiser(nodes: Array[Node]) -> void:
+func underworld_raiser(nodes: Array) -> void:
 #	warp monuments
 	for n: Node3D in nodes:
 		var y: float = get_ground_y(n.position.x, n.position.z)

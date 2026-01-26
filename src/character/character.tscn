@@ -12,19 +12,19 @@ properties/0/replication_mode = 2
 properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 2
-properties/2/path = NodePath(".:warp_speed")
+properties/2/path = NodePath("CameraPivot:rotation")
 properties/2/spawn = true
 properties/2/replication_mode = 2
-properties/3/path = NodePath(".:player_name")
+properties/3/path = NodePath("CameraPivot:position")
 properties/3/spawn = true
 properties/3/replication_mode = 2
-properties/4/path = NodePath("CameraPivot:rotation")
+properties/4/path = NodePath("..:player_name")
 properties/4/spawn = true
 properties/4/replication_mode = 2
-properties/5/path = NodePath("CameraPivot:position")
+properties/5/path = NodePath("..:warp_speed")
 properties/5/spawn = true
 properties/5/replication_mode = 2
-properties/6/path = NodePath(".:flying")
+properties/6/path = NodePath("..:flying")
 properties/6/spawn = true
 properties/6/replication_mode = 2
 
@@ -42,8 +42,6 @@ height = 0.2
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_tntuy"]
 radius = 0.1
 height = 0.7
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_k8eue"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_k8eue"]
 
@@ -82,14 +80,8 @@ mesh = SubResource("CapsuleMesh_tntuy")
 transform = Transform3D(1, 0, 0, 0, 0.34202015, -0.9396926, 0, 0.9396926, 0.34202015, 0.55, 0.2, -0.25)
 mesh = SubResource("CapsuleMesh_tntuy")
 
-[node name="Skeleton3D" type="Skeleton3D" parent="BodyMesh" unique_id=626508635]
-
-[node name="PhysicalBone3D" type="PhysicalBone3D" parent="BodyMesh/Skeleton3D" unique_id=1811817086]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="BodyMesh/Skeleton3D/PhysicalBone3D" unique_id=50397773]
-shape = SubResource("CapsuleShape3D_k8eue")
-
 [node name="Label3D" type="Label3D" parent="." unique_id=244575978]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 billboard = 1
 text = "PlayerName (x6)"
@@ -110,6 +102,7 @@ hit_from_inside = true
 script = ExtResource("2_8mo58")
 
 [node name="WarpDetector" parent="." unique_id=249574357 instance=ExtResource("2_2p3op")]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
 
 [node name="ChatBubbles" type="Node3D" parent="." unique_id=72391166]
@@ -117,6 +110,7 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
 [node name="Age" parent="." unique_id=781584009 instance=ExtResource("4_k8eue")]
+unique_name_in_owner = true
 
 [node name="InventoryRight" type="PinJoint3D" parent="." unique_id=1710293340]
 unique_name_in_owner = true
