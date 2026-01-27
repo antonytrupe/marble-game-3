@@ -6,6 +6,8 @@ SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
 cd "$SCRIPT_DIR"
 
 # Global settings
+# scoop install godot-mono
+# scoop update godot-mono
 GODOT_BIN="godot-mono"
 
 # Generic Godot build function
@@ -42,7 +44,7 @@ build_steam() {
     local APP_VDF=$(realpath "./steam/playtest_app.vdf")
 
     # STEAMCMD must be defined in your environment
-    "$STEAMCMD" +login tynoan +run_app_build "$APP_VDF" +quit
+    "$STEAMCMD" +login marble_game_developer +run_app_build "$APP_VDF" +quit
 
     if [ $? -eq 0 ]; then
         echo "✅ Steam build SUCCEEDED!"

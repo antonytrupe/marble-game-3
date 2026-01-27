@@ -1,6 +1,6 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marble Game 3", "Marble Game 3.csproj", "{C347A35E-FE28-4ED0-97B1-D74769D9936E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marble Game 3", "Marble Game 3.csproj", "{1BDF069A-79A9-43AF-A631-ECADFF2CEE9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,11 +9,11 @@ Global
 	ExportRelease|Any CPU = ExportRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C347A35E-FE28-4ED0-97B1-D74769D9936E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C347A35E-FE28-4ED0-97B1-D74769D9936E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C347A35E-FE28-4ED0-97B1-D74769D9936E}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
-		{C347A35E-FE28-4ED0-97B1-D74769D9936E}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
-		{C347A35E-FE28-4ED0-97B1-D74769D9936E}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
-		{C347A35E-FE28-4ED0-97B1-D74769D9936E}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+		{1BDF069A-79A9-43AF-A631-ECADFF2CEE9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BDF069A-79A9-43AF-A631-ECADFF2CEE9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BDF069A-79A9-43AF-A631-ECADFF2CEE9B}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{1BDF069A-79A9-43AF-A631-ECADFF2CEE9B}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{1BDF069A-79A9-43AF-A631-ECADFF2CEE9B}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{1BDF069A-79A9-43AF-A631-ECADFF2CEE9B}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
 	EndGlobalSection
 EndGlobal
