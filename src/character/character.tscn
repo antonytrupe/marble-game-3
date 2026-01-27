@@ -112,11 +112,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 [node name="Age" parent="." unique_id=781584009 instance=ExtResource("4_k8eue")]
 unique_name_in_owner = true
 
-[node name="InventoryRight" type="PinJoint3D" parent="." unique_id=1710293340]
+[node name="InventoryRightMarker" type="Marker3D" parent="." unique_id=1379425081]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5576246, 0.93172884, -0.6380893)
-node_a = NodePath("..")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5576246, 1.0340416, -0.58692276)
 
-[node name="InventoryLeft" type="PinJoint3D" parent="." unique_id=104929261]
+[node name="InventoryLeftMarker" type="Marker3D" parent="." unique_id=601016512]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55891776, 0.93172884, -0.6380893)

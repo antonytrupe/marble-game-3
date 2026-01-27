@@ -74,8 +74,8 @@ func pick_berry()->Dictionary:
 		a.berry.quantity = 1
 		#print(a)
 		return a
-	else:
-		return {}
+	# else:
+	return {}
 
 
 # Called when the node enters the scene tree for the first time.

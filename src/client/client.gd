@@ -77,11 +77,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		#only if we're not typing
 		if !chat_window.visible:
 			#interact
-			if Input.is_action_just_pressed("interact"):
+			if Input.is_action_just_pressed("interact_right"):
 				if is_server():
-					current_character.interact()
+					current_character.interact(MarbleCharacter.INTERACT.RIGHT)
 				else:
-					current_character.interact.rpc_id(1)
+					current_character.interact.rpc_id(1,MarbleCharacter.INTERACT.RIGHT)
+			if Input.is_action_just_pressed("interact_left"):
+				if is_server():
+					current_character.interact(MarbleCharacter.INTERACT.LEFT)
+				else:
+					current_character.interact.rpc_id(1,MarbleCharacter.INTERACT.LEFT)
 
 #			inventory
 			if Input.is_action_just_pressed("inventory"):

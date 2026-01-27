@@ -6,12 +6,12 @@ extends GdUnitTestSuite
 var tree: MarbleTree
 
 
-func before_each():
+func before_each() -> void:
 	pass
 	#tree = partial_double(load("res://objects/tree/tree.tscn")).instantiate()
 	#stub(tree.is_server).to_return(true)
 
 
-func test_not_null():
+func test_not_null() -> void:
 	pass
 	#assert_not_null(tree)

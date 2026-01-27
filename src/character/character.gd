@@ -1,7 +1,9 @@
 class_name MarbleCharacter
 extends Node
 
-signal inventory_updated
+#signal inventory_updated
+
+enum INTERACT {RIGHT, LEFT}
 
 enum MODE {
 	##half the walk distance
@@ -17,12 +19,13 @@ enum MODE {
 	RUN = 6,
 }
 
-const STRINGS: Dictionary[int, String] = {
+const STRINGS: Dictionary[MODE, String] = {
 	MODE.CROUCH: "CROUCH",
 	MODE.WALK: "WALK",
 	MODE.HUSTLE: "HUSTLE",
 	MODE.RUN: "RUN",
 }
+
 
 const SPEED_MULTIPLIER: float = 1.0 / 24.0
 const JUMP_VELOCITY: float = 5.0
@@ -51,29 +54,25 @@ var target_warp_speed: int = 1
 ##allowed maximum warp speed
 var max_warp_speed: int = 5000
 ##allowed minimum warp speed
-var min_warp_speed: int = 1
+#var min_warp_speed: int = 1
 
 var player_id: String
+
+var right_inventory: Node3D
+var left_inventory: Node3D
 
 @onready var label: Label3D = %Label3D
 @onready var camera_pivot: Node3D = %CameraPivot
 @onready var camera: Camera3D = %Camera3D
 @onready var chat_bubbles: Node3D = %ChatBubbles
 @onready var client: Client = $/root/Game/Client
+@onready var world: World = $/root/Game/World
 @onready var warp_detector: WarpDetector = %WarpDetector
 @onready var age: MarbleAge = %Age
 @onready var raycast: RayCast3D = %RayCast3D
-#@onready var inventory: Inventory = $Inventory
-@onready var inventory_right: PinJoint3D = %InventoryRight
-@onready var inventory_left: PinJoint3D = %InventoryLeft
-#@onready var character: MarbleCharacter = $"."
-#@onready var character: CharacterBody3D = %Character
+@onready var inventory_right_marker: Node3D = %InventoryRightMarker
+@onready var inventory_left_marker: Node3D = %InventoryLeftMarker
 @onready var character: MarbleCharacter = $"."
-
-#@onready var flora: Node3D = $/root/Game/World/Flora
-#func _set_inventory(value):
-	#inventory = value
-	#inventory_updated.emit(inventory)
 
 
 #setter, don't call directly
@@ -92,7 +91,7 @@ func get_target() -> Object:
 
 
 @rpc("any_peer")
-func interact() -> void:
+func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
 	if !is_server():
 		return
 
@@ -100,12 +99,12 @@ func interact() -> void:
 		#cancel_trade()
 		#return
 
-	if inventory_right.node_b:
-		var b: Node = get_node(inventory_right.node_b)
-		if b is RigidBody3D:
-			#b.freeze=false
-			#b.sleeping=false
-			inventory_right.node_b = ""
+	if hand == INTERACT.RIGHT and right_inventory:
+		right_inventory.freeze = false
+		right_inventory = null
+	if hand == INTERACT.LEFT and left_inventory:
+		left_inventory.freeze = false
+		left_inventory = null
 
 	if raycast.is_colliding():
 		var entity: Object = get_target()
@@ -134,10 +133,13 @@ func interact() -> void:
 			#var loot = entity.pick_up()
 			if entity is RigidBody3D:
 				entity.freeze = true
-				entity.sleeping = true
-				entity.global_position = inventory_right.global_position
+				if hand == INTERACT.RIGHT:
+					right_inventory = entity
+				if hand == INTERACT.LEFT:
+					left_inventory = entity
+				#entity.global_position = inventory_right.global_position
 				#entity.freeze=false
-				inventory_right.node_b = entity.get_path()
+				#inventory_right.node_b = entity.get_path()
 			set_action({"action": action})
 
 
@@ -219,14 +221,25 @@ func _physics_process(delta: float) -> void:
 		var new_turn: int = age.age / MarbleAge.SECONDS_IN_TURN + 1
 		_start_turn(range(self.turn + 1, new_turn + 1))
 		self.turn = new_turn
-	# Add the gravity.
-	if not character.is_on_floor():
-		if not flying:
-			character.velocity.y -= gravity * delta * min(warp_speed, MAX_CONTROLLED_WARP) * min(warp_speed, MAX_CONTROLLED_WARP)
-		#not on floor and flying
-		else:
-			character.velocity.y = 0
-	character.move_and_slide()
+
+
+		if not character.is_on_floor():
+			if not flying:
+				character.velocity.y -= gravity * delta * pow(min(warp_speed, MAX_CONTROLLED_WARP), 2)
+			#not on floor and flying
+			else:
+				character.velocity.y = 0
+		character.move_and_slide()
+		if right_inventory:
+		# Smoothly move object to hold position
+			var target_pos: Vector3 = inventory_right_marker.global_position
+			right_inventory.global_position = right_inventory.global_position.lerp(target_pos, 30 * delta)
+			right_inventory.global_rotation = inventory_right_marker.global_rotation # Add the gravity.
+		if left_inventory:
+		# Smoothly move object to hold position
+			var target_pos: Vector3 = inventory_left_marker.global_position
+			left_inventory.global_position = left_inventory.global_position.lerp(target_pos, 30 * delta)
+			left_inventory.global_rotation = inventory_left_marker.global_rotation # Add the gravity.
 
 
 @rpc("any_peer")
@@ -234,17 +247,17 @@ func server_move(d: Vector2) -> void:
 	if !is_server():
 		return
 	var direction: Vector3 = (character.transform.basis * Vector3(d.x, 0, d.y)).normalized()
-
+	var min_warp_speed: int = min(warp_speed, MAX_CONTROLLED_WARP)
 	#m*SPEED_MULTIPLIER*speed
 	if direction:
-		character.velocity.x = direction.x * mode * SPEED_MULTIPLIER * speed * min(warp_speed, MAX_CONTROLLED_WARP)
-		character.velocity.z = direction.z * mode * SPEED_MULTIPLIER * speed * min(warp_speed, MAX_CONTROLLED_WARP)
+		character.velocity.x = direction.x * mode * SPEED_MULTIPLIER * speed * min_warp_speed
+		character.velocity.z = direction.z * mode * SPEED_MULTIPLIER * speed * min_warp_speed
 	else:
 		character.velocity.x = move_toward(
-			character.velocity.x, 0, mode * SPEED_MULTIPLIER * speed * min(warp_speed, MAX_CONTROLLED_WARP)
+			character.velocity.x, 0, mode * SPEED_MULTIPLIER * speed * min_warp_speed
 		)
 		character.velocity.z = move_toward(
-			character.velocity.z, 0, mode * SPEED_MULTIPLIER * speed * min(warp_speed, MAX_CONTROLLED_WARP)
+			character.velocity.z, 0, mode * SPEED_MULTIPLIER * speed * min_warp_speed
 		)
 	#if !is_zero_approx(velocity.x) or !is_zero_approx(velocity.z):
 	#set_action({"move": mode})
@@ -303,7 +316,8 @@ func get_data() -> Dictionary:
 		"age": age,
 		"turn": turn,
 		"transform": var_to_str(character.transform),
-		#"inventory": var_to_str(inventory.items)
+		"left_inventory": left_inventory.name if left_inventory else StringName(""),
+		"right_inventory": right_inventory.name if right_inventory else StringName(""),
 	}
 
 
@@ -321,8 +335,23 @@ func load_node(node_data: Dictionary) -> void:
 		age.age = node_data.age
 	if "turn" in node_data:
 		turn = node_data.turn
-	#if "inventory" in node_data:
-		#inventory.items = str_to_var(node_data.inventory)
+	#TODO maybe find a wait to get an event when this node is added to the scenetree
+	if "left_inventory" in node_data and node_data.left_inventory:
+		var l: Node = world.find_child(node_data.left_inventory)
+		if l: left_inventory = l
+		else:
+			world.flora.child_entered_tree.connect(func(child: Node) -> void:
+				if child.name == node_data.left_inventory:
+					left_inventory = child
+			)
+	if "right_inventory" in node_data and node_data.right_inventory:
+		var r: Node = world.find_child(node_data.right_inventory)
+		if r: right_inventory = r
+		else:
+			world.flora.child_entered_tree.connect(func(child: Node) -> void:
+				if child.name == node_data.right_inventory:
+					right_inventory = child
+			)
 
 
 func _update_label() -> void:

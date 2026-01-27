@@ -1,11 +1,12 @@
 #@tool
 extends MeshInstance3D
 
-@onready var world: World = $".."
+@export var size: int = 512
 
-@export var size  :int= 512
-var noise :FastNoiseLite= FastNoiseLite.new()
-var st :SurfaceTool= SurfaceTool.new()
+var noise: FastNoiseLite = FastNoiseLite.new()
+var st: SurfaceTool = SurfaceTool.new()
+
+@onready var world: World = $".."
 
 func _ready() -> void:
 	randomize()
@@ -15,21 +16,21 @@ func _ready() -> void:
 	noise.domain_warp_fractal_lacunarity = 6.0
 	position.x -= size / 2.0
 	position.z -= size / 2.0
-	generateMap()
+	generate_map()
 
-func generateMap() -> void:
+func generate_map() -> void:
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for z :int in range(size + 1):
-		for x :int in range(size + 1):
+	for z: int in range(size + 1):
+		for x: int in range(size + 1):
 			var y: float = abs(noise.get_noise_2d(x, z)) * 32.0 - 10
 			st.set_color(Color(0.0, 0.4, 0.0, 1.0))
 			st.set_uv(Vector2(0, 0))
 			st.add_vertex(Vector3(x, y, z))
 
 	# 2. Define Triangles using Indices
-	for z:int in range(size):
-		for x :int in range(size):
-			var vert :int = z * (size + 1) + x
+	for z: int in range(size):
+		for x: int in range(size):
+			var vert: int = z * (size + 1) + x
 			st.add_index(vert)
 			st.add_index(vert + 1)
 			st.add_index(vert + size + 1)
@@ -44,7 +45,7 @@ func generateMap() -> void:
 
 	mesh = st.commit()
 	# IMPORTANT: You MUST tell the material to use these colors
-	var material :StandardMaterial3D= StandardMaterial3D.new()
+	var material: StandardMaterial3D = StandardMaterial3D.new()
 	material.vertex_color_use_as_albedo = true
 	material_override = material
 
