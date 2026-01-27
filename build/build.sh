@@ -1,116 +1,66 @@
 #!/bin/bash
 
-# pwd
-
-# Get the path to the script itself, handling various execution methods and symlinks
+# Setup environment and directories
 SCRIPT_PATH=$(readlink -f "$0")
-
-# Extract the directory name from that absolute path
 SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
-
-# Change to the script's directory (optional, but useful if your script needs local access)
 cd "$SCRIPT_DIR"
 
-##################
-EXPORT_NAME="Windows Desktop"
+# Global settings
+GODOT_BIN="godot-mono"
 
-# Make sure the directory exists (mkdir -p works in bash/mingw)
-mkdir -p ./godot/exports/win-64
+# Generic Godot build function
+# Usage: build_godot "Export Name" "directory_path" "binary_name"
+build_godot() {
+    local EXPORT_NAME=$1
+    local EXPORT_DIR=$2
+    local BINARY_NAME=$3
+    
+    mkdir -p "$EXPORT_DIR"
+    local OUTPUT_PATH=$(realpath "$EXPORT_DIR/$BINARY_NAME")
 
-OUTPUT_PATH=$(realpath "./godot/exports/win-64/marblegame.exe")
+    echo "------------------------------------------------"
+    echo "🚀 Starting Godot $EXPORT_NAME export..."
+    
+    # Execute Godot export command
+    $GODOT_BIN --path ../ --quiet --headless --export-release "$EXPORT_NAME" "$OUTPUT_PATH"
 
-echo "Starting Godot Windows export..."
+    if [ $? -eq 0 ]; then
+        echo "✅ Godot $EXPORT_NAME build SUCCEEDED!"
+    else
+        echo "❌ Godot $EXPORT_NAME build FAILED!"
+        exit 1
+    fi
+}
 
-# Execute the command using the environment variable
-godot-mono --path ../ --quiet --headless --export-release "$EXPORT_NAME" "$OUTPUT_PATH"
+# Steam specific build function
+build_steam() {
+    echo "------------------------------------------------"
+    echo "⚙️ Running pre-build scripts..."
+    ./scripts/pre-build.sh
 
-# Immediately check the exit status stored in $?
-if [ $? -eq 0 ]; then
-    echo "✅ Godot Windows build SUCCEEDED!"
-    # Continue with deployment steps (e.g., upload to SteamCMD)
-else
-    echo "❌ Godot Windows build FAILED!"
-    # Stop the script or handle the error
-    exit 1
-fi
+    echo "📦 Starting Steam build..."
+    local APP_VDF=$(realpath "./steam/playtest_app.vdf")
 
-# echo "Godot Windows Build complete."
-##################
+    # STEAMCMD must be defined in your environment
+    "$STEAMCMD" +login tynoan +run_app_build "$APP_VDF" +quit
 
-##################
-EXPORT_NAME="Linux"
+    if [ $? -eq 0 ]; then
+        echo "✅ Steam build SUCCEEDED!"
+    else
+        echo "❌ Steam build FAILED!"
+        exit 1
+    fi
+}
 
-# Make sure the directory exists (mkdir -p works in bash/mingw)
-mkdir -p ./godot/exports/linux-x64
+# --- MAIN EXECUTION ---
 
-OUTPUT_PATH=$(realpath "./godot/exports/linux-x64/marblegame.x86_64")
+# Build each platform
+build_godot "Windows Desktop" "./godot/exports/win-64" "marblegame.exe"
+# build_godot "Linux" "./godot/exports/linux-x64" "marblegame.x86_64"
+# build_godot "macOS" "./godot/exports/macOS" "marblegame.app"
 
-echo "Starting Godot Linux export..."
+# Finalize with Steam
+build_steam
 
-# Execute the command using the environment variable
-godot-mono --path ../ --quiet --headless --export-release "$EXPORT_NAME" "$OUTPUT_PATH"
-
-# Immediately check the exit status stored in $?
-if [ $? -eq 0 ]; then
-    echo "✅ Godot Linux build SUCCEEDED!"
-    # Continue with deployment steps (e.g., upload to SteamCMD)
-else
-    echo "❌ Godot Linux build FAILED!"
-    # Stop the script or handle the error
-    exit 1
-fi
-
-# echo "Godot Linux Build complete."
-
-##################
-
-EXPORT_NAME="macOS"
-
-# Make sure the directory exists (mkdir -p works in bash/mingw)
-mkdir -p ./godot/exports/macOS
-
-OUTPUT_PATH=$(realpath "./godot/exports/macOS/marblegame.app")
-
-echo "Starting Godot macOS export..."
-
-# Execute the command using the environment variable
-godot-mono --path ../ --quiet --headless --export-release "$EXPORT_NAME" "$OUTPUT_PATH"
-
-# Immediately check the exit status stored in $?
-if [ $? -eq 0 ]; then
-    echo "✅ Godot macOS build SUCCEEDED!"
-    # Continue with deployment steps (e.g., upload to SteamCMD)
-else
-    echo "❌ Godot macOS build FAILED!"
-    # Stop the script or handle the error
-    exit 1
-fi
-
-# echo "Godot macOS Build complete."
-
-##################
-
-./scripts/pre-build.sh
-
-echo "Starting Steam build..."
-
-APP_VDF=$(realpath "./steam/playtest_app.vdf")
-
-echo "Using Steam app build VDF at: $APP_VDF"
-pwd
-ls ${APP_VDF}
-# STEAMCMD is the path to your SteamCMD executable
-echo "$STEAMCMD" +login tynoan +run_app_build "$APP_VDF" +quit
-"$STEAMCMD" +login tynoan +run_app_build "$APP_VDF" +quit
-
-# Immediately check the exit status stored in $?
-if [ $? -eq 0 ]; then
-    echo "✅ Steam build SUCCEEDED!"
-    # Continue with deployment steps
-else
-    echo "❌ Steam build FAILED!"
-    # Stop the script or handle the error
-    exit 1
-fi
-
-# echo "Steam build complete."
+echo "------------------------------------------------"
+echo "🎉 All builds completed successfully!"

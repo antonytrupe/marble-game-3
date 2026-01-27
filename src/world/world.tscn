@@ -1,12 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://hwslegxxru8h"]
+[gd_scene format=3 uid="uid://hwslegxxru8h"]
 
 [ext_resource type="Script" uid="uid://bod6lvq43qjsc" path="res://src/world/world.gd" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://bga3y3kuercqk" path="res://src/world/mesh_instance_3d.gd" id="2_bsf3i"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f3sb7"]
-properties/0/path = NodePath(".:visible")
-properties/0/spawn = true
-properties/0/replication_mode = 2
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tcf2h"]
 sky_top_color = Color(0.14901961, 0.4392157, 0.81960785, 1)
@@ -38,82 +35,82 @@ albedo_color = Color(0, 0, 1, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_l0av5"]
 
-[node name="World" type="Node3D"]
+[node name="World" type="Node3D" unique_id=691290096]
 script = ExtResource("1_f3sb7")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=108575644]
 replication_config = SubResource("SceneReplicationConfig_f3sb7")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=50852929]
 environment = SubResource("Environment_h5o24")
 
-[node name="FloorStaticBody3D" type="StaticBody3D" parent="."]
+[node name="FloorStaticBody3D" type="StaticBody3D" parent="." unique_id=954725020]
 collision_mask = 0
 
-[node name="FloorCollisionShape3D" type="CollisionShape3D" parent="FloorStaticBody3D"]
+[node name="FloorCollisionShape3D" type="CollisionShape3D" parent="FloorStaticBody3D" unique_id=1456895388]
 shape = SubResource("WorldBoundaryShape3D_gv5m4")
 debug_fill = false
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=107141754]
 script = ExtResource("2_bsf3i")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1329767126]
 transform = Transform3D(1, 0, 0, 0, -0.3746066, 0.92718387, 0, -0.92718387, -0.3746066, 0, 10, 0)
 light_color = Color(1, 1, 0, 1)
 light_angular_distance = 0.5
 shadow_enabled = true
 
-[node name="Characters" type="Node3D" parent="."]
+[node name="Characters" type="Node3D" parent="." unique_id=1765580770]
 unique_name_in_owner = true
 
-[node name="CharacterSpawner" type="MultiplayerSpawner" parent="."]
+[node name="CharacterSpawner" type="MultiplayerSpawner" parent="." unique_id=677995604]
 _spawnable_scenes = PackedStringArray("uid://b4f3nuk5vp4rc")
 spawn_path = NodePath("../Characters")
 
-[node name="Flora" type="Node3D" parent="."]
+[node name="Flora" type="Node3D" parent="." unique_id=1861610664]
 unique_name_in_owner = true
 
-[node name="FloraSpawner" type="MultiplayerSpawner" parent="."]
+[node name="FloraSpawner" type="MultiplayerSpawner" parent="." unique_id=492482521]
 _spawnable_scenes = PackedStringArray("uid://c1e46m2pfqiji", "uid://damvmfs7dqebu", "uid://cxp2l820hl2q8")
 spawn_path = NodePath("../Flora")
 
-[node name="Fauna" type="Node3D" parent="."]
+[node name="Fauna" type="Node3D" parent="." unique_id=727120612]
 unique_name_in_owner = true
 
-[node name="Terra" type="Node3D" parent="."]
+[node name="Terra" type="Node3D" parent="." unique_id=1511932569]
 unique_name_in_owner = true
 
-[node name="WarpMonuments" type="Node3D" parent="."]
+[node name="WarpMonuments" type="Node3D" parent="." unique_id=1522204745]
 unique_name_in_owner = true
 
-[node name="WarpMonumentSpawner" type="MultiplayerSpawner" parent="."]
+[node name="WarpMonumentSpawner" type="MultiplayerSpawner" parent="." unique_id=1061211313]
 _spawnable_scenes = PackedStringArray("uid://bdkw10fdrlljw")
 spawn_path = NodePath("../WarpMonuments")
 
-[node name="ConeTwistJoint3D" type="ConeTwistJoint3D" parent="."]
+[node name="ConeTwistJoint3D" type="ConeTwistJoint3D" parent="." unique_id=137310554]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 node_b = NodePath("../B")
 exclude_nodes_from_collision = false
 swing_span = 0.2617994
 
-[node name="A" type="RigidBody3D" parent="."]
+[node name="A" type="RigidBody3D" parent="." unique_id=1276072715]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.329619, 13, 0)
 freeze = true
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="A"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="A" unique_id=147134590]
 mesh = SubResource("BoxMesh_6fy3g")
 surface_material_override/0 = SubResource("StandardMaterial3D_6fy3g")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="A"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="A" unique_id=1025626974]
 shape = SubResource("BoxShape3D_jte2u")
 
-[node name="B" type="RigidBody3D" parent="."]
+[node name="B" type="RigidBody3D" parent="." unique_id=1881817912]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.91594064, 13, 0)
 sleeping = true
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="B"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="B" unique_id=599873415]
 mesh = SubResource("BoxMesh_bsf3i")
 surface_material_override/0 = SubResource("StandardMaterial3D_43c6p")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="B"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="B" unique_id=1584484189]
 shape = SubResource("BoxShape3D_l0av5")

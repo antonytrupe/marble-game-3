@@ -81,12 +81,12 @@ func _unhandled_input(event: InputEvent) -> void:
 				if is_server():
 					current_character.interact(MarbleCharacter.INTERACT.RIGHT)
 				else:
-					current_character.interact.rpc_id(1,MarbleCharacter.INTERACT.RIGHT)
+					current_character.interact.rpc_id(1, MarbleCharacter.INTERACT.RIGHT)
 			if Input.is_action_just_pressed("interact_left"):
 				if is_server():
 					current_character.interact(MarbleCharacter.INTERACT.LEFT)
 				else:
-					current_character.interact.rpc_id(1,MarbleCharacter.INTERACT.LEFT)
+					current_character.interact.rpc_id(1, MarbleCharacter.INTERACT.LEFT)
 
 #			inventory
 			if Input.is_action_just_pressed("inventory"):
@@ -99,7 +99,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					current_character.server_jump()
 				else:
 					current_character.server_jump.rpc_id(1)
-					#server_jump()
+					#current_character.server_jump()
 
 			#fly
 			if Input.is_action_pressed("fly"):
@@ -107,6 +107,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					current_character.server_fly()
 				else:
 					current_character.server_fly.rpc_id(1)
+					#current_character.server_fly()
 
 			#moving
 			var input_dir: Vector2 = Input.get_vector("left", "right", "forward", "backward")

@@ -176,19 +176,21 @@ func calculate_warp() -> void:
 		warp_speed = 1
 
 
-@rpc("any_peer")
+@rpc("any_peer", "call_local")
 func server_jump() -> void:
 	if !is_server():
-		return
+		pass
+		#return
 	if character.is_on_floor() and warp_speed <= MAX_CONTROLLED_WARP:
 		character.velocity.y = JUMP_VELOCITY * min(warp_speed, MAX_CONTROLLED_WARP)
 	elif flying:
 		character.velocity.y = JUMP_VELOCITY * min(warp_speed, MAX_CONTROLLED_WARP)
 
-@rpc("any_peer")
+@rpc("any_peer", "call_local")
 func server_fly() -> void:
 	if !is_server():
-		return
+		pass
+		#return
 	#stop flying
 	if flying:
 		flying = false
@@ -223,23 +225,23 @@ func _physics_process(delta: float) -> void:
 		self.turn = new_turn
 
 
-		if not character.is_on_floor():
-			if not flying:
-				character.velocity.y -= gravity * delta * pow(min(warp_speed, MAX_CONTROLLED_WARP), 2)
-			#not on floor and flying
-			else:
-				character.velocity.y = 0
-		character.move_and_slide()
-		if right_inventory:
-		# Smoothly move object to hold position
-			var target_pos: Vector3 = inventory_right_marker.global_position
-			right_inventory.global_position = right_inventory.global_position.lerp(target_pos, 30 * delta)
-			right_inventory.global_rotation = inventory_right_marker.global_rotation # Add the gravity.
-		if left_inventory:
-		# Smoothly move object to hold position
-			var target_pos: Vector3 = inventory_left_marker.global_position
-			left_inventory.global_position = left_inventory.global_position.lerp(target_pos, 30 * delta)
-			left_inventory.global_rotation = inventory_left_marker.global_rotation # Add the gravity.
+	if not character.is_on_floor():
+		if not flying:
+			character.velocity.y -= gravity * delta * pow(min(warp_speed, MAX_CONTROLLED_WARP), 2)
+		#not on floor and flying
+		else:
+			character.velocity.y = 0
+	character.move_and_slide()
+	if right_inventory:
+	# Smoothly move object to hold position
+		var target_pos: Vector3 = inventory_right_marker.global_position
+		right_inventory.global_position = right_inventory.global_position.lerp(target_pos, 30 * delta)
+		right_inventory.global_rotation = inventory_right_marker.global_rotation # Add the gravity.
+	if left_inventory:
+	# Smoothly move object to hold position
+		var target_pos: Vector3 = inventory_left_marker.global_position
+		left_inventory.global_position = left_inventory.global_position.lerp(target_pos, 30 * delta)
+		left_inventory.global_rotation = inventory_left_marker.global_rotation # Add the gravity.
 
 
 @rpc("any_peer")
