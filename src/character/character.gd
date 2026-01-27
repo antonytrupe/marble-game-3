@@ -39,7 +39,7 @@ const MAX_CONTROLLED_WARP: int = 10
 	set = _set_action
 @export var flying: bool = false
 
-var turn: int = 0:
+@export var turn: int = 0:
 	set = _set_turn
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -73,6 +73,38 @@ var left_inventory: Node3D
 @onready var inventory_right_marker: Node3D = %InventoryRightMarker
 @onready var inventory_left_marker: Node3D = %InventoryLeftMarker
 @onready var character: MarbleCharacter = $"."
+
+
+func _ready() -> void:
+	_update_label()
+
+
+func _physics_process(delta: float) -> void:
+	#if is_server():
+	age.age = age.age + delta * warp_speed
+	#@warning_ignore("narrowing_conversion")
+	var new_turn: int = int(age.age / MarbleAge.SECONDS_IN_TURN) + 1
+	_start_turn(range(self.turn + 1, new_turn + 1))
+	self.turn = new_turn
+
+
+	if not character.is_on_floor():
+		if not flying:
+			character.velocity.y -= gravity * delta * pow(min(warp_speed, MAX_CONTROLLED_WARP), 2)
+		#not on floor and flying
+		else:
+			character.velocity.y = 0
+	character.move_and_slide()
+	if right_inventory:
+	# Smoothly move object to hold position
+		var target_pos: Vector3 = inventory_right_marker.global_position
+		right_inventory.global_position = right_inventory.global_position.lerp(target_pos, 30 * delta)
+		right_inventory.global_rotation = inventory_right_marker.global_rotation # Add the gravity.
+	if left_inventory:
+	# Smoothly move object to hold position
+		var target_pos: Vector3 = inventory_left_marker.global_position
+		left_inventory.global_position = left_inventory.global_position.lerp(target_pos, 30 * delta)
+		left_inventory.global_rotation = inventory_left_marker.global_rotation # Add the gravity.
 
 
 #setter, don't call directly
@@ -216,34 +248,6 @@ func _start_turn(_turns: Array) -> void:
 	pass
 
 
-func _physics_process(delta: float) -> void:
-	if is_server():
-		age.age = age.age + delta * warp_speed
-		@warning_ignore("narrowing_conversion")
-		var new_turn: int = age.age / MarbleAge.SECONDS_IN_TURN + 1
-		_start_turn(range(self.turn + 1, new_turn + 1))
-		self.turn = new_turn
-
-
-	if not character.is_on_floor():
-		if not flying:
-			character.velocity.y -= gravity * delta * pow(min(warp_speed, MAX_CONTROLLED_WARP), 2)
-		#not on floor and flying
-		else:
-			character.velocity.y = 0
-	character.move_and_slide()
-	if right_inventory:
-	# Smoothly move object to hold position
-		var target_pos: Vector3 = inventory_right_marker.global_position
-		right_inventory.global_position = right_inventory.global_position.lerp(target_pos, 30 * delta)
-		right_inventory.global_rotation = inventory_right_marker.global_rotation # Add the gravity.
-	if left_inventory:
-	# Smoothly move object to hold position
-		var target_pos: Vector3 = inventory_left_marker.global_position
-		left_inventory.global_position = left_inventory.global_position.lerp(target_pos, 30 * delta)
-		left_inventory.global_rotation = inventory_left_marker.global_rotation # Add the gravity.
-
-
 @rpc("any_peer")
 func server_move(d: Vector2) -> void:
 	if !is_server():
@@ -305,17 +309,13 @@ func _rotate_camera(value: Vector2) -> void:
 	camera_pivot.rotation.x = clamp(camera_pivot.rotation.x, -PI / 2, PI / 2)
 
 
-func _ready() -> void:
-	_update_label()
-
-
 func get_data() -> Dictionary:
 	return {
 		"name": name,
 		"player_id": player_id,
 		"player_name": player_name,
 		"warp_speed": warp_speed,
-		"age": age,
+		"age": age.age,
 		"turn": turn,
 		"transform": var_to_str(character.transform),
 		"left_inventory": left_inventory.name if left_inventory else StringName(""),
@@ -323,20 +323,25 @@ func get_data() -> Dictionary:
 	}
 
 
-func load_node(node_data: Dictionary) -> void:
-	#transform = str_to_var(node_data["transform"])
-	if "transform" in node_data:
-		character.transform = str_to_var(node_data.transform)
+#don't reference @onready vars
+func load_pre_ready(node_data: Dictionary) -> void:
+	if "turn" in node_data:
+		turn = node_data.turn
 	if "player_id" in node_data:
 		player_id = node_data.player_id
 	if "player_name" in node_data:
 		player_name = node_data.player_name
 	if "warp_speed" in node_data:
 		warp_speed = node_data.warp_speed
+
+
+#can reference @onready vars now
+func load_post_ready(node_data: Dictionary) -> void:
+	#transform = str_to_var(node_data["transform"])
+	if "transform" in node_data:
+		character.transform = str_to_var(node_data.transform)
 	if "age" in node_data:
 		age.age = node_data.age
-	if "turn" in node_data:
-		turn = node_data.turn
 	#TODO maybe find a wait to get an event when this node is added to the scenetree
 	if "left_inventory" in node_data and node_data.left_inventory:
 		var l: Node = world.find_child(node_data.left_inventory)

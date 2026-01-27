@@ -27,6 +27,9 @@ properties/5/replication_mode = 2
 properties/6/path = NodePath(".:warp_speed")
 properties/6/spawn = true
 properties/6/replication_mode = 2
+properties/7/path = NodePath(".:turn")
+properties/7/spawn = true
+properties/7/replication_mode = 2
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vu45j"]
 resource_local_to_scene = true

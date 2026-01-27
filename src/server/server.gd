@@ -92,10 +92,9 @@ func _load_character(character_name: String, data: Dictionary) -> void:
 	var c: MarbleCharacter = CHARACTER_SCENE.instantiate()
 	c.name = character_name.validate_node_name()
 
-	c.ready.connect(c.load_node.bind(data))
+	c.load_pre_ready(data)
+	c.ready.connect(c.load_post_ready.bind(data))
 
-	#if data.has("transform"):
-		#c.transform = str_to_var(data.transform)
 	world.characters.add_child(c)
 
 
