@@ -28,6 +28,9 @@ Utilites="*res://src/utilites.gd"
 [debug]
 
 file_logging/enable_file_logging=true
+gdscript/warnings/directory_rules={
+"res://addons/gdUnit4": 0
+}
 gdscript/warnings/untyped_declaration=1
 gdscript/warnings/inferred_declaration=1
 
