@@ -204,10 +204,12 @@ text = "March"
 
 [node name="WarpSlider" parent="." unique_id=2067929312 instance=ExtResource("2_kycxd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 1.1920929e-07, 0)
+custom_values = Array[int]([1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 60, 300, 600, 1800, 3600, 86400, 604800, 2419200, 24192000])
 show_label = true
 
 [node name="RadiusSlider" parent="." unique_id=2085755168 instance=ExtResource("2_kycxd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.74801326, 0, 0)
+custom_values = Array[int]([1, 2, 3, 6, 10, 20, 60, 300, 600])
 show_label = true
 
 [node name="ScannerArea" type="Area3D" parent="." unique_id=763033880 groups=["persist"]]
@@ -225,7 +227,7 @@ shape = SubResource("SphereShape3D_rydde")
 unique_name_in_owner = true
 mesh = SubResource("SphereMesh_6dixx")
 
-[connection signal="synchronized" from="MultiplayerSynchronizer" to="." method="_on_multiplayer_synchronizer_synchronized"]
+[connection signal="synchronized" from="MultiplayerSynchronizer" to="." method="_on_synchronized"]
 [connection signal="value_changed" from="WarpSlider" to="." method="_on_warp_slider_value_changed"]
 [connection signal="value_changed" from="RadiusSlider" to="." method="_on_radius_slider_value_changed"]
 [connection signal="body_entered" from="ScannerArea" to="." method="_on_scanner_body_entered"]
