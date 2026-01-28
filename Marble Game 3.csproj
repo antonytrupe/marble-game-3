@@ -6,4 +6,7 @@
     <RootNamespace>MarbleGame3</RootNamespace>
     <UseSharedCompilation>false</UseSharedCompilation>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="gdUnit4.api" Version="5.0.0" />
+  </ItemGroup>
 </Project>

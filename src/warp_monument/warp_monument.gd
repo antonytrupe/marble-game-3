@@ -23,29 +23,78 @@ var bodies: Dictionary = {}
 @onready var scanner_shape: CollisionShape3D = %ScannerShape
 
 
+@rpc("any_peer", "call_local")
+func server_set_warp(value: int) -> void:
+	if not is_server():
+		return
+	if warp_speed == value:
+		return
+	warp_speed = value
+
+
+@rpc("any_peer", "call_local")
+func server_set_radius(value: int) -> void:
+	if not is_server():
+		return
+	if radius == value:
+		return
+	radius = value
+
+
+func _on_multiplayer_synchronizer_synchronized() -> void:
+	_update_radius_mesh()
+	_update_bodies()
+	_update_warp_slider()
+	_update_radius_slider()
+
+
+func _ready() -> void:
+	_update_radius_mesh()
+	_update_bodies()
+	_update_warp_slider()
+	_update_radius_slider()
+
+
+## setter
 func _set_warp_speed(value: int) -> void:
 	if value != warp_speed:
 		warp_speed = value
-		for body: Node in bodies.values():
-			body.calculate_warp()
-		if warp_slider:
-			warp_slider.value = value
+		_update_bodies()
+		_update_warp_slider()
 
 
+func _update_warp_slider() -> void:
+	if not is_node_ready():
+		return
+	warp_slider.value = warp_speed
+
+
+func _update_bodies() -> void:
+	for body: Node in bodies.values():
+		body.calculate_warp()
+
+
+## setter
 func _set_radius(value: int) -> void:
 	if value != radius:
 		radius = value
-		_update_radius()
-		if radius_slider:
-			radius_slider.value = value
+		_update_radius_mesh()
+		_update_radius_slider()
 
 
-func _update_radius() -> void:
-	if sphere:
-		sphere.mesh.radius = radius
-		sphere.mesh.height = radius * 2
-	if scanner_shape:
-		scanner_shape.shape.radius = radius
+func _update_radius_slider() -> void:
+	if not is_node_ready():
+		return
+	radius_slider.value = radius
+
+
+## update the bubble and scanner
+func _update_radius_mesh() -> void:
+	if not is_node_ready():
+		return
+	sphere.mesh.radius = radius
+	sphere.mesh.height = radius * 2
+	scanner_shape.shape.radius = radius
 
 
 func _process(delta: float) -> void:
@@ -102,17 +151,33 @@ func _process(delta: float) -> void:
 	month_of_year_label.text = MarbleAge.MONTHS[month_of_year]
 
 
+func is_server() -> bool:
+	return multiplayer.is_server()
+
+
 func _on_warp_slider_value_changed(value: float) -> void:
 	#print('_on_warp_slider_value_changed')
 	warp_speed = int(value)
+	#TODO make sure this is updated everywhere
+	if not is_server():
+		server_set_warp.rpc_id(1, value)
 
 
 func _on_radius_slider_value_changed(value: float) -> void:
+	radius = int(value)
+	if not is_server():
+		server_set_radius.rpc_id(1, value)
+
+
+@rpc("any_peer", "call_local")
+func update_radius(value: float) -> void:
 	radius = int(value)
 
 
 func _on_scanner_body_entered(body: Node3D) -> void:
 	#print('_on_scanner_body_entered %s:%s %s' % [body.get_class(), body.name, name])
+	if not is_server():
+		return
 	if "warp_detector" in body:
 		#print('gg %s' % body.name)
 		body.warp_detector.warp_monuments[self.name] = self
@@ -122,6 +187,8 @@ func _on_scanner_body_entered(body: Node3D) -> void:
 
 
 func _on_scanner_body_exited(body: Node3D) -> void:
+	if not is_server():
+		return
 	#print('_on_scanner_body_exited %s:%s' % [body.get_class(), body.name])
 	if "warp_detector" in body or bodies.has(body.name):
 		#print('ff %s' % body.name)
@@ -142,11 +209,16 @@ func get_data() -> Dictionary:
 	}
 
 
-func load_node(node_data: Dictionary) -> void:
+func load_pre_ready(data: Dictionary) -> void:
+	if data.has("transform"):
+		transform = str_to_var(data.transform)
+
+
+func load_post_ready(data: Dictionary) -> void:
 	#transform = str_to_var(node_data["transform"])
-	if "age" in node_data:
-		age.age = node_data.age
-	if "warp_speed" in node_data:
-		warp_speed = node_data.warp_speed
-	if "radius" in node_data:
-		radius = node_data.radius
+	if "age" in data:
+		age.age = data.age
+	if "warp_speed" in data:
+		warp_speed = data.warp_speed
+	if "radius" in data:
+		radius = data.radius

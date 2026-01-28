@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://bdkw10fdrlljw"]
+[gd_scene format=3 uid="uid://bdkw10fdrlljw"]
 
 [ext_resource type="Script" uid="uid://b8xygpeqk5c05" path="res://src/warp_monument/warp_monument.gd" id="1_ln326"]
 [ext_resource type="PackedScene" uid="uid://jnsejnjhhfih" path="res://src/Slider3D/Slider3D.tscn" id="2_kycxd"]
@@ -17,8 +17,16 @@ properties/2/replication_mode = 2
 properties/3/path = NodePath(".:rotation")
 properties/3/spawn = true
 properties/3/replication_mode = 2
+properties/4/path = NodePath(".:radius")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wyfss"]
+albedo_color = Color(0.267, 0.267, 0.267, 1)
+roughness = 0.75
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_elqtf"]
+material = SubResource("StandardMaterial3D_wyfss")
 height = 0.2
 
 [sub_resource type="BoxMesh" id="BoxMesh_rydde"]
@@ -39,7 +47,11 @@ size = Vector3(0.02, 0.001, 0.35)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rydde"]
 albedo_color = Color(0, 0, 0, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qy5qu"]
+albedo_color = Color(0.16206557, 0.1620656, 0.16206557, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_usfmp"]
+material = SubResource("StandardMaterial3D_qy5qu")
 size = Vector3(1, 1, 0.2)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7b8f5"]
@@ -119,102 +131,101 @@ material = SubResource("ShaderMaterial_qy5qu")
 radius = 1.0
 height = 2.0
 
-[node name="WarpMonument" type="Node3D" groups=["persist"]]
+[node name="WarpMonument" type="Node3D" unique_id=656634854 groups=["persist"]]
 script = ExtResource("1_ln326")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1586845166]
 replication_config = SubResource("SceneReplicationConfig_ln326")
 
-[node name="Label3D" type="Label3D" parent="."]
+[node name="Label3D" type="Label3D" parent="." unique_id=433164808]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.022458851, 2.1898332, 3.5527137e-15)
 text = "01:27:27"
 
-[node name="Clock" type="MeshInstance3D" parent="."]
+[node name="Clock" type="MeshInstance3D" parent="." unique_id=1713451904]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.022458851, 1.6232744, 0)
 mesh = SubResource("CylinderMesh_elqtf")
 
-[node name="SecondHand" type="Node3D" parent="Clock"]
+[node name="SecondHand" type="Node3D" parent="Clock" unique_id=487076076]
 unique_name_in_owner = true
 transform = Transform3D(0.9510652, 0, -0.30901664, 0, 1.0000015, 0, 0.30901974, 0, 0.95105565, 0, -0.1, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/SecondHand"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/SecondHand" unique_id=207857195]
 transform = Transform3D(1, 8.881783e-16, 3.547835e-16, -8.881783e-16, 1, 6.302221e-31, -3.547835e-16, -9.453331e-31, 1, 0, 0, -0.23864883)
 mesh = SubResource("BoxMesh_rydde")
 surface_material_override/0 = SubResource("StandardMaterial3D_kycxd")
 
-[node name="MinuteHand" type="Node3D" parent="Clock"]
+[node name="MinuteHand" type="Node3D" parent="Clock" unique_id=602856752]
 unique_name_in_owner = true
 transform = Transform3D(0.96455646, 0, -0.2638727, 0, 1, 0, 0.2638727, 0, 0.96455646, 0, -0.1, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/MinuteHand"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/MinuteHand" unique_id=605382676]
 transform = Transform3D(1.0000001, -1.7763568e-15, -3.5478356e-16, -8.881784e-16, 1, 0, -3.5478354e-16, 0, 1.0000001, 0, 0, -0.25)
 mesh = SubResource("BoxMesh_n6kfb")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_elqtf")
 
-[node name="HourHand" type="Node3D" parent="Clock"]
+[node name="HourHand" type="Node3D" parent="Clock" unique_id=658712171]
 unique_name_in_owner = true
 transform = Transform3D(-0.7226647, 0, -0.6911971, 0, 1, 0, 0.6911971, 0, -0.7226647, 0, -0.1, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/HourHand"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Clock/HourHand" unique_id=763832703]
 transform = Transform3D(1.0000001, -1.7763568e-15, -3.5478356e-16, -8.881784e-16, 1, 0, -3.5478354e-16, 0, 1.0000001, 0, 0, -0.17104703)
 mesh = SubResource("BoxMesh_fyt7a")
 surface_material_override/0 = SubResource("StandardMaterial3D_rydde")
 
-[node name="Calendar" type="Node3D" parent="."]
+[node name="Calendar" type="Node3D" parent="." unique_id=1626850357]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0111294985, 0.5703186, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Calendar"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Calendar" unique_id=888249606]
 mesh = SubResource("BoxMesh_usfmp")
 skeleton = NodePath("../..")
 
-[node name="Node3D" type="Node3D" parent="Calendar"]
+[node name="Node3D" type="Node3D" parent="Calendar" unique_id=1692822335]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.35649967, 0.11404601)
 
-[node name="Day" type="Node3D" parent="Calendar/Node3D"]
+[node name="Day" type="Node3D" parent="Calendar/Node3D" unique_id=1996013187]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05801171, -0.45804942, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Calendar/Node3D/Day"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Calendar/Node3D/Day" unique_id=1611960846]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
 mesh = SubResource("PlaneMesh_n6kfb")
 
-[node name="DayOfMonth" type="Label3D" parent="Calendar/Node3D/Day"]
+[node name="DayOfMonth" type="Label3D" parent="Calendar/Node3D/Day" unique_id=1945381899]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.043460965, -0.040435076, 0.012545377)
 text = "18"
 
-[node name="Node3D2" type="Node3D" parent="Calendar"]
+[node name="Node3D2" type="Node3D" parent="Calendar" unique_id=1154712230]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.11)
 
-[node name="MonthOfYearLabel" type="Label3D" parent="Calendar/Node3D2"]
+[node name="MonthOfYearLabel" type="Label3D" parent="Calendar/Node3D2" unique_id=1190924728]
 text = "March"
 
-[node name="WarpSlider" parent="." instance=ExtResource("2_kycxd")]
+[node name="WarpSlider" parent="." unique_id=2067929312 instance=ExtResource("2_kycxd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 1.1920929e-07, 0)
-CUSTOM_VALUES = Array[int]([1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 60, 300, 600, 1800, 3600, 86400, 604800, 2419200, 24192000])
 show_label = true
 
-[node name="RadiusSlider" parent="." instance=ExtResource("2_kycxd")]
+[node name="RadiusSlider" parent="." unique_id=2085755168 instance=ExtResource("2_kycxd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.74801326, 0, 0)
-CUSTOM_VALUES = Array[int]([1, 2, 3, 6, 10, 20, 60, 300, 600])
 show_label = true
 
-[node name="ScannerArea" type="Area3D" parent="." groups=["persist"]]
+[node name="ScannerArea" type="Area3D" parent="." unique_id=763033880 groups=["persist"]]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
 collision_layer = 0
 collision_mask = 30
 input_ray_pickable = false
 
-[node name="ScannerShape" type="CollisionShape3D" parent="ScannerArea"]
+[node name="ScannerShape" type="CollisionShape3D" parent="ScannerArea" unique_id=1777554450]
 unique_name_in_owner = true
 shape = SubResource("SphereShape3D_rydde")
 
-[node name="Sphere" parent="ScannerArea" instance=ExtResource("3_elqtf")]
+[node name="Sphere" parent="ScannerArea" unique_id=255705316 instance=ExtResource("3_elqtf")]
 unique_name_in_owner = true
 mesh = SubResource("SphereMesh_6dixx")
 
+[connection signal="synchronized" from="MultiplayerSynchronizer" to="." method="_on_multiplayer_synchronizer_synchronized"]
 [connection signal="value_changed" from="WarpSlider" to="." method="_on_warp_slider_value_changed"]
 [connection signal="value_changed" from="RadiusSlider" to="." method="_on_radius_slider_value_changed"]
 [connection signal="body_entered" from="ScannerArea" to="." method="_on_scanner_body_entered"]

@@ -77,14 +77,14 @@ func _load_apple(object_name: String, data: Dictionary) -> void:
 		t.transform = str_to_var(data.transform)
 	world.flora.add_child(t)
 
+
 func _load_warp_monument(object_name: String, data: Dictionary) -> void:
 	var w: WarpMonument = WARP_MONUMENT_SCENE.instantiate()
 	w.name = object_name.validate_node_name()
 
-	w.ready.connect(w.load_node.bind(data))
+	w.ready.connect(w.load_post_ready.bind(data))
+	w.load_pre_ready(data)
 
-	if data.has("transform"):
-		w.transform = str_to_var(data.transform)
 	world.warp_monuments.add_child(w)
 
 
