@@ -2,6 +2,7 @@
 extends MeshInstance3D
 
 @export var size: int = 512
+@export var noise_seed:int =1
 
 var noise: FastNoiseLite = FastNoiseLite.new()
 var st: SurfaceTool = SurfaceTool.new()
@@ -10,13 +11,14 @@ var st: SurfaceTool = SurfaceTool.new()
 
 func _ready() -> void:
 	randomize()
-	noise.seed = 1 # randi()
+	noise.seed = noise_seed # randi()
 	noise.noise_type = FastNoiseLite.TYPE_CELLULAR
 	noise.fractal_octaves = 3
 	noise.domain_warp_fractal_lacunarity = 6.0
 	position.x -= size / 2.0
 	position.z -= size / 2.0
 	generate_map()
+
 
 func generate_map() -> void:
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)

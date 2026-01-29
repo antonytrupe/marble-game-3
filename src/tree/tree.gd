@@ -47,6 +47,14 @@ func _start_turn(_turns: Array) -> void:
 				_add_apple()
 
 
+func get_actions(action:String)->Array:
+	match action:
+		'chop':
+			return ['chop']
+		_:
+			return []
+
+
 func _add_apple() -> void:
 	#print("add apple")
 	var x: float = - abs(randfn(0, 1))

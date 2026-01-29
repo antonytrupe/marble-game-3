@@ -8,6 +8,7 @@ const ACORN_SCENE: Resource = preload("res://src/acorn/acorn.tscn")
 const BUSH_SCENE: Resource = preload("res://src/bush/bush.tscn")
 const TREE_SCENE: Resource = preload("res://src/tree/tree.tscn")
 const APPLE_SCENE: Resource = preload("res://src/apple/apple_3d.tscn")
+const AXE_SCENE: Resource = preload("res://src/axe/axe.tscn")
 const MOB_SCENE: Resource = preload("res://src/monster/monster.tscn")
 const WARP_MONUMENT_SCENE: Resource = preload("res://src/warp_monument/warp_monument.tscn")
 
@@ -260,6 +261,8 @@ func command(cmd: String, _player: Player, character: MarbleCharacter) -> void:
 			character.add_action(count, frequency)
 		"spawn", "/spawn":
 			match parts[1]:
+				"axe":
+					_spawn_axe(1,character.position)
 				"monument", "warp":
 					_spawn_warp_monument(character.position)
 				"mob", "monster":
@@ -344,6 +347,19 @@ func _spawn_bushes(count: int, center: Vector3) -> void:
 		bush.position = _get_random_vector(10, center)
 		#var chunk = chunks.get_chunk(bush.global_position)
 		world.flora.add_child(bush)
+
+
+func _spawn_axe(count: int, center: Vector3) -> void:
+	count = clampi(count, 1, 100)
+	for i: int in count:
+		var axe: Axe = AXE_SCENE.instantiate()
+		axe.name = axe.name + "%010d" % randi()
+		#TODO do this more righter
+		axe.position = _get_random_vector(10 + count, center)
+
+		#axe.ready.connect(axe.load_post_ready.bind(data))
+		#var chunk = chunks.get_chunk(tree.global_position)
+		world.flora.add_child(axe)
 
 
 func _spawn_trees(count: int, center: Vector3, maturity_ratio: float = 0.0) -> void:

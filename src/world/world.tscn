@@ -4,6 +4,12 @@
 [ext_resource type="Script" uid="uid://bga3y3kuercqk" path="res://src/world/mesh_instance_3d.gd" id="2_bsf3i"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f3sb7"]
+properties/0/path = NodePath("Terrain:noise_seed")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath("Terrain:size")
+properties/1/spawn = true
+properties/1/replication_mode = 2
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tcf2h"]
 sky_top_color = Color(0.14901961, 0.4392157, 0.81960785, 1)
@@ -51,7 +57,8 @@ collision_mask = 0
 shape = SubResource("WorldBoundaryShape3D_gv5m4")
 debug_fill = false
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=107141754]
+[node name="Terrain" type="MeshInstance3D" parent="." unique_id=107141754]
+unique_name_in_owner = true
 script = ExtResource("2_bsf3i")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1329767126]
@@ -87,30 +94,38 @@ unique_name_in_owner = true
 _spawnable_scenes = PackedStringArray("uid://bdkw10fdrlljw")
 spawn_path = NodePath("../WarpMonuments")
 
-[node name="ConeTwistJoint3D" type="ConeTwistJoint3D" parent="." unique_id=137310554]
+[node name="Items" type="Node3D" parent="." unique_id=619687010]
+
+[node name="ItemsMultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=337416223]
+_spawnable_scenes = PackedStringArray("uid://cvidv27x4bxrk")
+spawn_path = NodePath("../Items")
+
+[node name="tests" type="Node3D" parent="." unique_id=765091900]
+
+[node name="ConeTwistJoint3D" type="ConeTwistJoint3D" parent="tests" unique_id=137310554]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
 node_b = NodePath("../B")
 exclude_nodes_from_collision = false
 swing_span = 0.2617994
 
-[node name="A" type="RigidBody3D" parent="." unique_id=1276072715]
+[node name="A" type="RigidBody3D" parent="tests" unique_id=1276072715]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.329619, 13, 0)
 freeze = true
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="A" unique_id=147134590]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="tests/A" unique_id=147134590]
 mesh = SubResource("BoxMesh_6fy3g")
 surface_material_override/0 = SubResource("StandardMaterial3D_6fy3g")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="A" unique_id=1025626974]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="tests/A" unique_id=1025626974]
 shape = SubResource("BoxShape3D_jte2u")
 
-[node name="B" type="RigidBody3D" parent="." unique_id=1881817912]
+[node name="B" type="RigidBody3D" parent="tests" unique_id=1881817912]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.91594064, 13, 0)
 sleeping = true
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="B" unique_id=599873415]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="tests/B" unique_id=599873415]
 mesh = SubResource("BoxMesh_bsf3i")
 surface_material_override/0 = SubResource("StandardMaterial3D_43c6p")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="B" unique_id=1584484189]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="tests/B" unique_id=1584484189]
 shape = SubResource("BoxShape3D_l0av5")

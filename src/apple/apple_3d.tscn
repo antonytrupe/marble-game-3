@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cxp2l820hl2q8"]
+[gd_scene format=3 uid="uid://cxp2l820hl2q8"]
 
 [ext_resource type="Script" uid="uid://dmr70y3w8hsrm" path="res://src/apple/apple_3d.gd" id="1_k0cf5"]
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_wnbc6"]
@@ -51,7 +51,7 @@ properties/5/path = NodePath(".:sleeping")
 properties/5/spawn = true
 properties/5/replication_mode = 2
 
-[node name="Apple3D" type="RigidBody3D"]
+[node name="Apple3D" type="RigidBody3D" unique_id=1299505769]
 collision_layer = 4
 collision_mask = 17
 sleeping = true
@@ -60,30 +60,33 @@ continuous_cd = true
 angular_damp = 30.0
 script = ExtResource("1_k0cf5")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=985549909]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
 shape = SubResource("SphereShape3D_pek8c")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=626182701]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+visible = false
 mesh = SubResource("SphereMesh_5qehy")
 
-[node name="WarpDetectorArea3D" parent="." instance=ExtResource("2_wnbc6")]
+[node name="WarpDetectorArea3D" parent="." unique_id=683026006 instance=ExtResource("2_wnbc6")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+visible = false
 
-[node name="HighlightMeshInstance3D" parent="." instance=ExtResource("3_o25wh")]
+[node name="HighlightMeshInstance3D" parent="." unique_id=447267715 instance=ExtResource("3_o25wh")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+visible = false
 mesh = SubResource("SphereMesh_wnbc6")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1620672061]
 replication_config = SubResource("SceneReplicationConfig_yckcf")
 
-[node name="MarbleItem" parent="." instance=ExtResource("5_k0cf5")]
+[node name="MarbleItem" parent="." unique_id=1850392088 instance=ExtResource("5_k0cf5")]
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1014133982]
 _spawnable_scenes = PackedStringArray("uid://dgxgm8v8tpc6w")
 spawn_path = NodePath("..")

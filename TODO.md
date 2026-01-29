@@ -23,40 +23,44 @@ TODO
 22. eating
 23. water
 24. inventory
-25. skills
+25. mining
 26. digging
 27. picking up stones
-28. saving terrain
-29. level of detail terrain
-30. rivers
-31. wells
-32. lakes
-33. clamp camera movement
-34. aging/dying
-35. ~~trees growing and dropping fruit~~
-36. bushes growing and dropping fruit
-37. picking fruit off ground
-38. picking fruit off trees/bushes
-39. granting items to characters
-40. crafting
-    1.  making tools
-    2.  making lumber
-    3.  making walls/buildings
-41. mining
-42. making fire
-43. smelting
-44. xp
-45. spells
-46. limit high warp speeds to zoomed out
-47. npc dialogu(nobodywho?)
-48. ~~crosshairs~~
-49. able to drag things too big for inventory
-50. combat
-51. factions
-52. morale
-53. multiplying
-54. monsters
-55. fishing
+28. water stuff
+    1.  rivers
+    2.  wells
+    3.  lakes
+29. clamp camera movement
+30. aging/dying
+31. ~~trees growing and dropping fruit~~
+32. bush stuff
+    1.  bushes growing and dropping fruit
+    2.  picking fruit off ground
+    3.  picking fruit off trees/bushes
+33. granting items to characters
+34. make trees drop sticks
+35. crafting
+    1.  skills
+    2.  making tools
+    3.  making lumber
+    4.  making walls/buildings
+36. making fire
+37. smelting
+38. xp
+39. spells
+40. limit high warp speeds to zoomed out
+41. npc dialogu(nobodywho?)
+42. ~~crosshairs~~
+43. able to drag things too big for inventory
+44. combat
+45. factions
+46. monsters
+    1.  multiplying
+    2.  moral
+47. fishing
     1.  fish
     2.  fishing rods
-56. put persisting in its own thread
+48. put persisting in its own thread
+49. make the server authoritative for terrain
+50. saving terrain
+51. level of detail terrain

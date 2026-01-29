@@ -84,13 +84,15 @@ func _physics_process(delta: float) -> void:
 	age.age = age.age + delta * warp_speed
 	#@warning_ignore("narrowing_conversion")
 	var new_turn: int = int(age.age / MarbleAge.SECONDS_IN_TURN) + 1
-	_start_turn(range(self.turn + 1, new_turn + 1))
-	self.turn = new_turn
+	if new_turn > turn:
+		_start_turn(range(self.turn + 1, new_turn + 1))
+		self.turn = new_turn
 
 
 	if not character.is_on_floor():
 		if not flying:
-			character.velocity.y -= gravity * delta * pow(min(warp_speed, MAX_CONTROLLED_WARP), 2)
+			var w_speed: float = min(warp_speed, MAX_CONTROLLED_WARP)
+			character.velocity.y -= gravity * delta * (w_speed * w_speed)
 		#not on floor and flying
 		else:
 			character.velocity.y = 0
@@ -127,52 +129,50 @@ func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
 	if !is_server():
 		return
 
-	#if trading:
-		#cancel_trade()
-		#return
-
-	if hand == INTERACT.RIGHT and right_inventory:
-		right_inventory.freeze = false
-		right_inventory = null
-	if hand == INTERACT.LEFT and left_inventory:
-		left_inventory.freeze = false
-		left_inventory = null
-
+	# 1. Check for interaction targets first
 	if raycast.is_colliding():
 		var entity: Object = get_target()
 
+		# Priority 1: Trade
 		if entity.has_method("start_trade"):
-			pass
-			#start_trade(entity)
-			#entity.start_trade(self)
+			# start_trade(entity)
+			return # Exit early so we don't drop items
 
-
+		# Priority 2: Pick Berry
 		if entity.has_method("pick_berry"):
-			pass
-			#var action = "pick_berry"
-			## make actions.action always a string
-			#if current_turn_actions.action != null and current_turn_actions.action != action:
-				#return
-			#var loot = entity.pick_berry()
+			var loot = entity.pick_berry()
 			#_add_to_inventory(loot)
-			#set_action({"action": "pick_berry"})
+			set_action({"action": "pick_berry"})
+			return
 
+		# Priority 3: Pick Up
 		if entity.has_method("pick_up"):
-			var action: String = "pick_up"
-			# make actions.action always a string
-			#if current_turn_actions.action != null and current_turn_actions.action != action:
-				#return
-			#var loot = entity.pick_up()
-			if entity is RigidBody3D:
-				entity.freeze = true
+			if entity is PhysicsBody3D:
+				if entity is RigidBody3D:
+					entity.freeze = true
+
 				if hand == INTERACT.RIGHT:
 					right_inventory = entity
-				if hand == INTERACT.LEFT:
+				else:
 					left_inventory = entity
-				#entity.global_position = inventory_right.global_position
-				#entity.freeze=false
-				#inventory_right.node_b = entity.get_path()
-			set_action({"action": action})
+
+				set_action({"action": "pick_up"})
+				return
+
+	# 2. Fallback: If nothing was interacted with, drop the held item
+	_handle_drop(hand)
+
+func _handle_drop(hand: INTERACT) -> void:
+	if hand == INTERACT.RIGHT and right_inventory:
+		if right_inventory is RigidBody3D:
+			right_inventory.freeze = false
+		right_inventory = null
+
+	elif hand == INTERACT.LEFT and left_inventory:
+		if left_inventory is RigidBody3D:
+			left_inventory.freeze = false
+		left_inventory = null
+
 
 
 # use reset_actions to clear this and skip internal logic
@@ -194,18 +194,22 @@ func _set_turn(value: int) -> void:
 
 func calculate_warp() -> void:
 	var closest: WarpMonument = null
-	#var closest_distance=0
-	for w: WarpMonument in warp_detector.warp_monuments.values():
-		var distance: float = w.position.distance_to(character.position)
-		if !closest or distance < closest.position.distance_to(character.position):
+	var closest_dist_sq: float = INF
+	for key: Variant in warp_detector.warp_monuments:
+		var w: WarpMonument = warp_detector.warp_monuments[key]
+		var dist_sq: float = w.position.distance_squared_to(character.position)
+		if dist_sq < closest_dist_sq:
 			closest = w
-			#closest_distance=distance
+			closest_dist_sq = dist_sq
+
+	var new_warp_speed: int = 1
 	if closest:
 		#TODO scale the warp within a bubble, maybe
 		#*(1-(closest_distance/closest.radius))
-		warp_speed = closest.warp_speed
-	else:
-		warp_speed = 1
+		new_warp_speed = closest.warp_speed
+
+	if warp_speed != new_warp_speed:
+		warp_speed = new_warp_speed
 
 
 @rpc("any_peer", "call_local")
@@ -252,19 +256,16 @@ func _start_turn(_turns: Array) -> void:
 func server_move(d: Vector2) -> void:
 	if !is_server():
 		return
-	var direction: Vector3 = (character.transform.basis * Vector3(d.x, 0, d.y)).normalized()
+	var direction: Vector3 = (character.transform.basis.x * d.x + character.transform.basis.z * d.y).normalized()
 	var min_warp_speed: int = min(warp_speed, MAX_CONTROLLED_WARP)
-	#m*SPEED_MULTIPLIER*speed
+	var move_speed: float = mode * SPEED_MULTIPLIER * speed * min_warp_speed
+
 	if direction:
-		character.velocity.x = direction.x * mode * SPEED_MULTIPLIER * speed * min_warp_speed
-		character.velocity.z = direction.z * mode * SPEED_MULTIPLIER * speed * min_warp_speed
+		character.velocity.x = direction.x * move_speed
+		character.velocity.z = direction.z * move_speed
 	else:
-		character.velocity.x = move_toward(
-			character.velocity.x, 0, mode * SPEED_MULTIPLIER * speed * min_warp_speed
-		)
-		character.velocity.z = move_toward(
-			character.velocity.z, 0, mode * SPEED_MULTIPLIER * speed * min_warp_speed
-		)
+		character.velocity.x = move_toward(character.velocity.x, 0, move_speed)
+		character.velocity.z = move_toward(character.velocity.z, 0, move_speed)
 	#if !is_zero_approx(velocity.x) or !is_zero_approx(velocity.z):
 	#set_action({"move": mode})
 	#play_animation.rpc("walking")
@@ -280,7 +281,7 @@ func server_warp(value: int) -> void:
 	if !is_server():
 		return
 	warp_speed = value
-	Persistance.persist.emit("MarbleCharacter", self)
+	Persistance.persist.emit("MarbleCharacter", self )
 
 
 func _set_warp_speed(w: int) -> void:

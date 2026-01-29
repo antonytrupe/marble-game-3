@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://cvidv27x4bxrk"]
+
+[ext_resource type="Script" uid="uid://c85hde0ep4sm8" path="res://src/axe/axe.gd" id="1_kwwce"]
+[ext_resource type="PackedScene" uid="uid://dgxgm8v8tpc6w" path="res://src/inventory/marble_item.tscn" id="2_6th5x"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_kwwce"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4wux1"]
+albedo_color = Color(0.6, 0.2, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_h44af"]
+material = SubResource("StandardMaterial3D_4wux1")
+top_radius = 0.05
+bottom_radius = 0.05
+height = 1.0
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_kwwce"]
+points = PackedVector3Array(0.053163733, 0.50793654, 0.03728761, -0.05792563, -0.50793654, -0.04204951, -0.05792563, -0.50793654, 0.03728761, -0.05792563, 0.50793654, -0.04204951, 0.053163733, -0.50793654, -0.04204951, 0.03728761, 0.50793654, -0.05792563, 0.03728761, -0.50793654, 0.053163733, -0.04204951, 0.50793654, 0.053163733, -0.04204951, -0.50793654, -0.05792563, -0.05792563, 0.50793654, 0.03728761, -0.04204951, 0.50793654, -0.05792563, -0.04204951, -0.50793654, 0.053163733, 0.03728761, -0.50793654, -0.05792563, 0.053163733, -0.50793654, 0.03728761, 0.03728761, 0.50793654, 0.053163733, 0.053163733, 0.50793654, -0.04204951)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ddqrt"]
+albedo_color = Color(0.31431612, 0.31431612, 0.3143161, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_74ctn"]
+material = SubResource("StandardMaterial3D_ddqrt")
+size = Vector3(0.1, 0.2, 0.1)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_6th5x"]
+points = PackedVector3Array(0.053162795, -0.10156741, -0.0515873, -0.05157705, -0.092061, -0.0515873, -0.05157705, -0.092061, 0.0531746, 0.053162795, -0.10156741, 0.0531746, -0.003965233, 0.098405235, 0.0531746, -0.003965233, 0.098405235, -0.0515873, 0.005540723, 0.092061, -0.0515873, -0.049285565, -0.09714227, -0.049295332, 0.005540723, 0.092061, 0.0531746, 0.053162795, -0.098405235, 0.0531746, -0.048403114, -0.09543049, 0.049999997, 0.053162795, -0.098405235, -0.0515873, -0.0007262912, 0.09709483, -0.049270872)
+
+[node name="Axe" type="RigidBody3D" unique_id=143075445]
+script = ExtResource("1_kwwce")
+
+[node name="MarbleItem" parent="." unique_id=871184265 instance=ExtResource("2_6th5x")]
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=710440716]
+replication_config = SubResource("SceneReplicationConfig_kwwce")
+
+[node name="HandleMeshInstance3D" type="MeshInstance3D" parent="." unique_id=1262124149]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("CylinderMesh_h44af")
+
+[node name="HandleCollisionShape3D" type="CollisionShape3D" parent="." unique_id=2100554293]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("ConvexPolygonShape3D_kwwce")
+
+[node name="HeadMeshInstance3D" type="MeshInstance3D" parent="." unique_id=2116068076]
+transform = Transform3D(1.0000001, 0, 0, 0, -4.3711385e-08, 1.0000001, 0, -0.99999994, -4.3711392e-08, 0, 0.9, -0.1)
+mesh = SubResource("PrismMesh_74ctn")
+
+[node name="HeadCollisionShape3D" type="CollisionShape3D" parent="." unique_id=1927504596]
+transform = Transform3D(1.0000001, 0, 0, 0, -4.3711385e-08, 1.0000001, 0, -0.99999994, -4.3711392e-08, 0, 0.9, -0.1)
+shape = SubResource("ConvexPolygonShape3D_6th5x")
