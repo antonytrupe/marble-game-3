@@ -1,5 +1,5 @@
 class_name MarbleCharacter
-extends Node
+extends CharacterBody3D
 
 #signal inventory_updated
 

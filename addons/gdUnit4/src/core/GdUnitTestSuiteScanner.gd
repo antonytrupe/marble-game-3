@@ -272,6 +272,8 @@ static func _to_naming_convention(file_name: String) -> String:
 			return GdObjects.to_snake_case(file_name + "Test")
 		GdUnitSettings.NAMING_CONVENTIONS.PASCAL_CASE:
 			return GdObjects.to_pascal_case(file_name + "Test")
+		GdUnitSettings.NAMING_CONVENTIONS.TONY_CASE:
+			return GdObjects.to_snake_case(file_name)
 	push_error("Unexpected case")
 	return "-<Unexpected>-"
 
