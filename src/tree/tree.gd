@@ -12,8 +12,8 @@ var turn: int = 0
 @onready var age: MarbleAge = $Age
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D
 @onready var label_3d: Label3D = $Label3D
-@onready var left_leaves: MeshInstance3D = $Trunk/LeftLeaves
 @onready var flora: Node = $/root/Game/World/Flora
+@onready var left_leaves: MeshInstance3D = %LeftLeaves
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:

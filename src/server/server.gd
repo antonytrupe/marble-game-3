@@ -11,6 +11,7 @@ const APPLE_SCENE: Resource = preload("res://src/apple/apple_3d.tscn")
 const AXE_SCENE: Resource = preload("res://src/axe/axe.tscn")
 const MOB_SCENE: Resource = preload("res://src/monster/monster.tscn")
 const WARP_MONUMENT_SCENE: Resource = preload("res://src/warp_monument/warp_monument.tscn")
+const MONSTER_SCENE: Resource = preload("res://src/monster/monster.tscn")
 
 ## key is unique id
 ## e.g. Steam:steam_id.
@@ -43,16 +44,13 @@ func _persistance_signals() -> void:
 	Persistance.load_warp_monument.connect(_load_warp_monument)
 	Persistance.load_tree.connect(_load_tree)
 	Persistance.load_apple.connect(_load_apple)
+	Persistance.load_monster.connect(_load_monster)
 	Persistance.load_finished.connect(_load_finished)
 
 
 func _load_finished() -> void:
-	var chars: Array = world.characters.get_children()
-	#var mc:Array = chars.map(func(c: Node) -> Node3D:
-		#var cc: Node3D = c.get_node("Character")
-		#return cc
-		#)
-	world.underworld_raiser(chars)
+	world.underworld_raiser(world.characters.get_children())
+	world.underworld_raiser(world.fauna.get_children())
 	world.underworld_raiser(world.warp_monuments.get_children())
 	world.visible = true
 
@@ -97,6 +95,16 @@ func _load_character(character_name: String, data: Dictionary) -> void:
 	c.ready.connect(c.load_post_ready.bind(data))
 
 	world.characters.add_child(c)
+
+
+func _load_monster(character_name: String, data: Dictionary) -> void:
+	var c: Monster = MONSTER_SCENE.instantiate()
+	c.name = character_name.validate_node_name()
+
+	c.load_pre_ready(data)
+	c.ready.connect(c.load_post_ready.bind(data))
+
+	world.fauna.add_child(c)
 
 
 func _persist() -> void:
@@ -311,7 +319,7 @@ func _get_random_vector(radius: float, center: Vector3) -> Vector3:
 	var theta: float = randf() * 2 * PI
 	var x: float = center.x + r * cos(theta)
 	var z: float = center.z + r * sin(theta)
-	var y: float = world.get_ground_y(x, z)
+	var y: float = world.get_ground_y(x, z)+1
 	return Vector3(x, y, z)
 
 
@@ -354,12 +362,11 @@ func _spawn_axe(count: int, center: Vector3) -> void:
 	for i: int in count:
 		var axe: Axe = AXE_SCENE.instantiate()
 		axe.name = axe.name + "%010d" % randi()
-		#TODO do this more righter
-		axe.position = _get_random_vector(10 + count, center)
+		axe.position = _get_random_vector(1, center)
 
-		#axe.ready.connect(axe.load_post_ready.bind(data))
+		axe.ready.connect(axe.load_post_ready.bind({}))
 		#var chunk = chunks.get_chunk(tree.global_position)
-		world.flora.add_child(axe)
+		world.items.add_child(axe)
 
 
 func _spawn_trees(count: int, center: Vector3, maturity_ratio: float = 0.0) -> void:

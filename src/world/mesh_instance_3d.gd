@@ -7,7 +7,9 @@ extends MeshInstance3D
 var noise: FastNoiseLite = FastNoiseLite.new()
 var st: SurfaceTool = SurfaceTool.new()
 
+#@onready var world: World = $".."
 @onready var world: World = $".."
+@onready var navigation_region_3d: NavigationRegion3D = %NavigationRegion3D
 
 func _ready() -> void:
 	randomize()
@@ -18,6 +20,8 @@ func _ready() -> void:
 	position.x -= size / 2.0
 	position.z -= size / 2.0
 	generate_map()
+	#navigation_region_3d.bake_navigation_mesh()
+
 
 
 func generate_map() -> void:
@@ -51,4 +55,21 @@ func generate_map() -> void:
 	material.vertex_color_use_as_albedo = true
 	material_override = material
 
-	create_trimesh_collision()
+	#create_trimesh_collision()
+
+	var static_body:StaticBody3D = StaticBody3D.new()
+	static_body.position=position
+	static_body.set_collision_layer_value(1,true)
+	static_body.set_collision_mask_value(1,true)
+	static_body.set_collision_mask_value(2,true)
+	static_body.set_collision_mask_value(3,true)
+	static_body.set_collision_mask_value(4,true)
+	#add_child(static_body)
+	var collision_shape:CollisionShape3D = CollisionShape3D.new()
+
+	static_body.add_child(collision_shape)
+	var shape:ConcavePolygonShape3D = mesh.create_trimesh_shape()
+	collision_shape.shape = shape
+	navigation_region_3d.add_child.call_deferred(static_body)
+
+	navigation_region_3d.bake_navigation_mesh.call_deferred()

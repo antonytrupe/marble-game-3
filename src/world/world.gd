@@ -6,6 +6,7 @@ extends Node3D
 @onready var fauna: Node = %Fauna
 @onready var terra: Node = %Terra
 @onready var warp_monuments: Node = %WarpMonuments
+@onready var items: Node3D = $Items
 
 
 func _notification(what: int) -> void:

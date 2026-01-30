@@ -1,12 +1,14 @@
-[gd_scene load_steps=10 format=3 uid="uid://dibu85hjscd1f"]
+[gd_scene format=3 uid="uid://dibu85hjscd1f"]
 
 [ext_resource type="Script" uid="uid://df7pole6t2j0m" path="res://src/test_3d.gd" id="1_w6vbi"]
-[ext_resource type="PackedScene" uid="uid://bdkw10fdrlljw" path="res://src/warp_monument/warp_monument.tscn" id="2_d2dbs"]
 [ext_resource type="PackedScene" uid="uid://b4f3nuk5vp4rc" path="res://src/character/character.tscn" id="4_ly8po"]
-[ext_resource type="PackedScene" uid="uid://c1e46m2pfqiji" path="res://src/tree/tree.tscn" id="5_ly8po"]
-[ext_resource type="PackedScene" uid="uid://cxp2l820hl2q8" path="res://src/apple/apple_3d.tscn" id="7_fy1rd"]
+[ext_resource type="PackedScene" uid="uid://dd71wveta0ct4" path="res://src/monster/monster.tscn" id="6_87kh2"]
 
 [sub_resource type="Environment" id="Environment_gwkrg"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_ly8po"]
+vertices = PackedVector3Array(-14.5, 0.5, -14.5, -14.5, 0.5, 14.5, 14.5, 0.5, 14.5, 14.5, 0.5, -14.5)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nn3fe"]
 albedo_color = Color(0.0012114991, 0.30787307, 0, 1)
@@ -15,38 +17,37 @@ albedo_color = Color(0.0012114991, 0.30787307, 0, 1)
 material = SubResource("StandardMaterial3D_nn3fe")
 size = Vector2(30, 30)
 
-[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_d2dbs"]
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_fwge0"]
+points = PackedVector3Array(15.238096, 0.23809525, 15.238096, -15.238096, -0.23809525, -15.238096, -15.238096, 0.23809525, -15.238096, 15.238096, -0.23809525, -15.238096, -15.238096, -0.23809525, 15.238096, -15.238096, 0.23809525, 15.238096, 15.238096, 0.23809525, -15.238096, 15.238096, -0.23809525, 15.238096)
 
-[node name="Node3D" type="Node3D"]
+[node name="Node3D" type="Node3D" unique_id=1243732745]
 script = ExtResource("1_w6vbi")
 
-[node name="WarpMonument" parent="." instance=ExtResource("2_d2dbs")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.258245, 0, 0.7808571)
-warp_speed = 24192000
-radius = 46
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.9982594, -0.015263939, 0.05696575, -8.591775e-09, 0.9659259, 0.2588191, -0.058975287, 0.2583686, -0.9642446, 2.846944, 1.8882055, -3.4331865)
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1376029307]
+transform = Transform3D(-0.9982594, -0.015263938, 0.05696575, 0.028193016, 0.7248925, 0.6882848, -0.051799983, 0.68869287, -0.7232005, 2.846944, 4.232404, -11.3099575)
 current = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1899555615]
 environment = SubResource("Environment_gwkrg")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=244025464]
 transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 4.757888, 0)
 
-[node name="ground" type="MeshInstance3D" parent="."]
+[node name="Monster" parent="." unique_id=1374232915 instance=ExtResource("6_87kh2")]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0.32710168, -0.096651316)
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=1264734912]
+navigation_mesh = SubResource("NavigationMesh_ly8po")
+
+[node name="ground" type="MeshInstance3D" parent="NavigationRegion3D" unique_id=1150531988]
 mesh = SubResource("PlaneMesh_y2bxs")
+skeleton = NodePath("../..")
 
-[node name="Character" parent="." instance=ExtResource("4_ly8po")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3717365, 0, 0)
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1418384604]
+collision_mask = 0
 
-[node name="Tree" parent="." instance=ExtResource("5_ly8po")]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=625688827]
+shape = SubResource("ConvexPolygonShape3D_fwge0")
 
-[node name="Apple" parent="." instance=ExtResource("7_fy1rd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14.300865, -3.879304)
-
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-shape = SubResource("WorldBoundaryShape3D_d2dbs")
+[node name="Character" parent="." unique_id=959185743 instance=ExtResource("4_ly8po")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.4160707)

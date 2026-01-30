@@ -98,6 +98,7 @@ skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_staie")
 
 [node name="LeftLeaves" type="MeshInstance3D" parent="TrunkMesh" unique_id=100127190]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 6, 0)
 mesh = SubResource("SphereMesh_7felh")
 surface_material_override/0 = SubResource("StandardMaterial3D_entft")

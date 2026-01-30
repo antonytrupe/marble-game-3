@@ -41,6 +41,9 @@ albedo_color = Color(0, 0, 1, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_l0av5"]
 
+[sub_resource type="NavigationMesh" id="NavigationMesh_6fy3g"]
+sample_partition_type = 2
+
 [node name="World" type="Node3D" unique_id=691290096]
 script = ExtResource("1_f3sb7")
 
@@ -56,10 +59,6 @@ collision_mask = 0
 [node name="FloorCollisionShape3D" type="CollisionShape3D" parent="FloorStaticBody3D" unique_id=1456895388]
 shape = SubResource("WorldBoundaryShape3D_gv5m4")
 debug_fill = false
-
-[node name="Terrain" type="MeshInstance3D" parent="." unique_id=107141754]
-unique_name_in_owner = true
-script = ExtResource("2_bsf3i")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1329767126]
 transform = Transform3D(1, 0, 0, 0, -0.3746066, 0.92718387, 0, -0.92718387, -0.3746066, 0, 10, 0)
@@ -84,8 +83,9 @@ spawn_path = NodePath("../Flora")
 [node name="Fauna" type="Node3D" parent="." unique_id=727120612]
 unique_name_in_owner = true
 
-[node name="Terra" type="Node3D" parent="." unique_id=1511932569]
-unique_name_in_owner = true
+[node name="FaunaMultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1024062045]
+_spawnable_scenes = PackedStringArray("uid://dd71wveta0ct4")
+spawn_path = NodePath("../Fauna")
 
 [node name="WarpMonuments" type="Node3D" parent="." unique_id=1522204745]
 unique_name_in_owner = true
@@ -95,12 +95,17 @@ _spawnable_scenes = PackedStringArray("uid://bdkw10fdrlljw")
 spawn_path = NodePath("../WarpMonuments")
 
 [node name="Items" type="Node3D" parent="." unique_id=619687010]
+unique_name_in_owner = true
 
 [node name="ItemsMultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=337416223]
 _spawnable_scenes = PackedStringArray("uid://cvidv27x4bxrk")
 spawn_path = NodePath("../Items")
 
+[node name="Terra" type="Node3D" parent="." unique_id=1511932569]
+unique_name_in_owner = true
+
 [node name="tests" type="Node3D" parent="." unique_id=765091900]
+visible = false
 
 [node name="ConeTwistJoint3D" type="ConeTwistJoint3D" parent="tests" unique_id=137310554]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
@@ -129,3 +134,12 @@ surface_material_override/0 = SubResource("StandardMaterial3D_43c6p")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="tests/B" unique_id=1584484189]
 shape = SubResource("BoxShape3D_l0av5")
+
+[node name="Terrain" type="MeshInstance3D" parent="." unique_id=107141754]
+unique_name_in_owner = true
+script = ExtResource("2_bsf3i")
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=1261365904]
+unique_name_in_owner = true
+visible = false
+navigation_mesh = SubResource("NavigationMesh_6fy3g")

@@ -5,6 +5,10 @@
 [ext_resource type="Script" uid="uid://cv7le154j7bfo" path="res://src/character/ray_cast_3d.gd" id="2_8mo58"]
 [ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/marble_age.tscn" id="4_k8eue"]
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vu45j"]
+resource_local_to_scene = true
+height = 1.8
+
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_glpr6"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
@@ -31,10 +35,6 @@ properties/7/path = NodePath(".:turn")
 properties/7/spawn = true
 properties/7/replication_mode = 2
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vu45j"]
-resource_local_to_scene = true
-height = 1.8
-
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_glpr6"]
 height = 1.8
 
@@ -53,13 +53,13 @@ collision_layer = 2
 collision_mask = 31
 script = ExtResource("1_glpr6")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=2147316321]
-replication_config = SubResource("SceneReplicationConfig_glpr6")
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1497872601]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_vu45j")
 debug_fill = false
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=2147316321]
+replication_config = SubResource("SceneReplicationConfig_glpr6")
 
 [node name="BodyMesh" type="MeshInstance3D" parent="." unique_id=1233194481]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
@@ -91,7 +91,7 @@ text = "PlayerName (x6)"
 
 [node name="CameraPivot" type="Node3D" parent="." unique_id=2078229616]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, -0.6)
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot" unique_id=1590937061]
 unique_name_in_owner = true

@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://dd71wveta0ct4"]
+[gd_scene format=3 uid="uid://dd71wveta0ct4"]
 
 [ext_resource type="Script" uid="uid://dqjxn247atvdv" path="res://src/monster/monster.gd" id="1_8r01v"]
+[ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/marble_age.tscn" id="2_go2lf"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0g571"]
 radius = 0.25
@@ -14,6 +15,10 @@ material = SubResource("StandardMaterial3D_bfmsx")
 radius = 0.25
 height = 1.0
 
+[sub_resource type="SphereMesh" id="SphereMesh_go2lf"]
+radius = 0.1
+height = 0.2
+
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_8r01v"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
@@ -22,26 +27,43 @@ properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 2
 
-[node name="Monster" type="CharacterBody3D" groups=["fauna", "persist"]]
+[node name="Monster" type="CharacterBody3D" unique_id=1374232915 groups=["fauna", "persist"]]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0, 0)
 collision_layer = 8
 collision_mask = 31
 script = ExtResource("1_8r01v")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2000063942]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.25, 0)
 shape = SubResource("CapsuleShape3D_0g571")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=376272976]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.25, 0)
 mesh = SubResource("CapsuleMesh_okp8s")
 
-[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MeshInstance3D" unique_id=1755974947]
+transform = Transform3D(0.99999964, 0, 0, 0, 0.99999964, 0, 0, 1.4210855e-14, 1, -0.09269543, -0.41276756, -0.108897656)
+mesh = SubResource("SphereMesh_go2lf")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="MeshInstance3D" unique_id=210955357]
+transform = Transform3D(0.9999996, 0, 0, 0, 0.9999996, 0, 0, 1.7763568e-14, 1, 0.103349335, -0.40767366, -0.108897656)
+mesh = SubResource("SphereMesh_go2lf")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=305717777]
+path_desired_distance = 6.0
+path_height_offset = 2.0
 navigation_layers = 31
 avoidance_enabled = true
-use_3d_avoidance = true
 avoidance_layers = 8
 avoidance_mask = 31
-debug_enabled = true
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1348463191]
 replication_config = SubResource("SceneReplicationConfig_8r01v")
+
+[node name="MarbleAge" parent="." unique_id=1789449314 instance=ExtResource("2_go2lf")]
+
+[node name="Timer" type="Timer" parent="." unique_id=1187359858]
+wait_time = 6.0
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
