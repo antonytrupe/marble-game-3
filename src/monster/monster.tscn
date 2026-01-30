@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dqjxn247atvdv" path="res://src/monster/monster.gd" id="1_8r01v"]
 [ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/marble_age.tscn" id="2_go2lf"]
+[ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="3_lnxkv"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0g571"]
 radius = 0.25
@@ -51,11 +52,10 @@ mesh = SubResource("SphereMesh_go2lf")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=305717777]
 path_desired_distance = 6.0
-path_height_offset = 2.0
 navigation_layers = 31
-avoidance_enabled = true
 avoidance_layers = 8
 avoidance_mask = 31
+debug_enabled = true
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1348463191]
 replication_config = SubResource("SceneReplicationConfig_8r01v")
@@ -63,7 +63,14 @@ replication_config = SubResource("SceneReplicationConfig_8r01v")
 [node name="MarbleAge" parent="." unique_id=1789449314 instance=ExtResource("2_go2lf")]
 
 [node name="Timer" type="Timer" parent="." unique_id=1187359858]
-wait_time = 6.0
+wait_time = 30.0
 autostart = true
+
+[node name="WarpDetectorArea3D" parent="." unique_id=1044293258 instance=ExtResource("3_lnxkv")]
+
+[node name="Label3D" type="Label3D" parent="." unique_id=868434920]
+unique_name_in_owner = true
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0.6432567, 0)
+text = "label"
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

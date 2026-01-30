@@ -1,18 +1,35 @@
 class_name Monster
 extends CharacterBody3D
+enum MODE {
+	##half the walk distance
+	##usually 15ft/round
+	CROUCH = 1,
+	##single move action
+	##usually 30ft/round
+	WALK = 2,
+	##this is the double move action
+	##usually 60ft/round
+	HUSTLE = 4,
+	##not used?
+	RUN = 6,
+}
 const SPEED_MULTIPLIER: float = 1.0 / 24.0
 
 @export var speed: float = 30.0
 @export var movement_range: float = 60.0
 
-var turn: int
-var warp_speed: int
+@export var turn: int = 0:
+	set = _set_turn
+@export var warp_speed: int = 1:
+	set = _set_warp_speed
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
+var mode: MODE = MODE.WALK # :
 
 @onready var age: MarbleAge = $MarbleAge
 @onready var world: World = $/root/Game/World
-
+@onready var label: Label3D = %Label3D
 @onready var nav_agent: NavigationAgent3D = $NavigationAgent3D
+@onready var warp_detector: WarpDetector = $WarpDetectorArea3D
 
 func _ready() -> void:
 	# Crucial: Navigation data often isn't ready on frame 1
@@ -20,7 +37,36 @@ func _ready() -> void:
 	await get_tree().physics_frame
 	set_new_random_target()
 
+
+func calculate_warp() -> void:
+	var closest: WarpMonument = null
+	var closest_dist_sq: float = INF
+	for key: Variant in warp_detector.warp_monuments:
+		var w: WarpMonument = warp_detector.warp_monuments[key]
+		var dist_sq: float = w.position.distance_squared_to(position)
+		if dist_sq < closest_dist_sq:
+			closest = w
+			closest_dist_sq = dist_sq
+
+	var new_warp_speed: int = 1
+	if closest:
+		#TODO scale the warp within a bubble, maybe
+		#*(1-(closest_distance/closest.radius))
+		new_warp_speed = closest.warp_speed
+
+	if warp_speed != new_warp_speed:
+		warp_speed = new_warp_speed
+
+
 func _physics_process(delta: float) -> void:
+	age.age = age.age + delta * warp_speed
+	#@warning_ignore("narrowing_conversion")
+	var new_turn: int = int(age.age / MarbleAge.SECONDS_IN_TURN) + 1
+	if new_turn > turn:
+		print('new turn')
+		_start_turn(range(self.turn + 1, new_turn + 1))
+		self.turn = new_turn
+
 	# 1. Apply Gravity first
 	if not is_on_floor():
 		print('not on floor!')
@@ -32,32 +78,24 @@ func _physics_process(delta: float) -> void:
 
 	# 2. Handle Navigation
 	if not nav_agent.is_navigation_finished():
-		#print("position:",position)
-		#print("target_position:",nav_agent.target_position)
-#
-		#print("next_path_pos:",next_path_pos)
-		#print("global_position:",global_position)
 		var direction: Vector3 = global_position.direction_to(next_path_pos)
-		direction.y=0
-		direction=direction.normalized()
+		direction.y = 0
+		direction = direction.normalized()
 
-		#print("direction:",direction)
 		# Only update horizontal velocity so you don't "fly" or cancel gravity
-		var move_speed: float = SPEED_MULTIPLIER * speed
+		var move_speed: float = SPEED_MULTIPLIER * speed * warp_speed * mode
 
 		velocity.x = direction.x * move_speed
-		#velocity.y = direction.y * move_speed
 		velocity.z = direction.z * move_speed
 
-		#print("velocity:",velocity)
 		# Rotate to face movement
 		if is_on_floor() and velocity.length() > 0.1:
-			var floor_normal = get_floor_normal()
-			var target_forward = velocity.normalized()
+			var floor_normal: Vector3 = get_floor_normal()
+			var target_forward: Vector3 = velocity.normalized()
 
 			# Build a transform that aligns with the slope normal
 			# This keeps the "Up" vector perpendicular to the ground
-			var target_basis = Basis()
+			var target_basis: Basis = Basis()
 			target_basis.y = floor_normal
 			target_basis.x = target_forward.cross(floor_normal).normalized()
 			target_basis.z = target_basis.x.cross(target_basis.y).normalized()
@@ -72,12 +110,34 @@ func _physics_process(delta: float) -> void:
 	# 3. Move
 	move_and_slide()
 
+
+func _set_turn(value: int) -> void:
+	if label and value != turn:
+		_update_label()
+	turn = value
+
+
+func _set_warp_speed(w: int) -> void:
+	warp_speed = w
+	_update_label()
+
+
+func _start_turn(_turns: Array) -> void:
+	#print('starting turn %.f'%turn)
+	pass
+
+
+func _update_label() -> void:
+	if label:
+		label.text = "(x%.f)\n turn %.f" % [warp_speed, turn]
+
+
 func set_new_random_target() -> void:
 	#print('picking a new target')
 	# Create a random target within the movement range
-	var x:float = randf_range(-movement_range, movement_range)
-	var z:float = randf_range(-movement_range, movement_range)
-	var y:float = 0
+	var x: float = randf_range(-movement_range, movement_range)
+	var z: float = randf_range(-movement_range, movement_range)
+	var y: float = world.get_ground_y(x, z)
 	var random_pos: Vector3 = Vector3(x, y, z)
 	# Apply to the agent
 	nav_agent.target_position = global_position + random_pos
