@@ -25,6 +25,8 @@ const SPEED_MULTIPLIER: float = 1.0 / 24.0
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var mode: MODE = MODE.WALK # :
 
+@export var maturity: int = MarbleAge.SECONDS_IN_MINUTE * 2
+
 @onready var age: MarbleAge = $MarbleAge
 @onready var world: World = $/root/Game/World
 @onready var label: Label3D = %Label3D
@@ -58,19 +60,45 @@ func calculate_warp() -> void:
 		warp_speed = new_warp_speed
 
 
+func _process(_delta: float) -> void:
+	var r: float = float(age.age) / float(maturity)
+	var s: float = clampf(r, 0.1, 1.0)
+
+	# 1. Scale the Visual Mesh
+	$MeshInstance3D.scale = Vector3.ONE * s
+
+	# 2. Resize the Shape Properties (Not Scale)
+	var shape:Shape3D = $CollisionShape3D.shape
+	if shape is CapsuleShape3D or shape is CylinderShape3D:
+		shape.radius = 0.25 * s
+		shape.height = 1.0 * s
+	elif shape is BoxShape3D:
+		# Box size is the full dimension (x, y, z)
+		shape.size = Vector3(0.5, 1.0, 0.5) * s
+
+	# 3. Align to Ground
+	# Since shapes are centered, move the Y position to half the current height
+	var current_height:float = 1.0 * s
+	var offset:float = current_height / 2.0
+
+	$MeshInstance3D.position.y = offset
+	$CollisionShape3D.position.y = offset
+
+
 func _physics_process(delta: float) -> void:
 	age.age = age.age + delta * warp_speed
 	#@warning_ignore("narrowing_conversion")
 	var new_turn: int = int(age.age / MarbleAge.SECONDS_IN_TURN) + 1
 	if new_turn > turn:
-		print('new turn')
+		#print('new turn')
 		_start_turn(range(self.turn + 1, new_turn + 1))
 		self.turn = new_turn
 
 	# 1. Apply Gravity first
 	if not is_on_floor():
-		print('not on floor!')
-		velocity.y -= gravity * delta
+		#print('not on floor!')
+		#var w_speed: float = warp_speed
+		velocity.y -= gravity * delta * (warp_speed * warp_speed)
 	else:
 		velocity.y = 0 # Keeps velocity from building up while grounded
 
@@ -99,7 +127,7 @@ func _physics_process(delta: float) -> void:
 			target_basis.y = floor_normal
 			target_basis.x = target_forward.cross(floor_normal).normalized()
 			target_basis.z = target_basis.x.cross(target_basis.y).normalized()
-
+			target_basis=target_basis.orthonormalized()
 			# Smoothly interpolate to avoid "shaking" on uneven Jolt colliders
 			global_basis = global_basis.slerp(target_basis, 10.0 * delta)
 	else:
@@ -128,8 +156,10 @@ func _start_turn(_turns: Array) -> void:
 
 
 func _update_label() -> void:
+	var r: float = float(age.age) / float(maturity)
+	var s: float = clampf(r, 0.1, 1.0)
 	if label:
-		label.text = "(x%.f)\n turn %.f" % [warp_speed, turn]
+		label.text = "(x%.f)\n turn %.f\n%.2f" % [warp_speed, turn,s]
 
 
 func set_new_random_target() -> void:

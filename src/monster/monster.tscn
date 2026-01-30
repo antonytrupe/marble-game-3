@@ -63,10 +63,11 @@ replication_config = SubResource("SceneReplicationConfig_8r01v")
 [node name="MarbleAge" parent="." unique_id=1789449314 instance=ExtResource("2_go2lf")]
 
 [node name="Timer" type="Timer" parent="." unique_id=1187359858]
-wait_time = 30.0
+wait_time = 12.0
 autostart = true
 
 [node name="WarpDetectorArea3D" parent="." unique_id=1044293258 instance=ExtResource("3_lnxkv")]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0.25, 0)
 
 [node name="Label3D" type="Label3D" parent="." unique_id=868434920]
 unique_name_in_owner = true

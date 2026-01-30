@@ -57,8 +57,9 @@ TODO
 39. factions
 40. monsters
     1.  multiplying
-    2.  moral
-    3.  ~~warp speed~~
+    2.  morale
+    3.  ~~aging~~
+    4.  ~~warp speed~~
 41. fishing
     1.  fish
     2.  fishing rods
