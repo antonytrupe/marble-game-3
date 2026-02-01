@@ -3,6 +3,8 @@ extends CharacterBody3D
 
 #signal inventory_updated
 
+static var scene: Resource = preload("res://src/character/character.tscn")
+
 enum INTERACT {RIGHT, LEFT}
 
 enum MODE {
@@ -124,14 +126,52 @@ func get_target() -> Object:
 	return entity
 
 
+func get_actions() -> Array[Action]:
+	#var a:Action
+	return [Action.new("pick_up", func() -> void: pass )]
+
+
 @rpc("any_peer")
 func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
 	if !is_server():
 		return
-
+	var did_action: bool = false
 	# 1. Check for interaction targets first
 	if raycast.is_colliding():
 		var entity: Object = get_target()
+
+		var actions: Array[Action] = []
+		if hand == INTERACT.RIGHT:
+			if right_inventory:
+				actions = right_inventory.get_actions()
+			else:
+				actions = get_actions()
+		elif hand == INTERACT.LEFT:
+			if left_inventory:
+				actions = left_inventory.get_actions()
+			else:
+				actions = get_actions()
+
+		var entity_actions: Array[Action] = []
+		if entity.has_method("get_actions"):
+			entity_actions = entity.get_actions()
+
+		#var player_action:Action=null
+		#var entity_action:Action=null
+		did_action = entity_actions.any(func(entity_action: Action) -> bool:
+			return actions.any(func(player_action: Action) -> bool:
+				if entity_action.name == player_action.name:
+					entity_action.do.call()
+					player_action.do.call()
+					return true
+				return false
+				)
+			)
+		print(did_action)
+
+		#if entity_action:entity_action.do.call()
+		#if player_action:player_action.do.call()
+
 
 		# Priority 1: Trade
 		if entity.has_method("start_trade"):
@@ -140,10 +180,11 @@ func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
 
 		# Priority 2: Pick Berry
 		if entity.has_method("pick_berry"):
-			var loot = entity.pick_berry()
+			#var loot = entity.pick_berry()
 			#_add_to_inventory(loot)
 			set_action({"action": "pick_berry"})
 			return
+
 
 		# Priority 3: Pick Up
 		if entity.has_method("pick_up"):
@@ -160,7 +201,8 @@ func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
 				return
 
 	# 2. Fallback: If nothing was interacted with, drop the held item
-	_handle_drop(hand)
+	if not did_action:
+		_handle_drop(hand)
 
 func _handle_drop(hand: INTERACT) -> void:
 	if hand == INTERACT.RIGHT and right_inventory:
@@ -172,7 +214,6 @@ func _handle_drop(hand: INTERACT) -> void:
 		if left_inventory is RigidBody3D:
 			left_inventory.freeze = false
 		left_inventory = null
-
 
 
 # use reset_actions to clear this and skip internal logic
@@ -303,7 +344,7 @@ func server_camera_zoom(scroll_amount: float) -> void:
 		return
 	var direction: Vector3 = camera.transform.basis.z
 	camera.position += direction * scroll_amount * .1
-	camera.position.z=max(camera.position.z,0)
+	camera.position.z = max(camera.position.z, 0)
 
 
 func _rotate_camera(value: Vector2) -> void:
@@ -314,6 +355,8 @@ func _rotate_camera(value: Vector2) -> void:
 func get_data() -> Dictionary:
 	return {
 		"name": name,
+		"parent": str(get_parent().get_path()) if get_parent() else "",
+		"scene_file_path": get_scene_file_path(),
 		"player_id": player_id,
 		"player_name": player_name,
 		"warp_speed": warp_speed,
@@ -349,15 +392,15 @@ func load_post_ready(node_data: Dictionary) -> void:
 		var l: Node = world.find_child(node_data.left_inventory)
 		if l: left_inventory = l
 		else:
-			world.flora.child_entered_tree.connect(func(child: Node) -> void:
+			world.items.child_entered_tree.connect(func(child: Node) -> void:
 				if child.name == node_data.left_inventory:
 					left_inventory = child
 			)
 	if "right_inventory" in node_data and node_data.right_inventory:
-		var r: Node = world.find_child(node_data.right_inventory)
+		var r: Node = world.find_child(node_data.right_inventory, true, false)
 		if r: right_inventory = r
 		else:
-			world.flora.child_entered_tree.connect(func(child: Node) -> void:
+			world.items.child_entered_tree.connect(func(child: Node) -> void:
 				if child.name == node_data.right_inventory:
 					right_inventory = child
 			)

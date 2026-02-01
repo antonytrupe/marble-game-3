@@ -1,6 +1,7 @@
 class_name Acorn
 extends Node3D
 
+static var scene: Resource = preload("res://src/acorn/acorn.tscn")
 
 func get_actions() -> Array:
 	return ['pick_up', 'plant']

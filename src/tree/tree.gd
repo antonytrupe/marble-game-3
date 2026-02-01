@@ -2,10 +2,19 @@
 class_name MarbleTree
 extends Node3D
 
+static var scene:Resource=preload("res://src/tree/tree.tscn")
+
 const APPLE_SCENE: Resource = preload("res://src/apple/apple_3d.tscn")
 
 @export var maturity: int = MarbleAge.SECONDS_IN_YEAR * 8
 @export var warp_speed: float = 1
+@export var chop_stage:int=0
+
+@onready var meshes:Array[MeshInstance3D]=[
+	%TrunkMesh1, %TrunkMesh2,
+	 %TrunkMesh3, %TrunkMesh4,
+	 %TrunkMesh5, %TrunkMesh6, %TrunkMesh7,
+]
 
 var turn: int = 0
 
@@ -14,6 +23,9 @@ var turn: int = 0
 @onready var label_3d: Label3D = $Label3D
 @onready var flora: Node = $/root/Game/World/Flora
 @onready var left_leaves: MeshInstance3D = %LeftLeaves
+@onready var trunk_collision: CollisionShape3D = %TrunkCollision
+@onready var server: Server = $/root/Game/Server
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -47,10 +59,26 @@ func _start_turn(_turns: Array) -> void:
 				_add_apple()
 
 
-func get_actions(action:String)->Array:
+func chop()->void:
+	print('tree chop')
+	if chop_stage<=6:
+		meshes[chop_stage].visible=false
+		chop_stage+=1
+
+		if chop_stage==7:
+			#spawn stump and log
+			server.spawn_stump(position)
+			server.spawn_log(position)
+			queue_free()
+			Persistance.delete.emit(self)
+		else:
+			meshes[chop_stage].visible=true
+
+
+func get_actions(action:String="chop")->Array[Action]:
 	match action:
 		'chop':
-			return ['chop']
+			return [Action.new('chop',chop)]
 		_:
 			return []
 
@@ -76,6 +104,9 @@ func is_server() -> bool:
 
 func get_data() -> Dictionary:
 	var save_dict: Dictionary = {
+		"name": name,
+		"parent": str(get_parent().get_path()) if get_parent() else "",
+		"scene_file_path":get_scene_file_path(),
 		"transform": var_to_str(transform),
 		"age": age.age,
 		"turn": turn,
@@ -84,14 +115,15 @@ func get_data() -> Dictionary:
 	return save_dict
 
 
-func load_node(node_data: Dictionary) -> void:
-	#transform = str_to_var(node_data["transform"])
-	if "age" in node_data:
-		age.age = node_data.age
-	if "warp_speed" in node_data:
-		warp_speed = node_data.warp_speed
-	if "turn" in node_data:
-		turn = node_data.turn
+func load_post_ready(data: Dictionary) -> void:
+	if "transform" in data:
+		transform = str_to_var(data.transform)
+	if "age" in data:
+		age.age = data.age
+	if "warp_speed" in data:
+		warp_speed = data.warp_speed
+	if "turn" in data:
+		turn = data.turn
 
 
 func calculate_warp() -> void:

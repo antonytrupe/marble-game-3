@@ -32,7 +32,7 @@ TODO
     1.  rivers
     2.  wells
     3.  lakes
-24. clamp camera movement
+24. ~~clamp camera movement~~
 25. aging/dying
 26. ~~trees growing and dropping fruit~~
 27. bush stuff
@@ -68,6 +68,6 @@ TODO
     1.  make the server authoritative for terrain
     2.  saving terrain
     3.  level of detail terrain
-44. turning head
+44. turning character head
 45. make persistance pick up new items automagically
 46. action economy system

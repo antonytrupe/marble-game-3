@@ -2,6 +2,9 @@
 class_name Apple3D
 extends RigidBody3D
 
+static var scene: Resource = preload("res://src/apple/apple_3d.tscn")
+
+
 #apples take 150 days to mature
 ##days
 @export var maturity: int = MarbleAge.SECONDS_IN_DAY * 1
@@ -119,6 +122,9 @@ func calculate_warp() -> void:
 
 func get_data() -> Dictionary:
 	var save_dict: Dictionary = {
+		"name": name,
+		"parent": str(get_parent().get_path()) if get_parent() else "",
+		"scene_file_path": get_scene_file_path(),
 		"transform": var_to_str(transform),
 		"age": item.age.age,
 		"turn": turn,
@@ -127,8 +133,8 @@ func get_data() -> Dictionary:
 	return save_dict
 
 
-func load_node(node_data: Dictionary) -> void:
-	#transform = str_to_var(node_data["transform"])
+func load_post_ready(node_data: Dictionary) -> void:
+	transform = str_to_var(node_data["transform"])
 	if "age" in node_data:
 		item.age.age = node_data.age
 	if "warp_speed" in node_data:

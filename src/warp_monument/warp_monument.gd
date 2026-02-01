@@ -7,6 +7,8 @@ const VISIBILITY_THRESHOLD_MINUTES: int = 6000
 const VISIBILITY_THRESHOLD_HOURS: int = 60000
 const HOURS_IN_CLOCK_FACE: float = 12.0
 
+static var scene: Resource = preload("res://src/warp_monument/warp_monument.tscn")
+
 @export var age: MarbleAge = MarbleAge.new()
 @export var warp_speed: int = 1: set = _set_warp_speed
 @export var radius: int = 1: set = _set_radius
@@ -33,6 +35,8 @@ func _ready() -> void:
 func get_data() -> Dictionary:
 	return {
 		"name": name,
+		"parent": str(get_parent().get_path()) if get_parent() else "",
+		"scene_file_path": get_scene_file_path(),
 		"warp_speed": warp_speed,
 		"radius": radius,
 		"transform": var_to_str(transform),

@@ -1,5 +1,6 @@
 class_name Monster
 extends CharacterBody3D
+
 enum MODE {
 	##half the walk distance
 	##usually 15ft/round
@@ -15,6 +16,9 @@ enum MODE {
 }
 const SPEED_MULTIPLIER: float = 1.0 / 24.0
 
+static var scene: Resource = preload("res://src/monster/monster.tscn")
+
+
 @export var speed: float = 30.0
 @export var movement_range: float = 60.0
 
@@ -22,10 +26,10 @@ const SPEED_MULTIPLIER: float = 1.0 / 24.0
 	set = _set_turn
 @export var warp_speed: int = 1:
 	set = _set_warp_speed
-var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
-var mode: MODE = MODE.WALK # :
-
+@export var mode: MODE = MODE.WALK # :
 @export var maturity: int = MarbleAge.SECONDS_IN_MINUTE * 2
+
+var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 @onready var age: MarbleAge = $MarbleAge
 @onready var world: World = $/root/Game/World
@@ -68,7 +72,7 @@ func _process(_delta: float) -> void:
 	$MeshInstance3D.scale = Vector3.ONE * s
 
 	# 2. Resize the Shape Properties (Not Scale)
-	var shape:Shape3D = $CollisionShape3D.shape
+	var shape: Shape3D = $CollisionShape3D.shape
 	if shape is CapsuleShape3D or shape is CylinderShape3D:
 		shape.radius = 0.25 * s
 		shape.height = 1.0 * s
@@ -78,8 +82,8 @@ func _process(_delta: float) -> void:
 
 	# 3. Align to Ground
 	# Since shapes are centered, move the Y position to half the current height
-	var current_height:float = 1.0 * s
-	var offset:float = current_height / 2.0
+	var current_height: float = 1.0 * s
+	var offset: float = current_height / 2.0
 
 	$MeshInstance3D.position.y = offset
 	$CollisionShape3D.position.y = offset
@@ -127,9 +131,9 @@ func _physics_process(delta: float) -> void:
 			target_basis.y = floor_normal
 			target_basis.x = target_forward.cross(floor_normal).normalized()
 			target_basis.z = target_basis.x.cross(target_basis.y).normalized()
-			target_basis=target_basis.orthonormalized()
+			target_basis = target_basis.orthonormalized()
 			# Smoothly interpolate to avoid "shaking" on uneven Jolt colliders
-			global_basis = global_basis.slerp(target_basis, 10.0 * delta)
+			global_basis = global_basis.slerp(target_basis, 10.0 * delta).orthonormalized()
 	else:
 		# Stop moving horizontally if reached target
 		velocity.x = move_toward(velocity.x, 0, speed)
@@ -159,7 +163,7 @@ func _update_label() -> void:
 	var r: float = float(age.age) / float(maturity)
 	var s: float = clampf(r, 0.1, 1.0)
 	if label:
-		label.text = "(x%.f)\n turn %.f\n%.2f" % [warp_speed, turn,s]
+		label.text = "(x%.f)\n turn %.f\n%.2f" % [warp_speed, turn, s]
 
 
 func set_new_random_target() -> void:
@@ -200,9 +204,8 @@ func load_pre_ready(node_data: Dictionary) -> void:
 		warp_speed = node_data.warp_speed
 
 
-#can reference @onready vars now
+#can reference @onready vars
 func load_post_ready(node_data: Dictionary) -> void:
-	#transform = str_to_var(node_data["transform"])
 	if "transform" in node_data:
 		transform = str_to_var(node_data.transform)
 	if "age" in node_data:

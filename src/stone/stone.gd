@@ -1,6 +1,7 @@
 class_name Stone
 extends RigidBody3D
 
+static var scene: Resource = preload("res://src/stone/stone.tscn")
 
 #@export var birth_date: int = 0:
 	#set = set_birth_date
@@ -38,7 +39,7 @@ func craft(player: MarbleCharacter, loot: Dictionary) -> Dictionary:
 	#print('%s stone crafting' % player.name, self)
 	var result: Dictionary = {}
 	for item_name: String in loot.keys():
-		var item:Node = player.inventory[item_name]
+		var item: Node = player.inventory[item_name]
 		#print(item)
 		if item.category == "Stone":
 			if item.hardness < hardness:
@@ -108,9 +109,9 @@ func save_node() -> Dictionary:
 	return save_dict
 
 
-func load_node(node_data: Dictionary) -> void:
+func load_post_ready(node_data: Dictionary) -> void:
 	if node_data.has("transform"):
 		transform = str_to_var(node_data["transform"])
 	for p: String in node_data:
 		if p in self and p not in ['transform']:
-			self[p] = node_data[p]
+			self [p] = node_data[p]
