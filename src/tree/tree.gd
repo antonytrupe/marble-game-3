@@ -15,7 +15,7 @@ var turn: int = 0
 
 @onready var meshes: Array[MeshInstance3D] = [
 	%TrunkMesh1, %TrunkMesh2, %TrunkMesh3, %TrunkMesh4,
-	%TrunkMesh5, %TrunkMesh6, %TrunkMesh7,
+	 %TrunkMesh6, %TrunkMesh7,%TrunkMesh8,%TrunkMesh9,%TrunkMesh10,
 	]
 @onready var age: MarbleAge = $Age
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D
@@ -71,7 +71,7 @@ func chop(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
 	if chop_stage < meshes.size():
 		chop_stage += 1
 
-		if chop_stage == 7:
+		if chop_stage == meshes.size():
 			#spawn stump and log
 			server.spawn_stump(position)
 			var l: MarbleLog = server.spawn_log(position + Vector3(0, 1, 0))
