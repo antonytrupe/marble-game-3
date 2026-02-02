@@ -1,23 +1,22 @@
 #@tool
 class_name MarbleTree
-extends Node3D
+extends RigidBody3D
 
-static var scene:Resource=preload("res://src/tree/tree.tscn")
 
 const APPLE_SCENE: Resource = preload("res://src/apple/apple_3d.tscn")
+static var scene: Resource = preload("res://src/tree/tree.tscn")
 
 @export var maturity: int = MarbleAge.SECONDS_IN_YEAR * 8
 @export var warp_speed: float = 1
-@export var chop_stage:int=0
-
-@onready var meshes:Array[MeshInstance3D]=[
-	%TrunkMesh1, %TrunkMesh2,
-	 %TrunkMesh3, %TrunkMesh4,
-	 %TrunkMesh5, %TrunkMesh6, %TrunkMesh7,
-]
+@export var chop_stage: int = 0:
+	set = _set_chop_stage
 
 var turn: int = 0
 
+@onready var meshes: Array[MeshInstance3D] = [
+	%TrunkMesh1, %TrunkMesh2, %TrunkMesh3, %TrunkMesh4,
+	%TrunkMesh5, %TrunkMesh6, %TrunkMesh7,
+	]
 @onready var age: MarbleAge = $Age
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D
 @onready var label_3d: Label3D = $Label3D
@@ -59,26 +58,34 @@ func _start_turn(_turns: Array) -> void:
 				_add_apple()
 
 
-func chop()->void:
-	print('tree chop')
-	if chop_stage<=6:
-		meshes[chop_stage].visible=false
-		chop_stage+=1
+func _set_chop_stage(v: int) -> void:
+	if is_node_ready():
+		meshes[chop_stage].visible = false
+	chop_stage = v
+	if chop_stage < meshes.size() and is_node_ready():
+		meshes[chop_stage].visible = true
 
-		if chop_stage==7:
+
+func chop(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
+	print('tree chop')
+	if chop_stage < meshes.size():
+		chop_stage += 1
+
+		if chop_stage == 7:
 			#spawn stump and log
 			server.spawn_stump(position)
-			server.spawn_log(position)
+			var l: MarbleLog = server.spawn_log(position + Vector3(0, 1, 0))
+			l.freeze = false
+			l.apply_torque_impulse(Vector3(1, 0, 0))
 			queue_free()
-			Persistance.delete.emit(self)
-		else:
-			meshes[chop_stage].visible=true
+			Persistance.delete.emit(self )
+	return []
 
 
-func get_actions(action:String="chop")->Array[Action]:
+func get_object_verbs(action: String = "chop") -> Array[Action]:
 	match action:
 		'chop':
-			return [Action.new('chop',chop)]
+			return [Action.new('chop', chop)]
 		_:
 			return []
 
@@ -91,10 +98,7 @@ func _add_apple() -> void:
 	var l: float = sqrt(x * x + y * y + z * z)
 	var apple: Apple3D = APPLE_SCENE.instantiate()
 	apple.name = apple.name + "%010d" % randi()
-	#apple.position = Vector3(x / l, y / l, z / l) * 3
-	#print(apple.position)
 	apple.position = left_leaves.global_position + Vector3(x / l, y / l, z / l) * 3
-	#left_leaves.add_child(apple)
 	flora.add_child(apple)
 
 
@@ -103,27 +107,33 @@ func is_server() -> bool:
 
 
 func get_data() -> Dictionary:
-	var save_dict: Dictionary = {
+	var data: Dictionary = {
 		"name": name,
 		"parent": str(get_parent().get_path()) if get_parent() else "",
-		"scene_file_path":get_scene_file_path(),
+		"scene_file_path": get_scene_file_path(),
 		"transform": var_to_str(transform),
 		"age": age.age,
 		"turn": turn,
 		"warp_speed": warp_speed,
+		"chop_stage": chop_stage,
 	}
-	return save_dict
+	return data
+
+
+func load_pre_ready(data: Dictionary) -> void:
+	if "transform" in data:
+		transform = str_to_var(data.transform)
 
 
 func load_post_ready(data: Dictionary) -> void:
-	if "transform" in data:
-		transform = str_to_var(data.transform)
 	if "age" in data:
 		age.age = data.age
 	if "warp_speed" in data:
 		warp_speed = data.warp_speed
 	if "turn" in data:
 		turn = data.turn
+	if "chop_stage" in data:
+		chop_stage = data.chop_stage
 
 
 func calculate_warp() -> void:

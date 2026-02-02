@@ -108,6 +108,9 @@ properties/2/replication_mode = 2
 properties/3/path = NodePath(".:warp_speed")
 properties/3/spawn = true
 properties/3/replication_mode = 2
+properties/4/path = NodePath(".:chop_stage")
+properties/4/spawn = true
+properties/4/replication_mode = 2
 
 [sub_resource type="Shader" id="Shader_jrthf"]
 resource_local_to_scene = true
@@ -143,12 +146,13 @@ top_radius = 0.8
 bottom_radius = 1.0
 height = 10.0
 
-[node name="Tree" type="RigidBody3D" unique_id=1659524965 groups=["persist"]]
+[node name="Tree" type="RigidBody3D" unique_id=1643654767 groups=["persist"]]
 collision_layer = 4
 collision_mask = 31
-mass = 102.651
+mass = 20000.0
 freeze = true
 script = ExtResource("1_2omd0")
+metadata/_custom_type_script = "uid://duyhummlm0gr1"
 
 [node name="TrunkCollision" type="CollisionShape3D" parent="." unique_id=1224660995]
 unique_name_in_owner = true

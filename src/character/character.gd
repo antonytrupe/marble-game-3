@@ -126,9 +126,30 @@ func get_target() -> Object:
 	return entity
 
 
-func get_actions() -> Array[Action]:
+##verbs the character can do
+func get_subject_verbs() -> Array[Action]:
 	#var a:Action
-	return [Action.new("pick_up", func() -> void: pass )]
+	return [Action.new("pick_up", pick_up)]
+
+
+##verbs that can be done to the character
+func get_object_verbs() -> Array[Action]:
+	return [Action.new("pick_up", pick_up)]
+
+
+func pick_up(hand: INTERACT, entities: Array) -> void:
+	for entity: Object in entities:
+		if entity is PhysicsBody3D:
+			if entity is RigidBody3D:
+				entity.freeze = true
+
+			if hand == INTERACT.RIGHT:
+				right_inventory = entity
+			else:
+				left_inventory = entity
+
+			set_action({"action": "pick_up"})
+			return
 
 
 @rpc("any_peer")
@@ -138,67 +159,49 @@ func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
 	var did_action: bool = false
 	# 1. Check for interaction targets first
 	if raycast.is_colliding():
-		var entity: Object = get_target()
+		var object: Object = get_target()
 
-		var actions: Array[Action] = []
+		var verbs: Array[Action] = []
 		if hand == INTERACT.RIGHT:
-			if right_inventory:
-				actions = right_inventory.get_actions()
-			else:
-				actions = get_actions()
+			if right_inventory and right_inventory.has_method("get_subject_verbs"):
+				verbs = right_inventory.get_subject_verbs()
+			elif not right_inventory:
+				verbs = get_subject_verbs()
 		elif hand == INTERACT.LEFT:
-			if left_inventory:
-				actions = left_inventory.get_actions()
-			else:
-				actions = get_actions()
+			if left_inventory and left_inventory.has_method("get_subject_verbs"):
+				verbs = left_inventory.get_subject_verbs()
+			elif not left_inventory:
+				verbs = get_subject_verbs()
 
-		var entity_actions: Array[Action] = []
-		if entity.has_method("get_actions"):
-			entity_actions = entity.get_actions()
+		var entity_verbs: Array[Action] = []
+		if object.has_method("get_object_verbs"):
+			entity_verbs = object.get_object_verbs()
 
-		#var player_action:Action=null
-		#var entity_action:Action=null
-		did_action = entity_actions.any(func(entity_action: Action) -> bool:
-			return actions.any(func(player_action: Action) -> bool:
-				if entity_action.name == player_action.name:
-					entity_action.do.call()
-					player_action.do.call()
+		did_action = entity_verbs.any(func(entity_action: Action) -> bool:
+			return verbs.any(func(subject_verb: Action) -> bool:
+				if entity_action.name == subject_verb.name:
+					var a: Array[Object] = []
+					var r: Array = entity_action.do.call(hand, a)
+					subject_verb.do.call(hand, r)
 					return true
 				return false
 				)
 			)
 		print(did_action)
 
-		#if entity_action:entity_action.do.call()
-		#if player_action:player_action.do.call()
-
 
 		# Priority 1: Trade
-		if entity.has_method("start_trade"):
+		if object.has_method("start_trade"):
 			# start_trade(entity)
 			return # Exit early so we don't drop items
 
 		# Priority 2: Pick Berry
-		if entity.has_method("pick_berry"):
+		if object.has_method("pick_berry"):
 			#var loot = entity.pick_berry()
 			#_add_to_inventory(loot)
 			set_action({"action": "pick_berry"})
 			return
 
-
-		# Priority 3: Pick Up
-		if entity.has_method("pick_up"):
-			if entity is PhysicsBody3D:
-				if entity is RigidBody3D:
-					entity.freeze = true
-
-				if hand == INTERACT.RIGHT:
-					right_inventory = entity
-				else:
-					left_inventory = entity
-
-				set_action({"action": "pick_up"})
-				return
 
 	# 2. Fallback: If nothing was interacted with, drop the held item
 	if not did_action:
@@ -369,39 +372,30 @@ func get_data() -> Dictionary:
 
 
 #don't reference @onready vars
-func load_pre_ready(node_data: Dictionary) -> void:
-	if "turn" in node_data:
-		turn = node_data.turn
-	if "player_id" in node_data:
-		player_id = node_data.player_id
-	if "player_name" in node_data:
-		player_name = node_data.player_name
-	if "warp_speed" in node_data:
-		warp_speed = node_data.warp_speed
+func load_pre_ready(data: Dictionary) -> void:
+	if "transform" in data:
+		transform = str_to_var(data.transform)
 
 
 #can reference @onready vars now
-func load_post_ready(node_data: Dictionary) -> void:
-	#transform = str_to_var(node_data["transform"])
-	if "transform" in node_data:
-		character.transform = str_to_var(node_data.transform)
-	if "age" in node_data:
-		age.age = node_data.age
+func load_post_ready(data: Dictionary) -> void:
+	if "age" in data:
+		age.age = data.age
 	#TODO maybe find a wait to get an event when this node is added to the scenetree
-	if "left_inventory" in node_data and node_data.left_inventory:
-		var l: Node = world.find_child(node_data.left_inventory)
+	if "left_inventory" in data and data.left_inventory:
+		var l: Node = world.find_child(data.left_inventory, true, false)
 		if l: left_inventory = l
 		else:
 			world.items.child_entered_tree.connect(func(child: Node) -> void:
-				if child.name == node_data.left_inventory:
+				if child.name == data.left_inventory:
 					left_inventory = child
 			)
-	if "right_inventory" in node_data and node_data.right_inventory:
-		var r: Node = world.find_child(node_data.right_inventory, true, false)
+	if "right_inventory" in data and data.right_inventory:
+		var r: Node = world.find_child(data.right_inventory, true, false)
 		if r: right_inventory = r
 		else:
 			world.items.child_entered_tree.connect(func(child: Node) -> void:
-				if child.name == node_data.right_inventory:
+				if child.name == data.right_inventory:
 					right_inventory = child
 			)
 

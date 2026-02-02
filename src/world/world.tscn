@@ -77,7 +77,7 @@ spawn_path = NodePath("../Characters")
 unique_name_in_owner = true
 
 [node name="FloraSpawner" type="MultiplayerSpawner" parent="." unique_id=492482521]
-_spawnable_scenes = PackedStringArray("uid://c1e46m2pfqiji", "uid://damvmfs7dqebu", "uid://cxp2l820hl2q8")
+_spawnable_scenes = PackedStringArray("uid://c1e46m2pfqiji", "uid://damvmfs7dqebu", "uid://cxp2l820hl2q8", "uid://ccubaycjp0spr", "uid://qhpn0xnkgnm7", "uid://du6jyqw1yoah8")
 spawn_path = NodePath("../Flora")
 
 [node name="Fauna" type="Node3D" parent="." unique_id=727120612]

@@ -52,12 +52,8 @@ func _physics_process(_delta: float) -> void:
 		#_set_scale( Vector3(s, s, s))
 
 
-func pick_up() -> Array[MarbleItem]:
-	print('pick up')
-	queue_free()
-	var i: MarbleItem = MarbleItem.new()
-	i.name = "Apple"
-	return [i]
+func pick_up(_hand: MarbleCharacter.INTERACT, _o: Array[Object]) -> Array:
+	return [ self ]
 
 
 func _set_scale(s: Vector3) -> void:
@@ -106,6 +102,18 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 			break
 
 
+func get_subject_verbs() -> Array[Action]:
+	return []
+
+
+func get_object_verbs(action: String = "pick_up") -> Array[Action]:
+	match action:
+		'pick_up':
+			return [Action.new('pick_up', pick_up)]
+		_:
+			return []
+
+
 func calculate_warp() -> void:
 	var closest: WarpMonument = null
 	#var closest_distance=0
@@ -133,11 +141,15 @@ func get_data() -> Dictionary:
 	return save_dict
 
 
-func load_post_ready(node_data: Dictionary) -> void:
-	transform = str_to_var(node_data["transform"])
-	if "age" in node_data:
-		item.age.age = node_data.age
-	if "warp_speed" in node_data:
-		item.warp_speed = node_data.warp_speed
-	if "turn" in node_data:
-		turn = node_data.turn
+func load_pre_ready(data: Dictionary) -> void:
+	if "transform" in data:
+		transform = data.transform
+
+
+func load_post_ready(data: Dictionary) -> void:
+	if "age" in data:
+		item.age.age = data.age
+	if "warp_speed" in data:
+		item.warp_speed = data.warp_speed
+	if "turn" in data:
+		turn = data.turn

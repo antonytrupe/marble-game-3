@@ -33,12 +33,6 @@ func _multiplayer_signals() -> void:
 
 func _persistance_signals() -> void:
 	Persistance.load_object.connect(_load_object)
-	#Persistance.load_player.connect(_load_player)
-	#Persistance.load_character.connect(_load_character)
-	#Persistance.load_warp_monument.connect(_load_warp_monument)
-	#Persistance.load_tree.connect(_load_tree)
-	#Persistance.load_apple.connect(_load_apple)
-	#Persistance.load_monster.connect(_load_monster)
 	Persistance.load_finished.connect(_load_finished)
 
 
@@ -177,7 +171,7 @@ func command(cmd: String, _player: Player, character: MarbleCharacter) -> void:
 		"persist":
 			_persist()
 		"loc", "pos", "position", "location":
-			pass
+			debug("%.f %.f %.f" % [character.position.x, character.position.y, character.position.z])
 			print("%.f %.f %.f" % [character.position.x, character.position.y, character.position.z])
 		"s", "switch":
 			print("switch")
@@ -207,6 +201,11 @@ func command(cmd: String, _player: Player, character: MarbleCharacter) -> void:
 			character.add_action(count, frequency)
 		"spawn", "/spawn":
 			match parts[1]:
+				"log", "logs":
+					var count: int = 1
+					if parts.size() >= 3:
+						count = int(parts[2])
+					_spawn_logs(count, character.position)
 				"axe":
 					_spawn_axe(1, character.position)
 				"monument", "warp":
@@ -257,7 +256,7 @@ func _get_random_vector(radius: float, center: Vector3) -> Vector3:
 	var theta: float = randf() * 2 * PI
 	var x: float = center.x + r * cos(theta)
 	var z: float = center.z + r * sin(theta)
-	var y: float = world.get_ground_y(x, z) + 1
+	var y: float = world.get_ground_y(x, z)
 	return Vector3(x, y, z)
 
 
@@ -323,23 +322,21 @@ func _spawn_trees(count: int, center: Vector3, maturity_ratio: float = 0.0) -> v
 		world.flora.add_child(tree)
 
 
-func spawn_log(p_position: Vector3, maturity_ratio: float = 0.0) -> void:
-	var stump: MarbleLog = MarbleLog.scene.instantiate()
-	stump.name = stump.name + "%010d" % randi()
-	#TODO do this more righter
-	stump.position = p_position
+func spawn_log(p_position: Vector3) -> MarbleLog:
+	var l: MarbleLog = MarbleLog.scene.instantiate()
+	l.name = l.name + "%010d" % randi()
+	l.position = p_position
 
-	stump.ready.connect(func() -> void:
-		stump.age.age = stump.maturity * maturity_ratio
-		)
+	l.ready.connect(l.load_post_ready.bind({}))
 	#var chunk = chunks.get_chunk(tree.global_position)
-	world.flora.add_child(stump)
+	world.flora.add_child(l)
+	l.apply_torque_impulse(Vector3(1, 0, 0))
+	return l
 
 
-func spawn_stump(p_position: Vector3, maturity_ratio: float = 0.0) -> void:
+func spawn_stump(p_position: Vector3, maturity_ratio: float = 1.0) -> void:
 	var stump: Stump = Stump.scene.instantiate()
 	stump.name = stump.name + "%010d" % randi()
-	#TODO do this more righter
 	stump.position = p_position
 
 	stump.ready.connect(func() -> void:
@@ -354,12 +351,19 @@ func _spawn_apples(count: int, center: Vector3) -> void:
 	for i: int in count:
 		var apple: Apple3D = Apple3D.scene.instantiate()
 		apple.name = apple.name + "%010d" % randi()
-		#TODO do this more righter
 		apple.position = _get_random_vector(10, center)
-		apple.position.y = 15
 		#var chunk = chunks.get_chunk(tree.global_position)
 		world.flora.add_child(apple)
 
+
+func _spawn_logs(count: int, center: Vector3) -> void:
+	count = clampi(count, 1, 100)
+	for i: int in count:
+		var l: MarbleLog = MarbleLog.scene.instantiate()
+		l.name = l.name + "%010d" % randi()
+		l.position = _get_random_vector(10, center)
+		#var chunk = chunks.get_chunk(tree.global_position)
+		world.flora.add_child(l)
 
 func _spawn_stones(quantity: int, p: Vector3) -> void:
 	print('_spawn_stones')

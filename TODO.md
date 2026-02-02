@@ -20,6 +20,7 @@ TODO
 19. tree stuff
     1.  cutting trees
     2.  make trees drop sticks
+    3.  make apples fall when the tree is cut
 20. health stuff
     1.  hunger
     2.  eating

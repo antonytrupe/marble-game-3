@@ -40,7 +40,7 @@ project/assembly_name="Marble Game 3"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot-sqlite/plugin.cfg", "res://addons/gdUnit4/plugin.cfg")
+enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg", "res://addons/godot-sqlite/plugin.cfg")
 
 [gdunit4]
 
