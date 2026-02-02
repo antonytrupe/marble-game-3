@@ -1,4 +1,3 @@
-#@tool
 class_name Slider3D
 extends Node3D
 

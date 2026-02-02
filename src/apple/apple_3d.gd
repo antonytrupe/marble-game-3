@@ -1,4 +1,3 @@
-#@tool
 class_name Apple3D
 extends RigidBody3D
 

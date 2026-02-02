@@ -1,4 +1,3 @@
-#@tool
 class_name MarbleTree
 extends RigidBody3D
 
