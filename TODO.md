@@ -18,9 +18,11 @@ TODO
 17. ~~turn logic~~
 18. delete functionality
 19. tree stuff
-    1.  cutting trees
+    1.  ~~cutting trees~~
     2.  make trees drop sticks
     3.  make apples fall when the tree is cut
+    4.  scale logs 
+    5.  polish tree models
 20. health stuff
     1.  hunger
     2.  eating
@@ -64,7 +66,7 @@ TODO
 41. fishing
     1.  fish
     2.  fishing rods
-42. put persisting in its own thread
+42. ~~put persisting in its own thread~~
 43. terrain stuff
     1.  make the server authoritative for terrain
     2.  saving terrain
@@ -72,3 +74,4 @@ TODO
 44. turning character head
 45. make persistance pick up new items automagically
 46. action economy system
+47. sync turns in a localized area

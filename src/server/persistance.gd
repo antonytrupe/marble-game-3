@@ -46,7 +46,7 @@ func _get_tables() -> void:
 
 func _init_db() -> void:
 	_db = SQLite.new()
-	_db.path = "res://server.db"
+	_db.path = "user://server.db"
 	_db.open_db()
 
 	_get_tables()
