@@ -160,6 +160,8 @@ func _start_turn(_turns: Array) -> void:
 
 
 func _update_label() -> void:
+	if not is_node_ready():
+		return
 	var r: float = float(age.age) / float(maturity)
 	var s: float = clampf(r, 0.1, 1.0)
 	if label:

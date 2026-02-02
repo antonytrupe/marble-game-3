@@ -14,7 +14,7 @@ var turn: int = 0
 
 @onready var meshes: Array[MeshInstance3D] = [
 	%TrunkMesh1, %TrunkMesh2, %TrunkMesh3, %TrunkMesh4,
-	 %TrunkMesh6, %TrunkMesh7,%TrunkMesh8,%TrunkMesh9,%TrunkMesh10,
+	%TrunkMesh6, %TrunkMesh7, %TrunkMesh8, %TrunkMesh9, %TrunkMesh10,
 	]
 @onready var age: MarbleAge = $Age
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D

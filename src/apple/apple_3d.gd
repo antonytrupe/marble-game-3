@@ -142,7 +142,7 @@ func get_data() -> Dictionary:
 
 func load_pre_ready(data: Dictionary) -> void:
 	if "transform" in data:
-		transform = data.transform
+		transform = str_to_var(data.transform)
 
 
 func load_post_ready(data: Dictionary) -> void:

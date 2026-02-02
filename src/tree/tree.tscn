@@ -47,7 +47,7 @@ properties/4/path = NodePath(".:chop_stage")
 properties/4/spawn = true
 properties/4/replication_mode = 2
 
-[sub_resource type="Shader" id="Shader_h24r6"]
+[sub_resource type="Shader" id="Shader_55c6y"]
 resource_local_to_scene = true
 code = "shader_type spatial;
 render_mode cull_front, unshaded;
@@ -66,17 +66,17 @@ void fragment() {
     ALPHA = intensity;
 }"
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_rrnf1"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oge1k"]
 resource_local_to_scene = true
 render_priority = 0
-shader = SubResource("Shader_h24r6")
+shader = SubResource("Shader_55c6y")
 shader_parameter/highlight_color = Color(0, 0, 1, 1)
 shader_parameter/intensity = 0.0
 shader_parameter/outline_width = 0.1
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_8eyh1"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_xavw4"]
 resource_local_to_scene = true
-material = SubResource("ShaderMaterial_rrnf1")
+material = SubResource("ShaderMaterial_oge1k")
 top_radius = 0.8
 bottom_radius = 1.0
 height = 10.0
@@ -172,7 +172,7 @@ font_size = 128
 [node name="HighlightMeshInstance3D" parent="." unique_id=973307759 instance=ExtResource("3_kguxu")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
-mesh = SubResource("CylinderMesh_8eyh1")
+mesh = SubResource("CylinderMesh_xavw4")
 
 [node name="Age" parent="." unique_id=1655969799 instance=ExtResource("4_tqj8e")]
 
