@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://bm4xlm4n6hqkm" path="res://src/client/client.gd" id="1_lgb4g"]
 [ext_resource type="Script" uid="uid://jnoxhwe83f6c" path="res://src/client/chat_input.gd" id="2_1drpi"]
 [ext_resource type="PackedScene" uid="uid://nwnomeygl26l" path="res://src/window/window.tscn" id="3_40k8x"]
-[ext_resource type="PackedScene" uid="uid://ndv046sjn52g" path="res://src/inventory/inventory_window.tscn" id="3_78v8x"]
 [ext_resource type="Shader" uid="uid://dgingokxm04i5" path="res://src/client/crosshairs.gdshader" id="5_c8hrx"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qlar1"]
@@ -36,35 +35,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
-
-[node name="Inventory" parent="." unique_id=568910922 instance=ExtResource("3_78v8x")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -256.0
-offset_top = -256.0
-offset_right = 256.0
-offset_bottom = 256.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="Inventory" unique_id=425157419]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 32
-theme_override_constants/margin_right = 32
-theme_override_constants/margin_bottom = 32
 
 [node name="ChatWindow" parent="." unique_id=220595147 instance=ExtResource("3_40k8x")]
 unique_name_in_owner = true
@@ -112,5 +82,3 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("2_1drpi")
-
-[connection signal="current_character_updated" from="." to="Inventory" method="_on_client_current_character_updated"]

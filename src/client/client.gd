@@ -6,7 +6,7 @@ signal current_character_updated(character: MarbleCharacter)
 @onready var server: Server = $/root/Game/Server
 @onready var world: World = $/root/Game/World
 @onready var main_menu: MarbleWindow = $/root/Game/MainMenu
-@onready var inventory: InventoryWindow = %Inventory
+#@onready var inventory: InventoryWindow = %Inventory
 @onready var chat_text_edit: TextEdit = %ChatInput
 @onready var chat_window: MarbleWindow = %ChatWindow
 var current_character: MarbleCharacter
@@ -68,6 +68,7 @@ func _input(event: InputEvent) -> void:
 					current_character.server_turn(event.relative)
 				else:
 					current_character.server_turn.rpc_id(1, event.relative)
+					#current_character.server_turn(event.relative)
 			else:
 				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -89,8 +90,8 @@ func _unhandled_input(event: InputEvent) -> void:
 					current_character.interact.rpc_id(1, MarbleCharacter.INTERACT.LEFT)
 
 #			inventory
-			if Input.is_action_just_pressed("inventory"):
-				inventory.visible = !inventory.visible
+			#if Input.is_action_just_pressed("inventory"):
+				#inventory.visible = !inventory.visible
 
 			# Jump
 			if Input.is_action_just_pressed("jump") or \
@@ -115,7 +116,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				current_character.server_move(input_dir)
 			else:
 				current_character.server_move.rpc_id(1, input_dir)
-				#server_move(input_dir)
+				#current_character.server_move(input_dir)
 
 
 		if event is InputEventMouseButton:
@@ -126,6 +127,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					current_character.server_camera_zoom(scroll_amount)
 				else:
 					current_character.server_camera_zoom.rpc_id(1, scroll_amount)
+					#current_character.server_camera_zoom(scroll_amount)
 
 			#handle moving the camera backwards
 			if (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN)):
@@ -134,6 +136,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					current_character.server_camera_zoom(scroll_amount)
 				else:
 					current_character.server_camera_zoom.rpc_id(1, scroll_amount)
+					#current_character.server_camera_zoom(scroll_amount)
 
 
 	if Input.is_action_just_pressed("escape"):

@@ -12,7 +12,7 @@ static var scene: Resource = preload("res://src/apple/apple_3d.tscn")
 
 var turn: int = 0
 var _is_on_floor: bool = false
-var tree:MarbleTree
+var tree: MarbleTree
 
 @onready var collision_shape_3d: CollisionShape3D = %CollisionShape3D
 @onready var mesh_instance_3d: MeshInstance3D = $MeshInstance3D
@@ -24,17 +24,16 @@ var tree:MarbleTree
 @onready var world: World = $/root/Game/World
 
 func _ready() -> void:
-	pass
 	#timer.wait_time=MarbleAge.SECONDS_IN_TURN/warp_speed
 	#timer.start()
 	#timer.stop()
 	await get_tree().physics_frame
-	if not is_on_floor() and not tree:
+	if not is_on_floor() and not tree and is_server():
 		fall()
 
 
 func _physics_process(_delta: float) -> void:
-	if is_on_floor() and linear_velocity.length() < 0.01 and angular_velocity.length() < 0.01:
+	if not freeze and is_on_floor() and linear_velocity.length() < 0.01 and angular_velocity.length() < 0.01:
 		freeze = true
 	#if is_server():
 		#pass
@@ -145,7 +144,7 @@ func get_data() -> Dictionary:
 		"age": item.age.age,
 		"turn": turn,
 		"warp_speed": item.warp_speed,
-		"tree":str(tree.name) if tree else ""
+		"tree": str(tree.name) if tree else ""
 	}
 	return save_dict
 
@@ -166,8 +165,8 @@ func load_post_ready(data: Dictionary) -> void:
 		var t: MarbleTree = world.find_child(data.tree, true, false)
 		if t: tree = t
 		else:
-			var f:Callable
-			f=func(child: Node) -> void:
+			var f: Callable
+			f = func(child: Node) -> void:
 				if child.name == data.tree:
 					tree = child
 					#world.flora.child_entered_tree.disconnect(f)

@@ -101,13 +101,13 @@ func _physics_process(delta: float) -> void:
 	character.move_and_slide()
 	if right_inventory and right_inventory is RigidBody3D:
 	# Smoothly move object to hold position
-		right_inventory.freeze_mode=RigidBody3D.FreezeMode.FREEZE_MODE_STATIC
+		right_inventory.freeze_mode = RigidBody3D.FreezeMode.FREEZE_MODE_STATIC
 		var target_pos: Vector3 = inventory_right_marker.global_position
 		right_inventory.global_position = right_inventory.global_position.lerp(target_pos, 30 * delta)
 		right_inventory.global_rotation = inventory_right_marker.global_rotation # Add the gravity.
 	if left_inventory:
 	# Smoothly move object to hold position
-		left_inventory.freeze_mode=RigidBody3D.FreezeMode.FREEZE_MODE_STATIC
+		left_inventory.freeze_mode = RigidBody3D.FreezeMode.FREEZE_MODE_STATIC
 		var target_pos: Vector3 = inventory_left_marker.global_position
 		left_inventory.global_position = left_inventory.global_position.lerp(target_pos, 30 * delta)
 		left_inventory.global_rotation = inventory_left_marker.global_rotation # Add the gravity.
@@ -260,8 +260,7 @@ func calculate_warp() -> void:
 
 @rpc("any_peer", "call_local")
 func server_jump() -> void:
-	if !is_server():
-		pass
+	#if !is_server():
 		#return
 	if character.is_on_floor() and warp_speed <= MAX_CONTROLLED_WARP:
 		character.velocity.y = JUMP_VELOCITY * min(warp_speed, MAX_CONTROLLED_WARP)
@@ -270,8 +269,7 @@ func server_jump() -> void:
 
 @rpc("any_peer", "call_local")
 func server_fly() -> void:
-	if !is_server():
-		pass
+	#if !is_server():
 		#return
 	#stop flying
 	if flying:
@@ -298,10 +296,10 @@ func _start_turn(_turns: Array) -> void:
 	pass
 
 
-@rpc("any_peer")
+@rpc("any_peer", "call_local")
 func server_move(d: Vector2) -> void:
-	if !is_server():
-		return
+	#if !is_server():
+		#return
 	var direction: Vector3 = (character.transform.basis.x * d.x + character.transform.basis.z * d.y).normalized()
 	var min_warp_speed: int = min(warp_speed, MAX_CONTROLLED_WARP)
 	var move_speed: float = mode * SPEED_MULTIPLIER * speed * min_warp_speed
@@ -335,18 +333,18 @@ func _set_warp_speed(w: int) -> void:
 	_update_label()
 
 
-@rpc("any_peer")
+@rpc("any_peer", "call_local")
 func server_turn(value: Vector2) -> void:
-	if !is_server():
-		return
+	#if !is_server():
+		#return
 	character.rotate_y(-value.x * .005)
 	_rotate_camera(value)
 
 
-@rpc("any_peer")
+@rpc("any_peer", "call_local")
 func server_camera_zoom(scroll_amount: float) -> void:
-	if !is_server():
-		return
+	#if !is_server():
+		#return
 	var direction: Vector3 = camera.transform.basis.z
 	camera.position += direction * scroll_amount * .1
 	camera.position.z = max(camera.position.z, 0)
@@ -388,8 +386,8 @@ func load_post_ready(data: Dictionary) -> void:
 		var l: Node = world.find_child(data.left_inventory, true, false)
 		if l: left_inventory = l
 		else:
-			var f:Callable
-			f=func(child: Node) -> void:
+			var f: Callable
+			f = func(child: Node) -> void:
 				if child.name == data.left_inventory:
 					left_inventory = child
 					#world.items.child_entered_tree.disconnect(f)
@@ -400,8 +398,8 @@ func load_post_ready(data: Dictionary) -> void:
 		var r: Node = world.find_child(data.right_inventory, true, false)
 		if r: right_inventory = r
 		else:
-			var f:Callable
-			f=func(child: Node) -> void:
+			var f: Callable
+			f = func(child: Node) -> void:
 				if child.name == data.right_inventory:
 					right_inventory = child
 					#world.items.child_entered_tree.disconnect(f)
