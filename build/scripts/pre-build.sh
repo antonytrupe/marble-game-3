@@ -24,6 +24,6 @@ echo "Build number incremented to $NEW_VERSION"
 
 # CRITICAL STEP: Add the modified file back to the git staging area,
 # otherwise the change won't be included in this commit.
-git add "$VERSION_FILE"
+# git add "$VERSION_FILE"
 
 exit 0 # Exit with 0 to allow the commit to proceed
