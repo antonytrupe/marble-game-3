@@ -12,6 +12,7 @@ static var scene: Resource = preload("res://src/apple/apple_3d.tscn")
 
 var turn: int = 0
 var _is_on_floor: bool = false
+var tree:MarbleTree
 
 @onready var collision_shape_3d: CollisionShape3D = %CollisionShape3D
 @onready var mesh_instance_3d: MeshInstance3D = $MeshInstance3D
@@ -20,31 +21,39 @@ var _is_on_floor: bool = false
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D
 @onready var flora: Node = $/root/Game/World/Flora
 @onready var item: MarbleItem = $MarbleItem
+@onready var world: World = $/root/Game/World
 
 func _ready() -> void:
 	pass
 	#timer.wait_time=MarbleAge.SECONDS_IN_TURN/warp_speed
 	#timer.start()
 	#timer.stop()
+	await get_tree().physics_frame
+	if not is_on_floor() and not tree:
+		fall()
 
 
 func _physics_process(_delta: float) -> void:
-	if is_server():
+	if is_on_floor() and linear_velocity.length() < 0.01 and angular_velocity.length() < 0.01:
+		freeze = true
+	#if is_server():
+		#pass
 		#put it back to sleep when its done falling/rolling
-		if is_on_floor() and not freeze and linear_velocity.distance_squared_to(Vector3(0, 0, 0)) < .0001:
-			print('freezing')
-			set_deferred("freeze", true)
-			set_deferred("sleeping", true)
+		#if is_on_floor() and not freeze and linear_velocity.distance_squared_to(Vector3(0, 0, 0)) < 1:
+			#print('freezing')
+			#set_deferred("freeze", true)
+			#set_deferred("sleeping", true)
+			#freeze_mode=RigidBody3D.FREEZE_MODE_STATIC
+#
+		#@warning_ignore("narrowing_conversion")
+		#var new_turn: int = item.age.age / MarbleAge.SECONDS_IN_TURN + 1
+		#_start_turn(range(self.turn + 1, new_turn + 1))
+		#self.turn = new_turn
 
-		@warning_ignore("narrowing_conversion")
-		var new_turn: int = item.age.age / MarbleAge.SECONDS_IN_TURN + 1
-		_start_turn(range(self.turn + 1, new_turn + 1))
-		self.turn = new_turn
-
-		if item.age.age > longevity:
-			set_deferred("freeze", true)
-			set_deferred("sleeping", true)
-			queue_free()
+		#if item.age.age > longevity:
+			#set_deferred("freeze", true)
+			#set_deferred("sleeping", true)
+			#queue_free()
 
 		#var r = float(age.age) / float(maturity)
 		#var s = clampf(r, .1, 1.0)
@@ -63,7 +72,7 @@ func _set_scale(s: Vector3) -> void:
 	highlight_mesh_instance_3d.scale = s
 
 
-func _fall() -> void:
+func fall() -> void:
 	set_deferred("freeze", false)
 	set_deferred("sleeping", false)
 	set_deferred("freeze_mode", RigidBody3D.FREEZE_MODE_KINEMATIC)
@@ -78,7 +87,7 @@ func _start_turn(_turns: Array) -> void:
 	#
 	if not is_on_floor() and item.age.age > maturity:
 		#print('apple fall')
-		_fall()
+		fall()
 
 
 func is_on_floor() -> bool:
@@ -136,6 +145,7 @@ func get_data() -> Dictionary:
 		"age": item.age.age,
 		"turn": turn,
 		"warp_speed": item.warp_speed,
+		"tree":str(tree.name) if tree else ""
 	}
 	return save_dict
 
@@ -152,3 +162,13 @@ func load_post_ready(data: Dictionary) -> void:
 		item.warp_speed = data.warp_speed
 	if "turn" in data:
 		turn = data.turn
+	if "tree" in data and data.tree:
+		var t: MarbleTree = world.find_child(data.tree, true, false)
+		if t: tree = t
+		else:
+			var f:Callable
+			f=func(child: Node) -> void:
+				if child.name == data.tree:
+					tree = child
+					#world.flora.child_entered_tree.disconnect(f)
+			world.flora.child_entered_tree.connect(f)

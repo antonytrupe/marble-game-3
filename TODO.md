@@ -20,9 +20,14 @@ TODO
 19. tree stuff
     1.  ~~cutting trees~~
     2.  make trees drop sticks
-    3.  make apples fall when the tree is cut
-    4.  scale logs 
+    3.  ~~make apples fall when the tree is cut~~
+    4.  ~~scale logs~~
     5.  polish tree models
+    6.  making boards
+    7.  change tree meshes to be two pills that separate
+    8.  picking up logs
+    9.  change weight of tree based on size
+    10. change weight of logs based on size
 20. health stuff
     1.  hunger
     2.  eating
@@ -48,30 +53,34 @@ TODO
     2.  making tools
     3.  making lumber
     4.  making walls/buildings
-30. making fire
-31. smelting
-32. xp
-33. spells
-34. limit high warp speeds to zoomed out
-35. npc dialogu(nobodywho?)
-36. ~~crosshairs~~
-37. able to drag things too big for inventory
-38. combat
-39. factions
-40. monsters
+    5.  making fire
+    6.  smelting
+30. xp
+31. spells
+32. limit high warp speeds to zoomed out
+33. npc dialog(nobodywho?)
+34. ~~crosshairs~~
+35. able to drag things too big for inventory
+36. monsters
     1.  multiplying
     2.  morale
-    3.  ~~aging~~
-    4.  ~~warp speed~~
-41. fishing
+    3.  factions
+    4.  combat
+    5.  ~~aging~~
+    6.  ~~warp speed~~
+37. fishing
     1.  fish
     2.  fishing rods
-42. ~~put persisting in its own thread~~
-43. terrain stuff
+38. ~~put persisting in its own thread~~
+39. terrain stuff
     1.  make the server authoritative for terrain
     2.  saving terrain
     3.  level of detail terrain
-44. turning character head
-45. make persistance pick up new items automagically
-46. action economy system
-47. sync turns in a localized area
+40. turning character head
+41. make persistance pick up new items automagically
+42. action economy system
+43. sync turns in a localized area
+44. move warp_speed to age scene
+45. make logs sink into the ground
+    1.  Voxel Tools for Godot
+46. cache is_server

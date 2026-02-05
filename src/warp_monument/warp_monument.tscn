@@ -48,7 +48,7 @@ size = Vector3(0.02, 0.001, 0.35)
 albedo_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qy5qu"]
-albedo_color = Color(0.16206557, 0.1620656, 0.16206557, 1)
+albedo_color = Color(0.10747983, 0.107479684, 0.10747973, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_usfmp"]
 material = SubResource("StandardMaterial3D_qy5qu")
@@ -131,6 +131,13 @@ material = SubResource("ShaderMaterial_qy5qu")
 radius = 1.0
 height = 2.0
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v6yrp"]
+albedo_color = Color(0.14767197, 0.14767176, 0.14767179, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_10mn5"]
+material = SubResource("StandardMaterial3D_v6yrp")
+size = Vector3(1, 0.5, 0.1)
+
 [node name="WarpMonument" type="Node3D" unique_id=656634854 groups=["persist"]]
 script = ExtResource("1_ln326")
 
@@ -143,7 +150,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.022458851, 2.1898332, 3.552
 text = "01:27:27"
 
 [node name="Clock" type="MeshInstance3D" parent="." unique_id=1713451904]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.022458851, 1.6232744, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1.5, 0)
 mesh = SubResource("CylinderMesh_elqtf")
 
 [node name="SecondHand" type="Node3D" parent="Clock" unique_id=487076076]
@@ -175,7 +182,7 @@ mesh = SubResource("BoxMesh_fyt7a")
 surface_material_override/0 = SubResource("StandardMaterial3D_rydde")
 
 [node name="Calendar" type="Node3D" parent="." unique_id=1626850357]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0111294985, 0.5703186, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Calendar" unique_id=888249606]
 mesh = SubResource("BoxMesh_usfmp")
@@ -200,6 +207,7 @@ text = "18"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.11)
 
 [node name="MonthOfYearLabel" type="Label3D" parent="Calendar/Node3D2" unique_id=1190924728]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.07766676, 0)
 text = "March"
 
 [node name="WarpSlider" parent="." unique_id=2067929312 instance=ExtResource("2_kycxd")]
@@ -226,6 +234,11 @@ shape = SubResource("SphereShape3D_rydde")
 [node name="Sphere" parent="ScannerArea" unique_id=255705316 instance=ExtResource("3_elqtf")]
 unique_name_in_owner = true
 mesh = SubResource("SphereMesh_6dixx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1981172211]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+mesh = SubResource("BoxMesh_10mn5")
+skeleton = NodePath("../..")
 
 [connection signal="synchronized" from="MultiplayerSynchronizer" to="." method="_on_synchronized"]
 [connection signal="value_changed" from="WarpSlider" to="." method="_on_warp_slider_value_changed"]

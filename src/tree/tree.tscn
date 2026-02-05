@@ -1,19 +1,9 @@
 [gd_scene format=3 uid="uid://c1e46m2pfqiji"]
 
 [ext_resource type="Script" uid="uid://duyhummlm0gr1" path="res://src/tree/tree.gd" id="1_2omd0"]
-[ext_resource type="PackedScene" uid="uid://crb8v2nnl67hu" path="res://src/tree/trunk_mesh_1.scn" id="2_c5k3m"]
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_e4g3r"]
-[ext_resource type="PackedScene" uid="uid://d28ea5sdr7pvc" path="res://src/tree/trunk_mesh_2.scn" id="3_55c6y"]
 [ext_resource type="PackedScene" uid="uid://dhtfh7aumk85c" path="res://src/highlight/highlight.tscn" id="3_kguxu"]
-[ext_resource type="PackedScene" uid="uid://dimj47jn0qjq8" path="res://src/tree/trunk_mesh_3.res" id="4_oge1k"]
 [ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/marble_age.tscn" id="4_tqj8e"]
-[ext_resource type="PackedScene" uid="uid://d3738ir01m53g" path="res://src/tree/csg_stump.tscn" id="5_jrthf"]
-[ext_resource type="PackedScene" uid="uid://03qstda51ju8" path="res://src/tree/trunk_mesh_4.scn" id="5_xavw4"]
-[ext_resource type="PackedScene" uid="uid://ev3xbsavtbge" path="res://src/tree/trunk_mesh_6.scn" id="6_lbsr4"]
-[ext_resource type="PackedScene" uid="uid://b88jq0ne2tppm" path="res://src/tree/trunk_mesh_7.scn" id="7_31uea"]
-[ext_resource type="PackedScene" uid="uid://j0bajx8u5s2g" path="res://src/tree/trunk_mesh_8.scn" id="8_n1dyv"]
-[ext_resource type="PackedScene" uid="uid://7otn8e4jbguk" path="res://src/tree/trunk_mesh_9.scn" id="9_nn2jw"]
-[ext_resource type="PackedScene" uid="uid://08wtptvmkbjx" path="res://src/tree/trunk_mesh_10.scn" id="10_gcpgn"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_k6sc6"]
 height = 10.0
@@ -47,7 +37,7 @@ properties/4/path = NodePath(".:chop_stage")
 properties/4/spawn = true
 properties/4/replication_mode = 2
 
-[sub_resource type="Shader" id="Shader_55c6y"]
+[sub_resource type="Shader" id="Shader_tqj8e"]
 resource_local_to_scene = true
 code = "shader_type spatial;
 render_mode cull_front, unshaded;
@@ -66,20 +56,74 @@ void fragment() {
     ALPHA = intensity;
 }"
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_oge1k"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jrthf"]
 resource_local_to_scene = true
 render_priority = 0
-shader = SubResource("Shader_55c6y")
+shader = SubResource("Shader_tqj8e")
 shader_parameter/highlight_color = Color(0, 0, 1, 1)
 shader_parameter/intensity = 0.0
 shader_parameter/outline_width = 0.1
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_xavw4"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_5lsbm"]
 resource_local_to_scene = true
-material = SubResource("ShaderMaterial_oge1k")
+material = SubResource("ShaderMaterial_jrthf")
 top_radius = 0.8
 bottom_radius = 1.0
 height = 10.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_mnorw"]
+top_radius = 1.0
+bottom_radius = 1.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tqj8e"]
+albedo_color = Color(0.21960784, 0.16078432, 0.06666667, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_c5k3m"]
+radius = 1.0
+height = 10.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jrthf"]
+albedo_color = Color(0.22004125, 0.16201201, 0.0674784, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_h24r6"]
+radius = 1.0
+height = 9.9
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_rrnf1"]
+radius = 1.0
+height = 9.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_8eyh1"]
+radius = 1.0
+height = 9.7
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ytjoa"]
+radius = 1.0
+height = 9.6
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_s63uj"]
+radius = 1.0
+height = 9.5
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_55c6y"]
+radius = 1.0
+height = 9.4
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_oge1k"]
+radius = 1.0
+height = 9.3
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_xavw4"]
+radius = 1.0
+height = 9.2
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_lbsr4"]
+radius = 1.0
+height = 9.1
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_31uea"]
+radius = 1.0
+height = 9.0
 
 [node name="Tree" type="RigidBody3D" unique_id=1643654767 groups=["persist"]]
 collision_layer = 4
@@ -94,36 +138,6 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
 shape = SubResource("CylinderShape3D_k6sc6")
 debug_fill = false
-
-[node name="TrunkMesh1" parent="." unique_id=1353250692 instance=ExtResource("2_c5k3m")]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, 0)
-
-[node name="TrunkMesh2" parent="." unique_id=1872880172 instance=ExtResource("3_55c6y")]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
-
-[node name="TrunkMesh3" parent="." unique_id=208987592 instance=ExtResource("4_oge1k")]
-unique_name_in_owner = true
-
-[node name="TrunkMesh4" parent="." unique_id=1832928303 instance=ExtResource("5_xavw4")]
-unique_name_in_owner = true
-
-[node name="TrunkMesh6" parent="." unique_id=1129480300 instance=ExtResource("6_lbsr4")]
-unique_name_in_owner = true
-
-[node name="TrunkMesh7" parent="." unique_id=1428075369 instance=ExtResource("7_31uea")]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.75, 0)
-
-[node name="TrunkMesh8" parent="." unique_id=321202524 instance=ExtResource("8_n1dyv")]
-unique_name_in_owner = true
-
-[node name="TrunkMesh9" parent="." unique_id=652693261 instance=ExtResource("9_nn2jw")]
-unique_name_in_owner = true
-
-[node name="TrunkMesh10" parent="." unique_id=1330681166 instance=ExtResource("10_gcpgn")]
-unique_name_in_owner = true
 
 [node name="LeftLeaves" type="MeshInstance3D" parent="." unique_id=100127190]
 unique_name_in_owner = true
@@ -163,6 +177,7 @@ replication_config = SubResource("SceneReplicationConfig_cbetc")
 
 [node name="Label3D" type="Label3D" parent="." unique_id=822432463]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 17.261553, 0)
+visible = false
 billboard = 1
 text = "Age:248979801
 Warp:100
@@ -172,10 +187,86 @@ font_size = 128
 [node name="HighlightMeshInstance3D" parent="." unique_id=973307759 instance=ExtResource("3_kguxu")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
-mesh = SubResource("CylinderMesh_xavw4")
+mesh = SubResource("CylinderMesh_5lsbm")
 
 [node name="Age" parent="." unique_id=1655969799 instance=ExtResource("4_tqj8e")]
 
-[node name="CSGStump" parent="." unique_id=1010834336 instance=ExtResource("5_jrthf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+[node name="StumpMesh" type="MeshInstance3D" parent="." unique_id=1294432193]
+mesh = SubResource("CylinderMesh_mnorw")
+surface_material_override/0 = SubResource("StandardMaterial3D_tqj8e")
+
+[node name="TrunkMesh0" type="MeshInstance3D" parent="." unique_id=2036245283]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+mesh = SubResource("CapsuleMesh_c5k3m")
+surface_material_override/0 = SubResource("StandardMaterial3D_jrthf")
+
+[node name="TrunkMesh1" type="MeshInstance3D" parent="." unique_id=183775163]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.05, 0)
 visible = false
+mesh = SubResource("CapsuleMesh_h24r6")
+surface_material_override/0 = SubResource("StandardMaterial3D_jrthf")
+
+[node name="TrunkMesh2" type="MeshInstance3D" parent="." unique_id=776397464]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.1, 0)
+visible = false
+mesh = SubResource("CapsuleMesh_rrnf1")
+surface_material_override/0 = SubResource("StandardMaterial3D_jrthf")
+
+[node name="TrunkMesh3" type="MeshInstance3D" parent="." unique_id=1918383199]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.15, 0)
+visible = false
+mesh = SubResource("CapsuleMesh_8eyh1")
+surface_material_override/0 = SubResource("StandardMaterial3D_jrthf")
+
+[node name="TrunkMesh4" type="MeshInstance3D" parent="." unique_id=744998356]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.2, 0)
+visible = false
+mesh = SubResource("CapsuleMesh_ytjoa")
+surface_material_override/0 = SubResource("StandardMaterial3D_jrthf")
+
+[node name="TrunkMesh5" type="MeshInstance3D" parent="." unique_id=1132542744]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.25, 0)
+visible = false
+mesh = SubResource("CapsuleMesh_s63uj")
+surface_material_override/0 = SubResource("StandardMaterial3D_jrthf")
+
+[node name="TrunkMesh6" type="MeshInstance3D" parent="." unique_id=1994601335]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.3, 0)
+visible = false
+mesh = SubResource("CapsuleMesh_55c6y")
+surface_material_override/0 = SubResource("StandardMaterial3D_jrthf")
+
+[node name="TrunkMesh7" type="MeshInstance3D" parent="." unique_id=1421475472]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.35, 0)
+visible = false
+mesh = SubResource("CapsuleMesh_oge1k")
+surface_material_override/0 = SubResource("StandardMaterial3D_jrthf")
+
+[node name="TrunkMesh8" type="MeshInstance3D" parent="." unique_id=1297656013]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.4, 0)
+visible = false
+mesh = SubResource("CapsuleMesh_xavw4")
+surface_material_override/0 = SubResource("StandardMaterial3D_jrthf")
+
+[node name="TrunkMesh9" type="MeshInstance3D" parent="." unique_id=1691825786]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.45, 0)
+visible = false
+mesh = SubResource("CapsuleMesh_lbsr4")
+surface_material_override/0 = SubResource("StandardMaterial3D_jrthf")
+
+[node name="TrunkMesh10" type="MeshInstance3D" parent="." unique_id=350195301]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, 0)
+visible = false
+mesh = SubResource("CapsuleMesh_31uea")
+surface_material_override/0 = SubResource("StandardMaterial3D_jrthf")

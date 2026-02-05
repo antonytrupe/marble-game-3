@@ -13,8 +13,7 @@ albedo_color = Color(0.3084838, 0.18790913, 0.08260072, 1)
 [sub_resource type="CylinderMesh" id="CylinderMesh_elrfv"]
 material = SubResource("StandardMaterial3D_elrfv")
 top_radius = 1.0
-bottom_radius = 1.0
-height = 1.0
+bottom_radius = 1.5
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_elrfv"]
 properties/0/path = NodePath(".:position")
@@ -23,6 +22,9 @@ properties/0/replication_mode = 2
 properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 2
+properties/2/path = NodePath(".:stump_scale")
+properties/2/spawn = true
+properties/2/replication_mode = 1
 
 [node name="Stump" type="RigidBody3D" unique_id=589599005 groups=["persist"]]
 collision_layer = 4
@@ -32,15 +34,16 @@ script = ExtResource("1_elrfv")
 metadata/_custom_type_script = "uid://c2soy7at5o3kt"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=578331107]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("CylinderShape3D_mm7tf")
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1026192150]
+unique_name_in_owner = true
+mesh = SubResource("CylinderMesh_elrfv")
+
 [node name="MarbleAge" parent="." unique_id=1789449314 instance=ExtResource("3_mm7tf")]
 unique_name_in_owner = true
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1026192150]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-mesh = SubResource("CylinderMesh_elrfv")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1657084282]
 replication_config = SubResource("SceneReplicationConfig_elrfv")

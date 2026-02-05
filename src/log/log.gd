@@ -2,12 +2,25 @@ class_name MarbleLog
 extends RigidBody3D
 
 static var scene: Resource = preload("res://src/log/log.tscn")
+@export var log_scale:float=1
+#@export var warp_speed: float = 1
 
-@onready var age: MarbleAge = $MarbleAge
+#var turn:int=0
+
+#@onready var age: MarbleAge = $MarbleAge
+@onready var mesh_instance_3d: MeshInstance3D = %MeshInstance3D
+@onready var collision_shape_3d: CollisionShape3D = %CollisionShape3D
 
 
 func _ready() -> void:
+
 	await get_tree().physics_frame
+
+	var s: float = clampf(log_scale, .01, 1.0)
+	#TODO don't scale the collisionbody
+	scale =Vector3(s, s, s)
+	#mesh_instance_3d.scale = Vector3(s, s, s)
+	#collision_shape_3d.scale=Vector3(s, s, s)
 
 	# Get the cylinder's local Y axis in world space
 	var local_up: Vector3 = global_transform.basis.y.normalized()
@@ -23,13 +36,25 @@ func _ready() -> void:
 		print("The cylinder has fallen over.")
 
 
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta: float) -> void:
+	pass
+	#label_3d.text = "Age:%.f\nWarp:%.f\nScale:%.2f" % [age.age, warp_speed, s]
+
+
+
+func is_server() -> bool:
+	return multiplayer.is_server()
+
+
 func get_data() -> Dictionary:
 	var data: Dictionary = {
 		"name": name,
 		"parent": str(get_parent().get_path()) if get_parent() else "",
 		"scene_file_path": get_scene_file_path(),
 		"transform": var_to_str(transform),
-		"age": age.age,
+		#"age": age.age,
+		"log_scale":log_scale
 	}
 	return data
 
@@ -37,8 +62,10 @@ func get_data() -> Dictionary:
 func load_pre_ready(data: Dictionary) -> void:
 	if "transform" in data:
 		transform = str_to_var(data.transform)
+	if "log_scale" in data:
+		log_scale = log_scale
 
-
-func load_post_ready(data: Dictionary) -> void:
-	if "age" in data:
-		age.age = data.age
+func load_post_ready(_data: Dictionary) -> void:
+	pass
+	#if "age" in data:
+		#age.age = data.age

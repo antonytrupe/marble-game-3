@@ -99,13 +99,15 @@ func _physics_process(delta: float) -> void:
 		else:
 			character.velocity.y = 0
 	character.move_and_slide()
-	if right_inventory:
+	if right_inventory and right_inventory is RigidBody3D:
 	# Smoothly move object to hold position
+		right_inventory.freeze_mode=RigidBody3D.FreezeMode.FREEZE_MODE_STATIC
 		var target_pos: Vector3 = inventory_right_marker.global_position
 		right_inventory.global_position = right_inventory.global_position.lerp(target_pos, 30 * delta)
 		right_inventory.global_rotation = inventory_right_marker.global_rotation # Add the gravity.
 	if left_inventory:
 	# Smoothly move object to hold position
+		left_inventory.freeze_mode=RigidBody3D.FreezeMode.FREEZE_MODE_STATIC
 		var target_pos: Vector3 = inventory_left_marker.global_position
 		left_inventory.global_position = left_inventory.global_position.lerp(target_pos, 30 * delta)
 		left_inventory.global_rotation = inventory_left_marker.global_rotation # Add the gravity.
@@ -187,7 +189,7 @@ func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
 				return false
 				)
 			)
-		print(did_action)
+		#print(did_action)
 
 
 		# Priority 1: Trade
@@ -386,18 +388,25 @@ func load_post_ready(data: Dictionary) -> void:
 		var l: Node = world.find_child(data.left_inventory, true, false)
 		if l: left_inventory = l
 		else:
-			world.items.child_entered_tree.connect(func(child: Node) -> void:
+			var f:Callable
+			f=func(child: Node) -> void:
 				if child.name == data.left_inventory:
 					left_inventory = child
-			)
+					#world.items.child_entered_tree.disconnect(f)
+
+			world.items.child_entered_tree.connect(f)
+
 	if "right_inventory" in data and data.right_inventory:
 		var r: Node = world.find_child(data.right_inventory, true, false)
 		if r: right_inventory = r
 		else:
-			world.items.child_entered_tree.connect(func(child: Node) -> void:
+			var f:Callable
+			f=func(child: Node) -> void:
 				if child.name == data.right_inventory:
 					right_inventory = child
-			)
+					#world.items.child_entered_tree.disconnect(f)
+
+			world.items.child_entered_tree.connect(f)
 
 
 func _update_label() -> void:
