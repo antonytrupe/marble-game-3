@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://bsxehrtv1ug1y"]
+
+[ext_resource type="Script" uid="uid://cpmf2wcjikshe" path="res://src/actions_ui/action_h_box.gd" id="1_23dwa"]
+[ext_resource type="Script" uid="uid://d12qpkn67h0km" path="res://src/actions_ui/button_3.gd" id="2_38rhn"]
+
+[node name="VBoxContainer" type="VBoxContainer" unique_id=309762767]
+offset_left = 164.0
+offset_right = 164.0
+offset_bottom = 42.0
+script = ExtResource("1_23dwa")
+
+[node name="DropIndicator" type="ColorRect" parent="." unique_id=1014548026]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+color = Color(0.3665946, 0.3665946, 0.36659458, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=967167228]
+layout_mode = 2
+
+[node name="Move" type="Button" parent="HBoxContainer" unique_id=2135272012]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 1
+theme_override_font_sizes/font_size = 24
+text = "≡"
+script = ExtResource("2_38rhn")
+
+[node name="Label" type="Label" parent="HBoxContainer" unique_id=1060828144]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 2
+text = "Chop Tree"
+
+[node name="Repeat" type="Button" parent="HBoxContainer" unique_id=1705746537]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+mouse_filter = 1
+toggle_mode = true
+text = "⟳"
+
+[node name="Cancel" type="Button" parent="HBoxContainer" unique_id=1621674984]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 1
+text = "X"
+
+[connection signal="pressed" from="HBoxContainer/Cancel" to="HBoxContainer" method="_on_cancel_pressed"]

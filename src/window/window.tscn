@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bmus6y86cmcye" path="res://src/window/window.gd" id="1_3n81k"]
 [ext_resource type="Texture2D" uid="uid://d2ytvny64xpfk" path="res://src/window/9patchpanel.png" id="1_lhejw"]
 
-[node name="Window" type="Control" unique_id=2066024384]
+[node name="MarbleWindow" type="Control" unique_id=172443875]
 clip_contents = true
 custom_minimum_size = Vector2(96, 96)
 layout_mode = 3
@@ -12,6 +12,7 @@ offset_right = 96.0
 offset_bottom = 96.0
 mouse_filter = 1
 script = ExtResource("1_3n81k")
+metadata/_custom_type_script = "uid://bmus6y86cmcye"
 
 [node name="NinePatchRect" type="NinePatchRect" parent="." unique_id=723065910]
 clip_contents = true

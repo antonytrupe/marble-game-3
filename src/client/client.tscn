@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://jnoxhwe83f6c" path="res://src/client/chat_input.gd" id="2_1drpi"]
 [ext_resource type="PackedScene" uid="uid://nwnomeygl26l" path="res://src/window/window.tscn" id="3_40k8x"]
 [ext_resource type="Shader" uid="uid://dgingokxm04i5" path="res://src/client/crosshairs.gdshader" id="5_c8hrx"]
+[ext_resource type="PackedScene" uid="uid://bjy2wbdo6fle4" path="res://src/actions_ui/marble_actions.tscn" id="5_d1n1t"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qlar1"]
 shader = ExtResource("5_c8hrx")
@@ -26,7 +27,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_lgb4g")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=254274000]
+[node name="CrossHairs" type="ColorRect" parent="." unique_id=254274000]
+visible = false
 material = SubResource("ShaderMaterial_qlar1")
 layout_mode = 1
 anchors_preset = 15
@@ -82,3 +84,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("2_1drpi")
+
+[node name="MarbleActionsWindow" parent="." unique_id=1148351150 instance=ExtResource("5_d1n1t")]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -259.0
+offset_top = 93.0
+offset_right = 0.0
+offset_bottom = 490.0
+grow_horizontal = 0

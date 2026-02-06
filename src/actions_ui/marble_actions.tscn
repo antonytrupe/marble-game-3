@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://bjy2wbdo6fle4"]
+
+[ext_resource type="PackedScene" uid="uid://nwnomeygl26l" path="res://src/window/window.tscn" id="1_bi5w4"]
+[ext_resource type="Script" uid="uid://b6jxquwn3mp1f" path="res://src/actions_ui/marble_actions.gd" id="1_qtck7"]
+[ext_resource type="PackedScene" uid="uid://bsxehrtv1ug1y" path="res://src/actions_ui/action_h_box.tscn" id="2_qtck7"]
+
+[node name="MarbleActionsWindow" type="Control" unique_id=1148351150]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 259.0
+offset_bottom = 278.0
+script = ExtResource("1_qtck7")
+
+[node name="MarbleWindow" parent="." unique_id=172443875 instance=ExtResource("1_bi5w4")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarbleWindow" unique_id=1181436305]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 28
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarbleWindow/MarginContainer2" unique_id=686189218]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarbleWindow/MarginContainer2/ScrollContainer" unique_id=764465172]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_right = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarbleWindow/MarginContainer2/ScrollContainer/MarginContainer" unique_id=630783089]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" parent="MarbleWindow/MarginContainer2/ScrollContainer/MarginContainer/VBoxContainer" unique_id=309762767 instance=ExtResource("2_qtck7")]
+layout_mode = 2
+
+[node name="Label" parent="MarbleWindow/MarginContainer2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer" parent_id_path=PackedInt32Array(309762767, 967167228) index="1" unique_id=1060828144]
+text = "Chop Tree 0"
+
+[node name="HBoxContainer2" parent="MarbleWindow/MarginContainer2/ScrollContainer/MarginContainer/VBoxContainer" unique_id=830495736 instance=ExtResource("2_qtck7")]
+layout_mode = 2
+
+[node name="Label" parent="MarbleWindow/MarginContainer2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2/HBoxContainer" parent_id_path=PackedInt32Array(830495736, 967167228) index="1" unique_id=1060828144]
+text = "Chop Tree 1"
+
+[node name="HBoxContainer3" parent="MarbleWindow/MarginContainer2/ScrollContainer/MarginContainer/VBoxContainer" unique_id=751996085 instance=ExtResource("2_qtck7")]
+layout_mode = 2
+
+[node name="Label" parent="MarbleWindow/MarginContainer2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/HBoxContainer" parent_id_path=PackedInt32Array(751996085, 967167228) index="1" unique_id=1060828144]
+text = "Chop Tree 2"
+
+[node name="HBoxContainer4" parent="MarbleWindow/MarginContainer2/ScrollContainer/MarginContainer/VBoxContainer" unique_id=1785900182 instance=ExtResource("2_qtck7")]
+layout_mode = 2
+
+[node name="HBoxContainer5" parent="MarbleWindow/MarginContainer2/ScrollContainer/MarginContainer/VBoxContainer" unique_id=260609172 instance=ExtResource("2_qtck7")]
+layout_mode = 2
+
+[node name="HBoxContainer6" parent="MarbleWindow/MarginContainer2/ScrollContainer/MarginContainer/VBoxContainer" unique_id=1701551534 instance=ExtResource("2_qtck7")]
+layout_mode = 2
+
+[editable path="MarbleWindow/MarginContainer2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[editable path="MarbleWindow/MarginContainer2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+[editable path="MarbleWindow/MarginContainer2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
