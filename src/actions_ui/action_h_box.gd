@@ -3,8 +3,13 @@ extends Container
 
 signal row_deleted
 
+var action: Action
+
 # Reference to a small ColorRect child used as a line (e.g., 2px height)
 @onready var drop_indicator: ColorRect = %DropIndicator
+@onready var label: Label = %Label
+@onready var count: TextEdit = %Count
+
 
 func _ready() -> void:
 	drop_indicator.visible = false
@@ -39,3 +44,7 @@ func _on_cancel_pressed() -> void:
 	queue_free()
 
 	row_deleted.emit()
+
+
+func _on_repeat_toggled(toggled_on: bool) -> void:
+	count.visible = toggled_on

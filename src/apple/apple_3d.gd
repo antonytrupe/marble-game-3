@@ -28,8 +28,8 @@ func _ready() -> void:
 	#timer.start()
 	#timer.stop()
 	await get_tree().physics_frame
-	if not is_on_floor() and not tree and is_server():
-		fall()
+	#if not is_on_floor() and not tree and is_server():
+		#fall()
 
 
 func _physics_process(_delta: float) -> void:
@@ -109,14 +109,14 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 			break
 
 
-func get_subject_verbs() -> Array[Action]:
+func get_subject_verbs() -> Array[Callable]:
 	return []
 
 
-func get_object_verbs(action: String = "pick_up") -> Array[Action]:
+func get_object_verbs(action: String = "pick_up") -> Array[Callable]:
 	match action:
 		'pick_up':
-			return [Action.new('pick_up', pick_up)]
+			return [pick_up]
 		_:
 			return []
 

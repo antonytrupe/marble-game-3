@@ -28,7 +28,6 @@ grow_vertical = 2
 script = ExtResource("1_lgb4g")
 
 [node name="CrossHairs" type="ColorRect" parent="." unique_id=254274000]
-visible = false
 material = SubResource("ShaderMaterial_qlar1")
 layout_mode = 1
 anchors_preset = 15
@@ -86,6 +85,7 @@ size_flags_vertical = 3
 script = ExtResource("2_1drpi")
 
 [node name="MarbleActionsWindow" parent="." unique_id=1148351150 instance=ExtResource("5_d1n1t")]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0

@@ -142,6 +142,7 @@ avoidance/layer_5="terra"
 [physics]
 
 3d/physics_engine="Jolt Physics"
+common/physics_interpolation=true
 
 [rendering]
 

@@ -198,7 +198,7 @@ func command(cmd: String, _player: Player, character: MarbleCharacter) -> void:
 				count = int(parts[1])
 				if parts.size() >= 3:
 					frequency = int(parts[2])
-			character.add_action(count, frequency)
+			#character.add_action(count, frequency)
 		"spawn", "/spawn":
 			match parts[1]:
 				"log", "logs":
@@ -316,20 +316,20 @@ func _spawn_trees(count: int, center: Vector3, maturity_ratio: float = 0.0) -> v
 		tree.position = _get_random_vector(10 + count, center)
 
 		tree.ready.connect(tree.load_post_ready.bind({
-			"age":tree.maturity * maturity_ratio,
-			"turn":(tree.maturity * maturity_ratio)/MarbleAge.SECONDS_IN_TURN
-		})	)
+			"age": tree.maturity * maturity_ratio,
+			"turn": (tree.maturity * maturity_ratio) / MarbleAge.SECONDS_IN_TURN
+		}))
 
 
 		#var chunk = chunks.get_chunk(tree.global_position)
 		world.flora.add_child(tree)
 
 
-func spawn_log(p_position: Vector3,p_scale:float) -> MarbleLog:
+func spawn_log(p_position: Vector3, p_scale: float) -> MarbleLog:
 	var l: MarbleLog = MarbleLog.scene.instantiate()
 	l.name = l.name + "%010d" % randi()
 	l.position = p_position
-	l.log_scale=p_scale
+	l.log_scale = p_scale
 
 	l.ready.connect(l.load_post_ready.bind({}))
 	#var chunk = chunks.get_chunk(tree.global_position)
@@ -344,7 +344,7 @@ func spawn_stump(p_position: Vector3, maturity_ratio: float = 1.0) -> void:
 	var stump: Stump = Stump.scene.instantiate()
 	stump.name = stump.name + "%010d" % randi()
 	stump.position = p_position
-	stump.stump_scale=maturity_ratio
+	stump.stump_scale = maturity_ratio
 	#stump.ready.connect(func() -> void:
 		#stump.age.age = stump.maturity * maturity_ratio
 		#)

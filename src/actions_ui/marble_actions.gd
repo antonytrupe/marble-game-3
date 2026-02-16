@@ -1,5 +1,7 @@
+class_name ActionsWindow
 extends Control
 
+@onready var list: VBoxContainer = %VBoxContainer
 
 func _ready() -> void:
 	pass

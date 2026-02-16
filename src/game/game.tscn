@@ -14,6 +14,7 @@ script = ExtResource("1_yarin")
 
 [node name="Client" parent="." unique_id=585245444 instance=ExtResource("5_clwl7")]
 unique_name_in_owner = true
+visible = false
 mouse_filter = 1
 
 [node name="World" parent="." unique_id=107267436 instance=ExtResource("2_jhw8o")]

@@ -11,10 +11,10 @@ static var scene: Resource = preload("res://src/tree/tree.tscn")
 	set = _set_chop_stage
 
 var turn: int = 0
-var apples:Array=[]
+var apples: Array = []
 
 @onready var meshes: Array[MeshInstance3D] = [
-	%TrunkMesh0,%TrunkMesh1, %TrunkMesh2, %TrunkMesh3, %TrunkMesh4,%TrunkMesh5,
+	%TrunkMesh0, %TrunkMesh1, %TrunkMesh2, %TrunkMesh3, %TrunkMesh4, %TrunkMesh5,
 	%TrunkMesh6, %TrunkMesh7, %TrunkMesh8, %TrunkMesh9, %TrunkMesh10,
 	]
 @onready var age: MarbleAge = $Age
@@ -79,47 +79,47 @@ func chop(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
 
 		if chop_stage == meshes.size():
 			#spawn stump and log
-			server.spawn_stump(position,scale.x)
-			server.spawn_log(position + Vector3(0, 1, 0)*scale.x,scale.x)
+			server.spawn_stump(position, scale.x)
+			server.spawn_log(position + Vector3(0, 1, 0) * scale.x, scale.x)
 			#l.log_scale=scale.x
 
-			for apple:Apple3D in apples:
+			for apple: Apple3D in apples:
 				apple.fall()
 			queue_free()
 			Persistance.delete.emit(self )
 	return []
 
 
-func get_object_verbs(action: String = "chop") -> Array[Action]:
+func get_object_verbs(action: String = "chop") -> Array[Callable]:
 	match action:
 		'chop':
-			return [Action.new('chop', chop)]
+			return [chop]
 		_:
 			return []
 
 
 func _add_apple() -> void:
 	#print("add apple")
-	var x:float = randf_range(-1.0, 1.0)
-	var y:float = randf_range(-1.0, 1.0)
-	var z:float = randf_range(-1.0, 1.0)
-	var p:Vector3 = Vector3(x, y, z).normalized()
+	var x: float = randf_range(-1.0, 1.0)
+	var y: float = randf_range(-1.0, 1.0)
+	var z: float = randf_range(-1.0, 1.0)
+	var p: Vector3 = Vector3(x, y, z).normalized()
 
 	var apple: Apple3D = APPLE_SCENE.instantiate()
 	apple.name = apple.name + "%010d" % randi()
-	apple.tree=self
-	match randi_range(0,3):
+	apple.tree = self
+	match randi_range(0, 3):
 		0:
-			p.x=-abs(p.x)
+			p.x = - abs(p.x)
 			apple.position = left_leaves.global_position + p * left_leaves.mesh.radius
 		1:
-			p.x=abs(p.x)
+			p.x = abs(p.x)
 			apple.position = right_leaves.global_position + p * right_leaves.mesh.radius
 		2:
-			p.z=-abs(p.z)
+			p.z = - abs(p.z)
 			apple.position = front_leaves.global_position + p * front_leaves.mesh.radius
 		3:
-			p.z=abs(p.z)
+			p.z = abs(p.z)
 			apple.position = back_leaves.global_position + p * back_leaves.mesh.radius
 	flora.add_child(apple)
 	apples.append(apple)
@@ -139,7 +139,7 @@ func get_data() -> Dictionary:
 		"turn": turn,
 		"warp_speed": warp_speed,
 		"chop_stage": chop_stage,
-		"apples":apples.map(func(a:Apple3D)->String:return a.name)
+		"apples": apples.map(func(a: Apple3D) -> String: return a.name)
 	}
 	return data
 
@@ -158,12 +158,12 @@ func load_post_ready(data: Dictionary) -> void:
 		turn = data.turn
 	if "chop_stage" in data:
 		chop_stage = data.chop_stage
-	if "apples" in data and data.apples.size()>0:
-		for a_name:String in apples:
+	if "apples" in data and data.apples.size() > 0:
+		for a_name: String in apples:
 			var apple: Apple3D = world.find_child(a_name, true, false)
 			if apple: apples.append(apple)
 			else:
-				var f:Callable=func(child: Node) -> void:
+				var f: Callable = func(child: Node) -> void:
 					if child.name == data.left_inventory:
 						apples.append(child)
 				world.items.child_entered_tree.connect(f)

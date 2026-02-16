@@ -13,12 +13,12 @@ func pick_up(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
 func chop(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
 	return []
 
-func get_object_verbs() -> Array[Action]:
-	return [Action.new('pick_up', pick_up)]
+func get_object_verbs() -> Array[Callable]:
+	return [pick_up]
 
 
-func get_subject_verbs() -> Array[Action]:
-	return [Action.new('chop', chop)]
+func get_subject_verbs() -> Array[Callable]:
+	return [chop]
 
 
 func get_data() -> Dictionary:

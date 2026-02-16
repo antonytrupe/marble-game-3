@@ -4,9 +4,8 @@
 [ext_resource type="Script" uid="uid://d12qpkn67h0km" path="res://src/actions_ui/button_3.gd" id="2_38rhn"]
 
 [node name="VBoxContainer" type="VBoxContainer" unique_id=309762767]
-offset_left = 164.0
-offset_right = 164.0
-offset_bottom = 42.0
+offset_right = 194.0
+offset_bottom = 78.0
 script = ExtResource("1_23dwa")
 
 [node name="DropIndicator" type="ColorRect" parent="." unique_id=1014548026]
@@ -34,6 +33,13 @@ layout_mode = 2
 size_flags_horizontal = 2
 text = "Chop Tree"
 
+[node name="Count" type="TextEdit" parent="HBoxContainer" unique_id=1270803603]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+text = "1"
+
 [node name="Repeat" type="Button" parent="HBoxContainer" unique_id=1705746537]
 unique_name_in_owner = true
 layout_mode = 2
@@ -49,4 +55,5 @@ size_flags_horizontal = 8
 mouse_filter = 1
 text = "X"
 
-[connection signal="pressed" from="HBoxContainer/Cancel" to="HBoxContainer" method="_on_cancel_pressed"]
+[connection signal="toggled" from="HBoxContainer/Repeat" to="." method="_on_repeat_toggled"]
+[connection signal="pressed" from="HBoxContainer/Cancel" to="." method="_on_cancel_pressed"]

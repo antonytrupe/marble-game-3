@@ -1,8 +1,7 @@
 class_name MarbleCharacter
 extends CharacterBody3D
 
-#signal inventory_updated
-
+#region static, enums, and consts
 static var scene: Resource = preload("res://src/character/character.tscn")
 
 enum INTERACT {RIGHT, LEFT}
@@ -28,33 +27,40 @@ const STRINGS: Dictionary[MODE, String] = {
 	MODE.RUN: "RUN",
 }
 
-
 const SPEED_MULTIPLIER: float = 1.0 / 24.0
 const JUMP_VELOCITY: float = 5.0
 const MAX_CONTROLLED_WARP: int = 10
+#endregion
+
+#region turn actions flags
+@export var move_action: bool = true
+@export var standard_action: bool = true
+@export var item_interaction: bool = true
+@export var free_action: bool = true
+#endregion
+
+#region exports
 ## current actual warp speed
 @export var warp_speed: int = 1:
 	set = _set_warp_speed
 @export var player_name: String
-
-@export var current_turn_actions: Dictionary = {"move": null, "action": null}:
-	set = _set_action
 @export var flying: bool = false
-
 @export var turn: int = 0:
 	set = _set_turn
+#endregion
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 var mode: MODE = MODE.WALK # :
-#set = _set_mode
 
 var speed: float = 30.0
 
+var turn_action: bool = true
+
 ##target warp speed
-var target_warp_speed: int = 1
+#var target_warp_speed: int = 1
 ##allowed maximum warp speed
-var max_warp_speed: int = 5000
+#var max_warp_speed: int = 5000
 ##allowed minimum warp speed
 #var min_warp_speed: int = 1
 
@@ -62,7 +68,9 @@ var player_id: String
 
 var right_inventory: Node3D
 var left_inventory: Node3D
+var actions: Array[Action]
 
+#region onready variables
 @onready var label: Label3D = %Label3D
 @onready var camera_pivot: Node3D = %CameraPivot
 @onready var camera: Camera3D = %Camera3D
@@ -75,7 +83,7 @@ var left_inventory: Node3D
 @onready var inventory_right_marker: Node3D = %InventoryRightMarker
 @onready var inventory_left_marker: Node3D = %InventoryLeftMarker
 @onready var character: MarbleCharacter = $"."
-
+#endregion
 
 func _ready() -> void:
 	_update_label()
@@ -98,24 +106,25 @@ func _physics_process(delta: float) -> void:
 		#not on floor and flying
 		else:
 			character.velocity.y = 0
+
 	character.move_and_slide()
+
 	if right_inventory and right_inventory is RigidBody3D:
-	# Smoothly move object to hold position
 		right_inventory.freeze_mode = RigidBody3D.FreezeMode.FREEZE_MODE_STATIC
-		var target_pos: Vector3 = inventory_right_marker.global_position
-		right_inventory.global_position = right_inventory.global_position.lerp(target_pos, 30 * delta)
-		right_inventory.global_rotation = inventory_right_marker.global_rotation # Add the gravity.
+		right_inventory.freeze = true
+		right_inventory.global_position = inventory_right_marker.global_position
+		right_inventory.global_rotation = inventory_right_marker.global_rotation
+
 	if left_inventory:
-	# Smoothly move object to hold position
 		left_inventory.freeze_mode = RigidBody3D.FreezeMode.FREEZE_MODE_STATIC
-		var target_pos: Vector3 = inventory_left_marker.global_position
-		left_inventory.global_position = left_inventory.global_position.lerp(target_pos, 30 * delta)
-		left_inventory.global_rotation = inventory_left_marker.global_rotation # Add the gravity.
+		left_inventory.freeze = true
+		left_inventory.global_position = inventory_left_marker.global_position
+		left_inventory.global_rotation = inventory_left_marker.global_rotation
 
 
 #setter, don't call directly
-func _set_action(value: Dictionary) -> void:
-	current_turn_actions = value
+#func _set_action(value: Dictionary) -> void:
+	#current_turn_actions = value
 	#Signals.Actions.emit(player_id, current_turn_actions)
 
 
@@ -129,17 +138,18 @@ func get_target() -> Object:
 
 
 ##verbs the character can do
-func get_subject_verbs() -> Array[Action]:
+func get_subject_verbs() -> Array[Callable]:
 	#var a:Action
-	return [Action.new("pick_up", pick_up)]
+	return [pick_up]
 
 
 ##verbs that can be done to the character
-func get_object_verbs() -> Array[Action]:
-	return [Action.new("pick_up", pick_up)]
+func get_object_verbs() -> Array[Callable]:
+	return [pick_up]
 
 
 func pick_up(hand: INTERACT, entities: Array) -> void:
+	#TODO pickup multiple things at once?!
 	for entity: Object in entities:
 		if entity is PhysicsBody3D:
 			if entity is RigidBody3D:
@@ -150,10 +160,10 @@ func pick_up(hand: INTERACT, entities: Array) -> void:
 			else:
 				left_inventory = entity
 
-			set_action({"action": "pick_up"})
+			#set_action({"action": "pick_up"})
 			return
 
-
+## client calls this. it does not run locally
 @rpc("any_peer")
 func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
 	if !is_server():
@@ -163,51 +173,38 @@ func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
 	if raycast.is_colliding():
 		var object: Object = get_target()
 
-		var verbs: Array[Action] = []
-		if hand == INTERACT.RIGHT:
-			if right_inventory and right_inventory.has_method("get_subject_verbs"):
-				verbs = right_inventory.get_subject_verbs()
-			elif not right_inventory:
-				verbs = get_subject_verbs()
-		elif hand == INTERACT.LEFT:
-			if left_inventory and left_inventory.has_method("get_subject_verbs"):
-				verbs = left_inventory.get_subject_verbs()
-			elif not left_inventory:
-				verbs = get_subject_verbs()
-
-		var entity_verbs: Array[Action] = []
 		if object.has_method("get_object_verbs"):
-			entity_verbs = object.get_object_verbs()
+			var subject: Object = self
 
-		did_action = entity_verbs.any(func(entity_action: Action) -> bool:
-			return verbs.any(func(subject_verb: Action) -> bool:
-				if entity_action.name == subject_verb.name:
-					var a: Array[Object] = []
-					var r: Array = entity_action.do.call(hand, a)
-					subject_verb.do.call(hand, r)
-					return true
-				return false
-				)
-			)
-		#print(did_action)
+			if hand == INTERACT.RIGHT:
+				if right_inventory and right_inventory.has_method("get_subject_verbs"):
+					subject = right_inventory
+			elif hand == INTERACT.LEFT:
+				if left_inventory and left_inventory.has_method("get_subject_verbs"):
+					subject = left_inventory
+			if subject.has_method("get_subject_verbs"):
+				var subject_verbs: Array[Callable] = subject.get_subject_verbs()
 
+				var object_verbs: Array[Callable] = object.get_object_verbs()
 
-		# Priority 1: Trade
-		if object.has_method("start_trade"):
-			# start_trade(entity)
-			return # Exit early so we don't drop items
+				did_action = object_verbs.any(func(object_verb: Callable) -> bool:
+					print(object_verb.get_method())
+					return subject_verbs.any(func(subject_verb: Callable) -> bool:
+						print(subject_verb.get_method())
 
-		# Priority 2: Pick Berry
-		if object.has_method("pick_berry"):
-			#var loot = entity.pick_berry()
-			#_add_to_inventory(loot)
-			set_action({"action": "pick_berry"})
-			return
+						if object_verb.get_method() == subject_verb.get_method():
+							print('match')
+							add_action(Action.new(hand, subject, subject_verb, object_verb, object))
+							do_actions()
+							return true
+						return false
+						)
+					)
+	#print(did_action)
 
-
-	# 2. Fallback: If nothing was interacted with, drop the held item
 	if not did_action:
 		_handle_drop(hand)
+
 
 func _handle_drop(hand: INTERACT) -> void:
 	if hand == INTERACT.RIGHT and right_inventory:
@@ -222,15 +219,15 @@ func _handle_drop(hand: INTERACT) -> void:
 
 
 # use reset_actions to clear this and skip internal logic
-func set_action(value: Dictionary) -> void:
-	if value.has("action") and value.action:
-		current_turn_actions.action = value.action
-	# only update move if we went faster
-	if (
-		value.has("move")
-		and (current_turn_actions.move == null or value.move > current_turn_actions.move)
-	):
-		current_turn_actions.move = value.move
+#func set_action(value: Dictionary) -> void:
+	#if value.has("action") and value.action:
+		#current_turn_actions.action = value.action
+	## only update move if we went faster
+	#if (
+		#value.has("move")
+		#and (current_turn_actions.move == null or value.move > current_turn_actions.move)
+	#):
+		#current_turn_actions.move = value.move
 
 
 func _set_turn(value: int) -> void:
@@ -291,10 +288,33 @@ func chat_bubble(message: String) -> void:
 	chat_bubbles.add_child(bubble)
 
 
+#TODO make this take multiple turns
 func _start_turn(_turns: Array) -> void:
 	#print('starting turn %.f'%turn)
-	pass
+	self.turn_action = true
+	do_actions()
 
+#this is called on the server
+func do_actions() -> void:
+	if actions.size() > 0 and turn_action:
+		var a: Action = actions[0]
+		print(a.subject_verb.get_method())
+		a.do.call()
+
+		remove_action()
+		turn_action = false
+
+
+#@rpc("call_local","authority")
+func add_action(action: Action) -> void:
+	actions.append(action)
+	client.update_actions()
+
+
+#@rpc("any_peer","call_local")
+func remove_action() -> void:
+	actions.remove_at(0)
+	client.update_actions()
 
 @rpc("any_peer", "call_local")
 func server_move(d: Vector2) -> void:
@@ -354,7 +374,7 @@ func _rotate_camera(value: Vector2) -> void:
 	camera_pivot.rotate_x(-value.y * .005)
 	camera_pivot.rotation.x = clamp(camera_pivot.rotation.x, -PI / 2, PI / 2)
 
-
+#region persistance functions
 func get_data() -> Dictionary:
 	return {
 		"name": name,
@@ -405,7 +425,7 @@ func load_post_ready(data: Dictionary) -> void:
 					#world.items.child_entered_tree.disconnect(f)
 
 			world.items.child_entered_tree.connect(f)
-
+#endregion
 
 func _update_label() -> void:
 	if label:
