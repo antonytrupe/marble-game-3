@@ -3,9 +3,42 @@
 [ext_resource type="Script" uid="uid://cpmf2wcjikshe" path="res://src/actions_ui/action_h_box.gd" id="1_23dwa"]
 [ext_resource type="Script" uid="uid://d12qpkn67h0km" path="res://src/actions_ui/button_3.gd" id="2_38rhn"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8mca3"]
+content_margin_left = 1.0
+content_margin_top = 1.0
+content_margin_right = 1.0
+content_margin_bottom = 1.0
+draw_center = false
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_38rhn"]
+content_margin_left = 6.0
+content_margin_top = 0.0
+content_margin_right = 6.0
+content_margin_bottom = 0.0
+bg_color = Color(0.50074106, 1.2153015e-06, 1.4439226e-07, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.30110535, 1.6544945e-07, 7.219613e-08, 1)
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
 [node name="VBoxContainer" type="VBoxContainer" unique_id=309762767]
-offset_right = 194.0
-offset_bottom = 78.0
+offset_right = 201.0
+offset_bottom = 94.0
 script = ExtResource("1_23dwa")
 
 [node name="DropIndicator" type="ColorRect" parent="." unique_id=1014548026]
@@ -16,44 +49,75 @@ size_flags_horizontal = 3
 mouse_filter = 1
 color = Color(0.3665946, 0.3665946, 0.36659458, 1)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=967167228]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1185968350]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8mca3")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=967167228]
 layout_mode = 2
 
-[node name="Move" type="Button" parent="HBoxContainer" unique_id=2135272012]
+[node name="Move" type="Button" parent="PanelContainer/HBoxContainer" unique_id=2135272012]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 0
 mouse_filter = 1
-theme_override_font_sizes/font_size = 24
 text = "≡"
 script = ExtResource("2_38rhn")
 
-[node name="Label" type="Label" parent="HBoxContainer" unique_id=1060828144]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 2
-text = "Chop Tree"
-
-[node name="Count" type="TextEdit" parent="HBoxContainer" unique_id=1270803603]
-unique_name_in_owner = true
-visible = false
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer" unique_id=1520439876]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "1"
 
-[node name="Repeat" type="Button" parent="HBoxContainer" unique_id=1705746537]
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/HBoxContainer/VBoxContainer" unique_id=1489634430]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1060828144]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 3
+text = "Chop Tree"
+
+[node name="Cancel" type="Button" parent="PanelContainer/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1621674984]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 1
+theme_override_styles/normal = SubResource("StyleBoxFlat_38rhn")
+text = "X"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/HBoxContainer/VBoxContainer" unique_id=518127963]
+layout_mode = 2
+
+[node name="Repeat" type="Button" parent="PanelContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1705746537]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
 mouse_filter = 1
 toggle_mode = true
 text = "⟳"
 
-[node name="Cancel" type="Button" parent="HBoxContainer" unique_id=1621674984]
+[node name="Forever" type="Button" parent="PanelContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=345772111]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
-size_flags_horizontal = 8
 mouse_filter = 1
-text = "X"
+toggle_mode = true
+text = "∞"
 
-[connection signal="toggled" from="HBoxContainer/Repeat" to="." method="_on_repeat_toggled"]
-[connection signal="pressed" from="HBoxContainer/Cancel" to="." method="_on_cancel_pressed"]
+[node name="Count" type="SpinBox" parent="PanelContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1148242626]
+unique_name_in_owner = true
+visible = false
+layout_direction = 3
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+value = 23.0
+rounded = true
+allow_greater = true
+suffix = "turns"
+custom_arrow_step = 1.0
+
+[connection signal="pressed" from="PanelContainer/HBoxContainer/VBoxContainer/HBoxContainer2/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="toggled" from="PanelContainer/HBoxContainer/VBoxContainer/HBoxContainer/Repeat" to="." method="_on_repeat_toggled"]
+[connection signal="toggled" from="PanelContainer/HBoxContainer/VBoxContainer/HBoxContainer/Forever" to="." method="_on_forever_toggled"]
+[connection signal="value_changed" from="PanelContainer/HBoxContainer/VBoxContainer/HBoxContainer/Count" to="." method="_on_count_value_changed"]

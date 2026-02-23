@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://sf7d74xprx6i"]
+
+[ext_resource type="Script" uid="uid://n2e5j3k2kcub" path="res://src/board/board.gd" id="1_irr3u"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_irr3u"]
+size = Vector3(0.28, 7.5, 1.41)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_irr3u"]
+size = Vector3(0.28, 7.5, 1.41)
+
+[node name="Board" type="RigidBody3D" unique_id=1973566815 groups=["persist"]]
+collision_layer = 32
+collision_mask = 63
+script = ExtResource("1_irr3u")
+metadata/_custom_type_script = "uid://n2e5j3k2kcub"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=302697966]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.75, 0)
+mesh = SubResource("BoxMesh_irr3u")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1744464971]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.75, 0)
+shape = SubResource("BoxShape3D_irr3u")

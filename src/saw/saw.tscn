@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://cpa8mo3vlaydv"]
+
+[ext_resource type="Script" uid="uid://clt7yoqws21rq" path="res://src/saw/saw.gd" id="1_vs6aa"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_7if7v"]
+size = Vector3(0.02, 2, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oq80y"]
+albedo_color = Color(0.2751181, 0.27510673, 0.26151899, 1)
+metallic = 0.5
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_vs6aa"]
+points = PackedVector3Array(-0.017092198, -1.0070922, -0.107092194, 0.01, 0.91645396, 0.0960993, -0.017092198, 1.0070922, 0.10567377, -0.017092198, 1.0070922, -0.107092194, -0.017092198, -1.0070922, 0.10567377, 0.01, -0.91645396, -0.09751773, 0.01, -0.91645396, 0.0960993, 0.01, 0.91645396, -0.09751773)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_6wm7c"]
+top_radius = 0.1
+bottom_radius = 0.1
+height = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hn5cg"]
+albedo_color = Color(0.36862746, 0.21568628, 0.0627451, 1)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_iglhu"]
+points = PackedVector3Array(0.093418255, 0.23195164, 0.035430357, -0.095385596, -0.23288733, -0.02988604, -0.09584171, -0.23401031, 0.028439038, 0.09522942, -0.23641074, -0.030326188, -0.02988604, 0.23288733, -0.095385596, -0.08682853, 0.22947505, 0.049385775, 0.035430357, -0.23195164, 0.093418255, 0.028439038, -0.23401031, -0.09584171, 0.08571157, 0.23072952, -0.051247377, -0.030326188, 0.23641074, 0.09522942, -0.095385596, 0.23288733, -0.02988604, -0.051247377, -0.23072952, 0.08571157, -0.058876086, -0.23240371, -0.080663934, 0.08641706, -0.23261121, 0.05007156, 0.05007156, 0.23261121, 0.08641706, 0.028439038, 0.23401031, -0.09584171, -0.080663934, 0.23240371, -0.058876086, 0.049385775, -0.22947505, -0.08682853, -0.030326188, -0.23641074, 0.09522942, 0.09522942, 0.23641074, -0.030326188, -0.02988604, -0.23288733, -0.095385596, -0.09584171, 0.23401031, 0.028439038, 0.0707, 0.22883789, 0.0707, 0.0707, -0.22883789, 0.0707, 0.035430357, 0.23195164, 0.093418255, 0.093418255, -0.23195164, 0.035430357, 0.08571157, -0.23072952, -0.051247377, -0.051247377, 0.23072952, 0.08571157, -0.08682853, -0.22947505, 0.049385775, 0.049385775, 0.22947505, -0.08682853, -0.080663934, -0.23240371, -0.058876086, -0.058876086, 0.23240371, -0.080663934)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w0ror"]
+albedo_color = Color(0.3677016, 0.214107, 0.06376506, 1)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_7if7v"]
+points = PackedVector3Array(0.093418255, 0.23195164, 0.035430357, -0.095385596, -0.23288733, -0.02988604, -0.09584171, -0.23401031, 0.028439038, 0.09522942, -0.23641074, -0.030326188, -0.02988604, 0.23288733, -0.095385596, -0.08682853, 0.22947505, 0.049385775, 0.035430357, -0.23195164, 0.093418255, 0.028439038, -0.23401031, -0.09584171, 0.08571157, 0.23072952, -0.051247377, -0.030326188, 0.23641074, 0.09522942, -0.095385596, 0.23288733, -0.02988604, -0.051247377, -0.23072952, 0.08571157, -0.058876086, -0.23240371, -0.080663934, 0.08641706, -0.23261121, 0.05007156, 0.05007156, 0.23261121, 0.08641706, 0.028439038, 0.23401031, -0.09584171, -0.080663934, 0.23240371, -0.058876086, 0.049385775, -0.22947505, -0.08682853, -0.030326188, -0.23641074, 0.09522942, 0.09522942, 0.23641074, -0.030326188, -0.02988604, -0.23288733, -0.095385596, -0.09584171, 0.23401031, 0.028439038, 0.0707, 0.22883789, 0.0707, 0.0707, -0.22883789, 0.0707, 0.035430357, 0.23195164, 0.093418255, 0.093418255, -0.23195164, 0.035430357, 0.08571157, -0.23072952, -0.051247377, -0.051247377, 0.23072952, 0.08571157, -0.08682853, -0.22947505, 0.049385775, 0.049385775, 0.22947505, -0.08682853, -0.080663934, -0.23240371, -0.058876086, -0.058876086, 0.23240371, -0.080663934)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_vs6aa"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[node name="Saw" type="RigidBody3D" unique_id=1832956551 groups=["persist"]]
+collision_layer = 32
+collision_mask = 63
+freeze = true
+script = ExtResource("1_vs6aa")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1209967389]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("BoxMesh_7if7v")
+surface_material_override/0 = SubResource("StandardMaterial3D_oq80y")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=65536634]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("ConvexPolygonShape3D_vs6aa")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=1027009988]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 2, 0.15)
+mesh = SubResource("CylinderMesh_6wm7c")
+skeleton = NodePath("../MeshInstance3D2")
+surface_material_override/0 = SubResource("StandardMaterial3D_hn5cg")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=1707642403]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 2, 0.15)
+shape = SubResource("ConvexPolygonShape3D_iglhu")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1944216101]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0.15)
+mesh = SubResource("CylinderMesh_6wm7c")
+surface_material_override/0 = SubResource("StandardMaterial3D_w0ror")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="." unique_id=756628270]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0.15)
+shape = SubResource("ConvexPolygonShape3D_7if7v")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=849562173]
+replication_config = SubResource("SceneReplicationConfig_vs6aa")

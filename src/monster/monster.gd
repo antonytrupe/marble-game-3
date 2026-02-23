@@ -189,7 +189,8 @@ func _on_timer_timeout() -> void:
 func get_data() -> Dictionary:
 	return {
 		"name": name,
-		#"warp_speed": warp_speed,
+		"parent": str(get_parent().get_path()) if get_parent() else "",
+		"scene_file_path": get_scene_file_path(),
 		"age": age.age,
 		#"turn": turn,
 		"transform": var_to_str(transform),

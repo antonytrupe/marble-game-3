@@ -33,7 +33,7 @@ const MAX_CONTROLLED_WARP: int = 10
 #endregion
 
 #region turn actions flags
-@export var move_action: bool = true
+#@export var move_action: bool = true
 @export var standard_action: bool = true
 @export var item_interaction: bool = true
 @export var free_action: bool = true
@@ -54,8 +54,6 @@ var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var mode: MODE = MODE.WALK # :
 
 var speed: float = 30.0
-
-var turn_action: bool = true
 
 ##target warp speed
 #var target_warp_speed: int = 1
@@ -84,6 +82,50 @@ var actions: Array[Action]
 @onready var inventory_left_marker: Node3D = %InventoryLeftMarker
 @onready var character: MarbleCharacter = $"."
 #endregion
+
+
+func debug(...args: Array) -> void:
+	Debug.debug.emit(args)
+
+
+#@rpc("call_local","authority")
+func action_add(action: Action) -> void:
+	var last_action: Action
+	if not actions.is_empty():
+		last_action = actions.back()
+	if last_action and last_action.equals(action):
+		last_action.count += 1
+		last_action.repeat = true
+	else:
+		actions.append(action)
+	client.actions.update_actions()
+
+
+#@rpc("any_peer","call_local")
+func action_remove(index: int = 0) -> void:
+	actions.remove_at(index)
+	client.actions.update_actions()
+
+
+func action_repeat(index: int, toggled_on: bool) -> void:
+	actions[index].repeat = toggled_on
+	if not actions[index].repeat:
+		actions[index].forever = false
+
+
+func action_reorder(from: int, to: int) -> void:
+	var item: Action = actions.pop_at(from)
+	actions.insert(to, item)
+	client.actions.update_actions()
+
+
+func action_forever(index: int, toggled_on: bool) -> void:
+	actions[index].forever = toggled_on
+
+
+func action_count_changed(index: int, count: int) -> void:
+	actions[index].count = count
+
 
 func _ready() -> void:
 	_update_label()
@@ -148,7 +190,7 @@ func get_object_verbs() -> Array[Callable]:
 	return [pick_up]
 
 
-func pick_up(hand: INTERACT, entities: Array) -> void:
+func pick_up(hand: INTERACT, entities: Array) -> bool:
 	#TODO pickup multiple things at once?!
 	for entity: Object in entities:
 		if entity is PhysicsBody3D:
@@ -157,11 +199,14 @@ func pick_up(hand: INTERACT, entities: Array) -> void:
 
 			if hand == INTERACT.RIGHT:
 				right_inventory = entity
+				add_collision_exception_with(right_inventory)
 			else:
 				left_inventory = entity
+				add_collision_exception_with(left_inventory)
 
 			#set_action({"action": "pick_up"})
-			return
+			return true
+	return false
 
 ## client calls this. it does not run locally
 @rpc("any_peer")
@@ -188,13 +233,12 @@ func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
 				var object_verbs: Array[Callable] = object.get_object_verbs()
 
 				did_action = object_verbs.any(func(object_verb: Callable) -> bool:
-					print(object_verb.get_method())
+					#print(object_verb.get_method())
 					return subject_verbs.any(func(subject_verb: Callable) -> bool:
-						print(subject_verb.get_method())
-
+						#print(subject_verb.get_method())
 						if object_verb.get_method() == subject_verb.get_method():
-							print('match')
-							add_action(Action.new(hand, subject, subject_verb, object_verb, object))
+							#print('match')
+							action_add(Action.new(hand, subject, subject_verb, object_verb, object))
 							do_actions()
 							return true
 						return false
@@ -210,11 +254,13 @@ func _handle_drop(hand: INTERACT) -> void:
 	if hand == INTERACT.RIGHT and right_inventory:
 		if right_inventory is RigidBody3D:
 			right_inventory.freeze = false
+			remove_collision_exception_with(right_inventory)
 		right_inventory = null
 
 	elif hand == INTERACT.LEFT and left_inventory:
 		if left_inventory is RigidBody3D:
 			left_inventory.freeze = false
+			remove_collision_exception_with(left_inventory)
 		left_inventory = null
 
 
@@ -291,30 +337,28 @@ func chat_bubble(message: String) -> void:
 #TODO make this take multiple turns
 func _start_turn(_turns: Array) -> void:
 	#print('starting turn %.f'%turn)
-	self.turn_action = true
+	self.standard_action = true
 	do_actions()
+
 
 #this is called on the server
 func do_actions() -> void:
-	if actions.size() > 0 and turn_action:
+	if actions.size() > 0 and standard_action:
 		var a: Action = actions[0]
 		print(a.subject_verb.get_method())
 		a.do.call()
 
-		remove_action()
-		turn_action = false
+		if not a.forever:
+			a.count -= 1
 
 
-#@rpc("call_local","authority")
-func add_action(action: Action) -> void:
-	actions.append(action)
-	client.update_actions()
+		if a.count <= 0:
+			action_remove(0)
 
+		client.actions.update_actions()
+		#debug('chop')
+		standard_action = false
 
-#@rpc("any_peer","call_local")
-func remove_action() -> void:
-	actions.remove_at(0)
-	client.update_actions()
 
 @rpc("any_peer", "call_local")
 func server_move(d: Vector2) -> void:
@@ -410,6 +454,7 @@ func load_post_ready(data: Dictionary) -> void:
 			f = func(child: Node) -> void:
 				if child.name == data.left_inventory:
 					left_inventory = child
+					add_collision_exception_with(left_inventory)
 					#world.items.child_entered_tree.disconnect(f)
 
 			world.items.child_entered_tree.connect(f)
@@ -422,6 +467,7 @@ func load_post_ready(data: Dictionary) -> void:
 			f = func(child: Node) -> void:
 				if child.name == data.right_inventory:
 					right_inventory = child
+					add_collision_exception_with(right_inventory)
 					#world.items.child_entered_tree.disconnect(f)
 
 			world.items.child_entered_tree.connect(f)

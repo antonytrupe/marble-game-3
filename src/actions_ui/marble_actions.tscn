@@ -2,12 +2,11 @@
 
 [ext_resource type="PackedScene" uid="uid://nwnomeygl26l" path="res://src/window/window.tscn" id="1_bi5w4"]
 [ext_resource type="Script" uid="uid://b6jxquwn3mp1f" path="res://src/actions_ui/marble_actions.gd" id="1_qtck7"]
-[ext_resource type="PackedScene" uid="uid://bsxehrtv1ug1y" path="res://src/actions_ui/action_h_box.tscn" id="2_qtck7"]
 
 [node name="MarbleActionsWindow" type="Control" unique_id=1148351150]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 259.0
+offset_right = 384.0
 offset_bottom = 278.0
 script = ExtResource("1_qtck7")
 
@@ -48,6 +47,3 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="VBoxContainer" parent="MarbleWindow/MarginContainer2/ScrollContainer/MarginContainer/VBoxContainer" unique_id=309762767 instance=ExtResource("2_qtck7")]
-layout_mode = 2

@@ -28,8 +28,8 @@ func _ready() -> void:
 	#timer.start()
 	#timer.stop()
 	await get_tree().physics_frame
-	#if not is_on_floor() and not tree and is_server():
-		#fall()
+	if not is_on_floor() and not tree and is_server():
+		fall()
 
 
 func _physics_process(_delta: float) -> void:
@@ -59,7 +59,7 @@ func _physics_process(_delta: float) -> void:
 		#_set_scale( Vector3(s, s, s))
 
 
-func pick_up(_hand: MarbleCharacter.INTERACT, _o: Array[Object]) -> Array:
+func pick_up(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
 	return [ self ]
 
 

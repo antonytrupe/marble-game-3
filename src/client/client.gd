@@ -6,12 +6,10 @@ signal current_character_updated(character: MarbleCharacter)
 @onready var server: Server = $/root/Game/Server
 @onready var world: World = $/root/Game/World
 @onready var main_menu: MarbleWindow = $/root/Game/MainMenu
-#@onready var inventory: InventoryWindow = %Inventory
 @onready var chat_text_edit: TextEdit = %ChatInput
 @onready var chat_window: MarbleWindow = %ChatWindow
 @onready var actions: ActionsWindow = %MarbleActionsWindow
-
-const ACTIONHROW_SCENE: Resource = preload("res://src/actions_ui/action_h_box.tscn")
+@onready var crosshairs: ColorRect = %CrossHairs
 
 var current_character: MarbleCharacter
 
@@ -20,15 +18,6 @@ var lobby_id: int
 func debug(...args: Array) -> void:
 	Debug.debug.emit(args)
 
-
-func update_actions() -> void:
-	for c: Node in actions.list.get_children():
-		c.queue_free()
-	for a: Action in current_character.actions:
-		var aa: ActionHRow = ACTIONHROW_SCENE.instantiate()
-
-		actions.list.add_child(aa)
-		aa.label.text = a.subject_verb.get_method()
 
 func _steam_signals() -> void:
 	Steam.lobby_joined.connect(_on_lobby_joined)
@@ -102,10 +91,6 @@ func _unhandled_input(event: InputEvent) -> void:
 				else:
 					current_character.interact.rpc_id(1, MarbleCharacter.INTERACT.LEFT)
 
-#			inventory
-			#if Input.is_action_just_pressed("inventory"):
-				#inventory.visible = !inventory.visible
-
 			# Jump
 			if Input.is_action_just_pressed("jump") or \
 			current_character.flying and Input.is_action_pressed("jump"):
@@ -155,6 +140,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("escape"):
 		#show the menu
 		main_menu.visible = !main_menu.visible
+		crosshairs.visible = !crosshairs.visible
 
 	if Input.is_action_just_pressed("command"):
 		chat_window.visible = !chat_window.visible

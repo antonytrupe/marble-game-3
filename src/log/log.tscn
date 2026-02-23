@@ -3,8 +3,6 @@
 [ext_resource type="Script" uid="uid://cydi6xjmd6bgw" path="res://src/log/log.gd" id="1_x8t0t"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_8x860"]
-friction = 0.5
-rough = true
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_x8t0t"]
 radius = 1.0

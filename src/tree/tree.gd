@@ -7,6 +7,7 @@ static var scene: Resource = preload("res://src/tree/tree.tscn")
 
 @export var maturity: int = MarbleAge.SECONDS_IN_YEAR * 8
 @export var warp_speed: float = 1
+@export_range(0, 1) var chop_progress: float = 0
 @export var chop_stage: int = 0:
 	set = _set_chop_stage
 
@@ -58,7 +59,7 @@ func _start_turn(_turns: Array) -> void:
 	if age.age > maturity:
 		#apples start growing in March
 		if age.get_month() == 0:
-			var i: int = randi_range(1, 1600)
+			var i: int = randi_range(1, 3200)
 			if i == 1:
 				#pass
 				_add_apple()
@@ -74,19 +75,22 @@ func _set_chop_stage(v: int) -> void:
 
 func chop(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
 	#print('tree chop')
-	if chop_stage < meshes.size():
-		chop_stage += 1
+	chop_progress += 0.05
+	chop_progress = clampf(chop_progress, 0.0, 1.0)
+	chop_stage = floori(chop_progress * (meshes.size() - 0))
+	#if chop_stage < meshes.size():
+		#chop_stage += 1
 
-		if chop_stage == meshes.size():
-			#spawn stump and log
-			server.spawn_stump(position, scale.x)
-			server.spawn_log(position + Vector3(0, 1, 0) * scale.x, scale.x)
-			#l.log_scale=scale.x
+	if chop_stage >= meshes.size():
+		#spawn stump and log
+		server.spawn_stump(position, scale.x)
+		server.spawn_log(position + Vector3(0, 1, 0) * scale.x, scale.x)
+		#l.log_scale=scale.x
 
-			for apple: Apple3D in apples:
-				apple.fall()
-			queue_free()
-			Persistance.delete.emit(self )
+		for apple: Apple3D in apples:
+			apple.fall()
+		queue_free()
+		Persistance.delete.emit(self )
 	return []
 
 

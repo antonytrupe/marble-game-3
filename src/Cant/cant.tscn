@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://c7dkw1hur7lwg"]
+
+[ext_resource type="Script" uid="uid://0j4w6s3iv42y" path="res://src/Cant/cant.gd" id="1_p63mr"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_umi2h"]
+size = Vector3(1.41, 7.5, 1.41)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_p63mr"]
+size = Vector3(1.41, 7.5, 1.41)
+
+[node name="Cant" type="RigidBody3D" unique_id=273810109 groups=["persist"]]
+collision_layer = 32
+collision_mask = 63
+script = ExtResource("1_p63mr")
+metadata/_custom_type_script = "uid://0j4w6s3iv42y"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=509165500]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.75, 0)
+mesh = SubResource("BoxMesh_umi2h")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1301200548]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0)
+shape = SubResource("BoxShape3D_p63mr")

@@ -2,7 +2,7 @@ class_name MarbleLog
 extends RigidBody3D
 
 static var scene: Resource = preload("res://src/log/log.tscn")
-@export var log_scale:float=1
+@export var log_scale: float = 1
 #@export var warp_speed: float = 1
 
 #var turn:int=0
@@ -10,15 +10,19 @@ static var scene: Resource = preload("res://src/log/log.tscn")
 #@onready var age: MarbleAge = $MarbleAge
 @onready var mesh_instance_3d: MeshInstance3D = %MeshInstance3D
 @onready var collision_shape_3d: CollisionShape3D = %CollisionShape3D
+@onready var server: Server = $/root/Game/Server
+
+
+func debug(...args: Array) -> void:
+	Debug.debug.emit(args)
 
 
 func _ready() -> void:
-
 	await get_tree().physics_frame
 
 	var s: float = clampf(log_scale, .01, 1.0)
 	#TODO don't scale the collisionbody
-	scale =Vector3(s, s, s)
+	scale = Vector3(s, s, s)
 	#mesh_instance_3d.scale = Vector3(s, s, s)
 	#collision_shape_3d.scale=Vector3(s, s, s)
 
@@ -36,11 +40,20 @@ func _ready() -> void:
 		print("The cylinder has fallen over.")
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
-	pass
-	#label_3d.text = "Age:%.f\nWarp:%.f\nScale:%.2f" % [age.age, warp_speed, s]
+func get_object_verbs(action: String = "saw") -> Array[Callable]:
+	match action:
+		'saw':
+			return [saw]
+		_:
+			return []
 
+
+func saw(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
+	debug('log saw')
+	server.spawn_cant(transform, scale.x)
+	queue_free()
+	Persistance.delete.emit(self )
+	return []
 
 
 func is_server() -> bool:
@@ -54,7 +67,7 @@ func get_data() -> Dictionary:
 		"scene_file_path": get_scene_file_path(),
 		"transform": var_to_str(transform),
 		#"age": age.age,
-		"log_scale":log_scale
+		"log_scale": log_scale
 	}
 	return data
 

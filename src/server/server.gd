@@ -185,69 +185,76 @@ func command(cmd: String, _player: Player, character: MarbleCharacter) -> void:
 		"teleport", "tele":
 			if parts.size() >= 4:
 				character.position = Vector3(float(parts[1]), float(parts[2]), float(parts[3]))
-		"wander":
-			var count: int = 10
-			if parts.size() >= 2:
-				count = int(parts[1])
-			character._wander(count)
-		"action":
-			#todo create the action
-			var count: int = 1
-			var frequency: int = 1
-			if parts.size() >= 2:
-				count = int(parts[1])
-				if parts.size() >= 3:
-					frequency = int(parts[2])
-			#character.add_action(count, frequency)
 		"spawn", "/spawn":
-			match parts[1]:
-				"log", "logs":
-					var count: int = 1
-					if parts.size() >= 3:
-						count = int(parts[2])
-					_spawn_logs(count, character.position)
-				"axe":
-					_spawn_axe(1, character.position)
-				"monument", "warp":
-					_spawn_warp_monument(character.position)
-				"mob", "monster":
-					var count: int = 1
-					if parts.size() >= 3:
-						count = int(parts[2])
-					_spawn_mob(count, character.position)
-				"stone", "stones", "rocks", "rock":
-					var count: int = 1
-					if parts.size() >= 3:
-						count = int(parts[2])
-					_spawn_stones(count, character.position)
+			_spawn(character, parts)
 
-				"acorn", "acorns":
-					var count: int = 1
-					if parts.size() >= 3:
-						count = int(parts[2])
-					count = clampi(count, 1, 100)
-					_spawn_acorns(count, character.position)
 
-				"bush", "bushes":
-					var count: int = 1
-					if parts.size() >= 3:
-						count = int(parts[2])
-					_spawn_bushes(count, character.position)
+func _spawn(character: MarbleCharacter, parts: Array) -> void:
+	if parts.size() < 2:
+		return
+	match parts[1]:
+		"saw", "saws":
+			var count: int = 1
+			if parts.size() >= 3:
+				count = int(parts[2])
+			_spawn_saws(count, character.position)
+		"board", "boards":
+			var count: int = 1
+			if parts.size() >= 3:
+				count = int(parts[2])
+			_spawn_boards(character.position, count)
+		"cant", "cants":
+			var count: int = 1
+			if parts.size() >= 3:
+				count = int(parts[2])
+			_spawn_cants(character.position)
+		"log", "logs":
+			var count: int = 1
+			if parts.size() >= 3:
+				count = int(parts[2])
+			_spawn_logs(count, character.position)
+		"axe":
+			_spawn_axe(1, character.position)
+		"monument", "warp":
+			_spawn_warp_monument(character.position)
+		"mob", "monster", "mobs", "monsters":
+			var count: int = 1
+			if parts.size() >= 3:
+				count = int(parts[2])
+			_spawn_mob(count, character.position)
+		"stone", "stones", "rocks", "rock":
+			var count: int = 1
+			if parts.size() >= 3:
+				count = int(parts[2])
+			_spawn_stones(count, character.position)
 
-				"tree", "trees":
-					var count: int = 1
-					if parts.size() >= 3:
-						count = int(parts[2])
-					var maturity_ratio: float = 0.0
-					if parts.size() >= 4:
-						maturity_ratio = float(parts[3])
-					_spawn_trees(count, character.position, maturity_ratio)
+		"acorn", "acorns":
+			var count: int = 1
+			if parts.size() >= 3:
+				count = int(parts[2])
+			count = clampi(count, 1, 100)
+			_spawn_acorns(count, character.position)
 
-				"apple", "apples":
-					var count: int = 1
-					if parts.size() >= 3:
-						count = int(parts[2])
-					_spawn_apples(count, character.position)
+		"bush", "bushes":
+			var count: int = 1
+			if parts.size() >= 3:
+				count = int(parts[2])
+			_spawn_bushes(count, character.position)
+
+		"tree", "trees":
+			var count: int = 1
+			if parts.size() >= 3:
+				count = int(parts[2])
+			var maturity_ratio: float = 0.0
+			if parts.size() >= 4:
+				maturity_ratio = float(parts[3])
+			_spawn_trees(count, character.position, maturity_ratio)
+
+		"apple", "apples":
+			var count: int = 1
+			if parts.size() >= 3:
+				count = int(parts[2])
+			_spawn_apples(count, character.position)
 
 
 func _get_random_vector(radius: float, center: Vector3) -> Vector3:
@@ -352,6 +359,63 @@ func spawn_stump(p_position: Vector3, maturity_ratio: float = 1.0) -> void:
 	world.flora.add_child(stump)
 
 
+func spawn_cant(p_transform: Transform3D, p_scale: float) -> Cant:
+	var c: Cant = Cant.scene.instantiate()
+	c.name = c.name + "%010d" % randi()
+	c.transform = p_transform
+	#c.log_scale = p_scale
+
+	#c.ready.connect(c.load_post_ready.bind({}))
+	#var chunk = chunks.get_chunk(tree.global_position)
+	world.flora.add_child(c)
+
+	c.freeze = false
+	return c
+
+
+func _spawn_cants(p_position: Vector3) -> Cant:
+	var b: Cant = Cant.scene.instantiate()
+	b.name = b.name + "%010d" % randi()
+	b.position = p_position
+	#c.log_scale = p_scale
+
+	#c.ready.connect(c.load_post_ready.bind({}))
+	#var chunk = chunks.get_chunk(tree.global_position)
+	world.flora.add_child(b)
+
+	b.freeze = false
+	return b
+
+
+func _spawn_boards(p_position: Vector3, count: int) -> void:
+	count = clampi(count, 1, 100)
+	for i: int in count:
+		var b: Board = Board.scene.instantiate()
+		b.name = b.name + "%010d" % randi()
+		b.position = p_position
+		#c.log_scale = p_scale
+
+		#c.ready.connect(c.load_post_ready.bind({}))
+		#var chunk = chunks.get_chunk(tree.global_position)
+		world.flora.add_child(b)
+
+		b.freeze = false
+
+
+func spawn_board(p_transform: Transform3D, p_scale: float) -> Board:
+	var b: Board = Board.scene.instantiate()
+	b.name = b.name + "%010d" % randi()
+	b.transform = p_transform
+	#c.log_scale = p_scale
+
+	#c.ready.connect(c.load_post_ready.bind({}))
+	#var chunk = chunks.get_chunk(tree.global_position)
+	world.flora.add_child(b)
+
+	b.freeze = false
+	return b
+
+
 func _spawn_apples(count: int, center: Vector3) -> void:
 	count = clampi(count, 1, 10000)
 	for i: int in count:
@@ -362,6 +426,16 @@ func _spawn_apples(count: int, center: Vector3) -> void:
 		world.flora.add_child(apple)
 
 
+func _spawn_saws(count: int, center: Vector3) -> void:
+	count = clampi(count, 1, 100)
+	for i: int in count:
+		var l: Saw = Saw.scene.instantiate()
+		l.name = l.name + "%010d" % randi()
+		l.position = _get_random_vector(10, center)
+		#var chunk = chunks.get_chunk(tree.global_position)
+		world.items.add_child(l)
+
+
 func _spawn_logs(count: int, center: Vector3) -> void:
 	count = clampi(count, 1, 100)
 	for i: int in count:
@@ -370,6 +444,7 @@ func _spawn_logs(count: int, center: Vector3) -> void:
 		l.position = _get_random_vector(10, center)
 		#var chunk = chunks.get_chunk(tree.global_position)
 		world.flora.add_child(l)
+
 
 func _spawn_stones(quantity: int, p: Vector3) -> void:
 	print('_spawn_stones')

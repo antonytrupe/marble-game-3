@@ -1,7 +1,7 @@
 extends MeshInstance3D
 
 @export var size: int = 512
-@export var noise_seed:int =1
+@export var noise_seed: int = 1
 
 var noise: FastNoiseLite = FastNoiseLite.new()
 var st: SurfaceTool = SurfaceTool.new()
@@ -20,7 +20,6 @@ func _ready() -> void:
 	position.z -= size / 2.0
 	generate_map()
 	#navigation_region_3d.bake_navigation_mesh()
-
 
 
 func generate_map() -> void:
@@ -56,18 +55,28 @@ func generate_map() -> void:
 
 	#create_trimesh_collision()
 
-	var static_body:StaticBody3D = StaticBody3D.new()
-	static_body.position=position
-	static_body.set_collision_layer_value(1,true)
-	static_body.set_collision_mask_value(1,true)
-	static_body.set_collision_mask_value(2,true)
-	static_body.set_collision_mask_value(3,true)
-	static_body.set_collision_mask_value(4,true)
+	var static_body: StaticBody3D = StaticBody3D.new()
+	static_body.position = position
+	static_body.set_collision_layer_value(1, true)
+	#static_body.set_collision_mask_value(1,true)
+	#static_body.set_collision_mask_value(2,true)
+	#static_body.set_collision_mask_value(3,true)
+	#static_body.set_collision_mask_value(4,true)
+	#static_body.set_collision_mask_value(4,true)
+	#static_body.set_collision_mask_value(4,true)
+
+
+	var physics_material: PhysicsMaterial = PhysicsMaterial.new()
+	physics_material.bounce = 0.0
+	physics_material.absorbent = true
+	physics_material.friction = 1.0
+	static_body.physics_material_override = physics_material
+
 	#add_child(static_body)
-	var collision_shape:CollisionShape3D = CollisionShape3D.new()
+	var collision_shape: CollisionShape3D = CollisionShape3D.new()
 
 	static_body.add_child(collision_shape)
-	var shape:ConcavePolygonShape3D = mesh.create_trimesh_shape()
+	var shape: ConcavePolygonShape3D = mesh.create_trimesh_shape()
 	collision_shape.shape = shape
 	navigation_region_3d.add_child.call_deferred(static_body)
 
