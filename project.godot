@@ -133,11 +133,14 @@ interact_left={
 3d_navigation/layer_4="fauna"
 3d_physics/layer_5="terra"
 3d_navigation/layer_5="terra"
+3d_physics/layer_6="items"
+3d_navigation/layer_6="items"
 avoidance/layer_1="environment"
 avoidance/layer_2="players"
 avoidance/layer_3="flora"
 avoidance/layer_4="fauna"
 avoidance/layer_5="terra"
+avoidance/layer_6="items"
 
 [physics]
 
