@@ -44,7 +44,13 @@ func get_object_verbs(subject_verbs: Array[String]) -> Array[Callable]:
 	var verbs: Array[Callable] = []
 	if subject_verbs.has("saw"):
 		verbs.append(saw)
+	if subject_verbs.has("pick_up"):
+		verbs.append(pick_up)
 	return verbs
+
+
+func pick_up(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
+	return [ self ]
 
 
 func saw(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:

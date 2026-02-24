@@ -36,7 +36,6 @@ points = PackedVector3Array(0.053162795, -0.10156741, -0.0515873, -0.05157705, -
 [node name="Axe" type="RigidBody3D" unique_id=143075445 groups=["persist"]]
 collision_layer = 32
 collision_mask = 63
-freeze = true
 script = ExtResource("1_kwwce")
 
 [node name="MarbleItem" parent="." unique_id=871184265 instance=ExtResource("2_6th5x")]

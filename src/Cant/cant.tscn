@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c7dkw1hur7lwg"]
 
-[ext_resource type="Script" uid="uid://0j4w6s3iv42y" path="res://src/Cant/cant.gd" id="1_p63mr"]
+[ext_resource type="Script" uid="uid://0j4w6s3iv42y" path="res://src/cant/cant.gd" id="1_p63mr"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_umi2h"]
 size = Vector3(1.41, 7.5, 1.41)

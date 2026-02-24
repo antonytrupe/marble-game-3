@@ -49,6 +49,7 @@ shadow_enabled = true
 collision_mask = 0
 
 [node name="FloorCollisionShape3D" type="CollisionShape3D" parent="FloorStaticBody3D" unique_id=1456895388]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6, 0)
 shape = SubResource("WorldBoundaryShape3D_gv5m4")
 debug_fill = false
 

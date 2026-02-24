@@ -118,7 +118,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 			#rotate left hand inventory
-			if Input.is_key_pressed(KEY_ALT):
+			if Input.is_key_pressed(KEY_ALT) and current_character.right_inventory:
 				if event is InputEventMouseButton:
 					print(event.factor)
 					var scroll_amount: float = 0
@@ -127,24 +127,24 @@ func _unhandled_input(event: InputEvent) -> void:
 					elif (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN)):
 						scroll_amount = event.factor if event.factor else 1.0
 					#spin
-					current_character.inventory_right_marker.rotate_object_local(
+					current_character.right_inventory.rotate_object_local(
 						Vector3.UP,
 						scroll_amount * 0.1)
 
 				if event is InputEventMouseMotion:
 					#side to side
-					current_character.inventory_right_marker.rotate(
+					current_character.right_inventory.rotate(
 						#current_character.transform.basis.z,
 						Vector3.FORWARD,
 						event.relative.x * 0.005)
 					#front to back
-					current_character.inventory_right_marker.rotate(
+					current_character.right_inventory.rotate(
 						#current_character.global_transform.basis.x,
 						Vector3.RIGHT,
 						event.relative.y * 0.005)
 
 			#rotate right hand inventory
-			elif Input.is_key_pressed(KEY_CTRL):
+			elif Input.is_key_pressed(KEY_CTRL) and current_character.left_inventory:
 				if event is InputEventMouseButton:
 					print(event.factor)
 					var scroll_amount: float = 0
@@ -153,18 +153,18 @@ func _unhandled_input(event: InputEvent) -> void:
 					elif (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN)):
 						scroll_amount = event.factor if event.factor else 1.0
 					#spin
-					current_character.inventory_left_marker.rotate_object_local(
+					current_character.left_inventory.rotate_object_local(
 						Vector3.UP,
 						scroll_amount * 0.1)
 
 				if event is InputEventMouseMotion:
 					#side to side
-					current_character.inventory_left_marker.rotate(
+					current_character.left_inventory.rotate(
 						#current_character.transform.basis.z,
 						Vector3.FORWARD,
 						event.relative.x * 0.005)
 					#front to back
-					current_character.inventory_left_marker.rotate(
+					current_character.left_inventory.rotate(
 						#current_character.global_transform.basis.x,
 						Vector3.RIGHT,
 						event.relative.y * 0.005)

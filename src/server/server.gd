@@ -204,9 +204,9 @@ func _spawn(character: MarbleCharacter, parts: Array) -> void:
 				count = int(parts[2])
 			_spawn_boards(character.position, count)
 		"cant", "cants":
-			var count: int = 1
-			if parts.size() >= 3:
-				count = int(parts[2])
+			# var count: int = 1
+			# if parts.size() >= 3:
+			# 	count = int(parts[2])
 			_spawn_cants(character.position)
 		"log", "logs":
 			var count: int = 1
@@ -359,7 +359,7 @@ func spawn_stump(p_position: Vector3, maturity_ratio: float = 1.0) -> void:
 	world.flora.add_child(stump)
 
 
-func spawn_cant(p_transform: Transform3D, p_scale: float) -> Cant:
+func spawn_cant(p_transform: Transform3D, _p_scale: float) -> Cant:
 	var c: Cant = Cant.scene.instantiate()
 	c.name = c.name + "%010d" % randi()
 	c.transform = p_transform
@@ -402,7 +402,7 @@ func _spawn_boards(p_position: Vector3, count: int) -> void:
 		b.freeze = false
 
 
-func spawn_board(p_transform: Transform3D, p_scale: float) -> Board:
+func spawn_board(p_transform: Transform3D, _p_scale: float) -> Board:
 	var b: Board = Board.scene.instantiate()
 	b.name = b.name + "%010d" % randi()
 	b.transform = p_transform

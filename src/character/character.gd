@@ -78,8 +78,8 @@ var actions: Array[Action]
 @onready var warp_detector: WarpDetector = %WarpDetector
 @onready var age: MarbleAge = %Age
 @onready var raycast: RayCast3D = %RayCast3D
-@onready var inventory_right_marker: RemoteTransform3D = %InventoryRightMarker
-@onready var inventory_left_marker: RemoteTransform3D = %InventoryLeftMarker
+@onready var inventory_right_marker: Generic6DOFJoint3D = %InventoryRightMarker
+@onready var inventory_left_marker: Generic6DOFJoint3D = %InventoryLeftMarker
 @onready var character: MarbleCharacter = $"."
 #endregion
 
@@ -181,12 +181,16 @@ func pick_up(hand: INTERACT, entities: Array) -> bool:
 
 			if hand == INTERACT.RIGHT:
 				right_inventory = entity
-				inventory_right_marker.remote_path = right_inventory.get_path()
-				add_collision_exception_with(right_inventory)
+				right_inventory.global_transform = inventory_right_marker.global_transform
+				inventory_right_marker.node_b = right_inventory.get_path()
+				#add_collision_exception_with(right_inventory)
+				raycast.add_exception(right_inventory)
 			else:
 				left_inventory = entity
-				inventory_left_marker.remote_path = left_inventory.get_path()
-				add_collision_exception_with(left_inventory)
+				left_inventory.global_transform = inventory_left_marker.global_transform
+				inventory_left_marker.node_b = left_inventory.get_path()
+				#add_collision_exception_with(left_inventory)
+				raycast.add_exception(left_inventory)
 
 			return true
 	return false
@@ -240,16 +244,18 @@ func _handle_drop(hand: INTERACT) -> void:
 	if hand == INTERACT.RIGHT and right_inventory:
 		if right_inventory is RigidBody3D:
 			right_inventory.freeze = false
-			remove_collision_exception_with(right_inventory)
+			#remove_collision_exception_with(right_inventory)
+		raycast.remove_exception(right_inventory)
 		right_inventory = null
-		inventory_right_marker.remote_path = ''
+		inventory_right_marker.node_b = NodePath()
 
 	elif hand == INTERACT.LEFT and left_inventory:
 		if left_inventory is RigidBody3D:
 			left_inventory.freeze = false
-			remove_collision_exception_with(left_inventory)
+			#remove_collision_exception_with(left_inventory)
+		raycast.remove_exception(left_inventory)
 		left_inventory = null
-		inventory_left_marker.remote_path = ''
+		inventory_left_marker.node_b = NodePath()
 
 
 func _set_turn(value: int) -> void:
@@ -423,34 +429,34 @@ func load_pre_ready(data: Dictionary) -> void:
 func load_post_ready(data: Dictionary) -> void:
 	if "age" in data:
 		age.age = data.age
-	#TODO maybe find a wait to get an event when this node is added to the scenetree
-	if "left_inventory" in data and data.left_inventory:
-		var l: Node = world.find_child(data.left_inventory, true, false)
-		if l: left_inventory = l
-		else:
-			var f: Callable
-			f = func(child: Node) -> void:
-				if child.name == data.left_inventory:
-					left_inventory = child
-					add_collision_exception_with(left_inventory)
-					inventory_left_marker.remote_path = left_inventory.get_path()
-					#world.items.child_entered_tree.disconnect(f)
 
-			world.items.child_entered_tree.connect(f)
+	if "left_inventory" in data and data.left_inventory:
+		var f: Callable = func(child: Node) -> void:
+			if child.name == data.left_inventory:
+				left_inventory = child
+				#add_collision_exception_with(left_inventory)
+				raycast.add_exception(left_inventory)
+				inventory_left_marker.node_b = left_inventory.get_path()
+				#world.items.child_entered_tree.disconnect(f)
+
+		var l: Node = world.find_child(data.left_inventory, true, false)
+
+		if l: f.call(l)
+		else: world.items.child_entered_tree.connect(f)
 
 	if "right_inventory" in data and data.right_inventory:
-		var r: Node = world.find_child(data.right_inventory, true, false)
-		if r: right_inventory = r
-		else:
-			var f: Callable
-			f = func(child: Node) -> void:
-				if child.name == data.right_inventory:
-					right_inventory = child
-					add_collision_exception_with(right_inventory)
-					inventory_right_marker.remote_path = right_inventory.get_path()
-					#world.items.child_entered_tree.disconnect(f)
+		var f: Callable = func(child: Node) -> void:
+			if child.name == data.right_inventory:
+				right_inventory = child
+				#add_collision_exception_with(right_inventory)
+				raycast.add_exception(right_inventory)
+				inventory_right_marker.node_b = right_inventory.get_path()
+				#world.items.child_entered_tree.disconnect(f)
 
-			world.items.child_entered_tree.connect(f)
+		var r: Node = world.find_child(data.right_inventory, true, false)
+
+		if r: f.call(r)
+		else: world.items.child_entered_tree.connect(f)
 #endregion
 
 func _update_label() -> void:
