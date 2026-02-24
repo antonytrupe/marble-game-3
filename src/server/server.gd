@@ -392,7 +392,7 @@ func _spawn_boards(p_position: Vector3, count: int) -> void:
 	for i: int in count:
 		var b: Board = Board.scene.instantiate()
 		b.name = b.name + "%010d" % randi()
-		b.position = p_position
+		b.position = _get_random_vector(2 + count, p_position)
 		#c.log_scale = p_scale
 
 		#c.ready.connect(c.load_post_ready.bind({}))

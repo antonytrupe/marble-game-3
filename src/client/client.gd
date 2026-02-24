@@ -117,24 +117,76 @@ func _unhandled_input(event: InputEvent) -> void:
 				#current_character.server_move(input_dir)
 
 
-		if event is InputEventMouseButton:
-			#handle moving the camera forward
-			if (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP)):
-				var scroll_amount: float = - event.factor if event.factor else -1.0
-				if is_server():
-					current_character.server_camera_zoom(scroll_amount)
-				else:
-					current_character.server_camera_zoom.rpc_id(1, scroll_amount)
-					#current_character.server_camera_zoom(scroll_amount)
+			#rotate left hand inventory
+			if Input.is_key_pressed(KEY_ALT):
+				if event is InputEventMouseButton:
+					print(event.factor)
+					var scroll_amount: float = 0
+					if (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP)):
+						scroll_amount = - event.factor if event.factor else -1.0
+					elif (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN)):
+						scroll_amount = event.factor if event.factor else 1.0
+					#spin
+					current_character.inventory_right_marker.rotate_object_local(
+						Vector3.UP,
+						scroll_amount * 0.1)
 
-			#handle moving the camera backwards
-			if (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN)):
-				var scroll_amount: float = event.factor if event.factor else 1.0
-				if is_server():
-					current_character.server_camera_zoom(scroll_amount)
-				else:
-					current_character.server_camera_zoom.rpc_id(1, scroll_amount)
-					#current_character.server_camera_zoom(scroll_amount)
+				if event is InputEventMouseMotion:
+					#side to side
+					current_character.inventory_right_marker.rotate(
+						#current_character.transform.basis.z,
+						Vector3.FORWARD,
+						event.relative.x * 0.005)
+					#front to back
+					current_character.inventory_right_marker.rotate(
+						#current_character.global_transform.basis.x,
+						Vector3.RIGHT,
+						event.relative.y * 0.005)
+
+			#rotate right hand inventory
+			elif Input.is_key_pressed(KEY_CTRL):
+				if event is InputEventMouseButton:
+					print(event.factor)
+					var scroll_amount: float = 0
+					if (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP)):
+						scroll_amount = - event.factor if event.factor else -1.0
+					elif (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN)):
+						scroll_amount = event.factor if event.factor else 1.0
+					#spin
+					current_character.inventory_left_marker.rotate_object_local(
+						Vector3.UP,
+						scroll_amount * 0.1)
+
+				if event is InputEventMouseMotion:
+					#side to side
+					current_character.inventory_left_marker.rotate(
+						#current_character.transform.basis.z,
+						Vector3.FORWARD,
+						event.relative.x * 0.005)
+					#front to back
+					current_character.inventory_left_marker.rotate(
+						#current_character.global_transform.basis.x,
+						Vector3.RIGHT,
+						event.relative.y * 0.005)
+
+			else:
+				#handle moving the camera forward
+				if (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP)):
+					var scroll_amount: float = - event.factor if event.factor else -1.0
+					if is_server():
+						current_character.server_camera_zoom(scroll_amount)
+					else:
+						current_character.server_camera_zoom.rpc_id(1, scroll_amount)
+						#current_character.server_camera_zoom(scroll_amount)
+
+				#handle moving the camera backwards
+				if (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN)):
+					var scroll_amount: float = event.factor if event.factor else 1.0
+					if is_server():
+						current_character.server_camera_zoom(scroll_amount)
+					else:
+						current_character.server_camera_zoom.rpc_id(1, scroll_amount)
+						#current_character.server_camera_zoom(scroll_amount)
 
 
 	if Input.is_action_just_pressed("escape"):

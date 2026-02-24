@@ -94,12 +94,11 @@ func chop(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
 	return []
 
 
-func get_object_verbs(action: String = "chop") -> Array[Callable]:
-	match action:
-		'chop':
-			return [chop]
-		_:
-			return []
+func get_object_verbs(subject_verbs: Array[String]) -> Array[Callable]:
+	var verbs: Array[Callable] = []
+	if subject_verbs.has("chop"):
+		verbs.append(chop)
+	return verbs
 
 
 func _add_apple() -> void:
@@ -167,9 +166,9 @@ func load_post_ready(data: Dictionary) -> void:
 			var apple: Apple3D = world.find_child(a_name, true, false)
 			if apple: apples.append(apple)
 			else:
-				var f: Callable = func(child: Node) -> void:
-					if child.name == data.left_inventory:
-						apples.append(child)
+				var f: Callable = func(apple: Node) -> void:
+					if apple.name == a_name:
+						apples.append(apple)
 				world.items.child_entered_tree.connect(f)
 
 

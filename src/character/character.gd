@@ -78,8 +78,8 @@ var actions: Array[Action]
 @onready var warp_detector: WarpDetector = %WarpDetector
 @onready var age: MarbleAge = %Age
 @onready var raycast: RayCast3D = %RayCast3D
-@onready var inventory_right_marker: Node3D = %InventoryRightMarker
-@onready var inventory_left_marker: Node3D = %InventoryLeftMarker
+@onready var inventory_right_marker: RemoteTransform3D = %InventoryRightMarker
+@onready var inventory_left_marker: RemoteTransform3D = %InventoryLeftMarker
 @onready var character: MarbleCharacter = $"."
 #endregion
 
@@ -151,24 +151,6 @@ func _physics_process(delta: float) -> void:
 
 	character.move_and_slide()
 
-	if right_inventory and right_inventory is RigidBody3D:
-		right_inventory.freeze_mode = RigidBody3D.FreezeMode.FREEZE_MODE_STATIC
-		right_inventory.freeze = true
-		right_inventory.global_position = inventory_right_marker.global_position
-		right_inventory.global_rotation = inventory_right_marker.global_rotation
-
-	if left_inventory:
-		left_inventory.freeze_mode = RigidBody3D.FreezeMode.FREEZE_MODE_STATIC
-		left_inventory.freeze = true
-		left_inventory.global_position = inventory_left_marker.global_position
-		left_inventory.global_rotation = inventory_left_marker.global_rotation
-
-
-#setter, don't call directly
-#func _set_action(value: Dictionary) -> void:
-	#current_turn_actions = value
-	#Signals.Actions.emit(player_id, current_turn_actions)
-
 
 func is_server() -> bool:
 	return multiplayer.is_server()
@@ -181,13 +163,12 @@ func get_target() -> Object:
 
 ##verbs the character can do
 func get_subject_verbs() -> Array[Callable]:
-	#var a:Action
 	return [pick_up]
 
 
 ##verbs that can be done to the character
-func get_object_verbs() -> Array[Callable]:
-	return [pick_up]
+func get_object_verbs(_subject_verbs: Array[String]) -> Array[Callable]:
+	return []
 
 
 func pick_up(hand: INTERACT, entities: Array) -> bool:
@@ -195,16 +176,18 @@ func pick_up(hand: INTERACT, entities: Array) -> bool:
 	for entity: Object in entities:
 		if entity is PhysicsBody3D:
 			if entity is RigidBody3D:
-				entity.freeze = true
+				pass
+				#entity.freeze = true
 
 			if hand == INTERACT.RIGHT:
 				right_inventory = entity
+				inventory_right_marker.remote_path = right_inventory.get_path()
 				add_collision_exception_with(right_inventory)
 			else:
 				left_inventory = entity
+				inventory_left_marker.remote_path = left_inventory.get_path()
 				add_collision_exception_with(left_inventory)
 
-			#set_action({"action": "pick_up"})
 			return true
 	return false
 
@@ -230,7 +213,10 @@ func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
 			if subject.has_method("get_subject_verbs"):
 				var subject_verbs: Array[Callable] = subject.get_subject_verbs()
 
-				var object_verbs: Array[Callable] = object.get_object_verbs()
+				var object_verbs: Array = object.get_object_verbs(Array(subject_verbs.map(
+					func(c: Callable) -> String:
+						return c.get_method()
+				), TYPE_STRING, "", null))
 
 				did_action = object_verbs.any(func(object_verb: Callable) -> bool:
 					#print(object_verb.get_method())
@@ -256,30 +242,21 @@ func _handle_drop(hand: INTERACT) -> void:
 			right_inventory.freeze = false
 			remove_collision_exception_with(right_inventory)
 		right_inventory = null
+		inventory_right_marker.remote_path = ''
 
 	elif hand == INTERACT.LEFT and left_inventory:
 		if left_inventory is RigidBody3D:
 			left_inventory.freeze = false
 			remove_collision_exception_with(left_inventory)
 		left_inventory = null
-
-
-# use reset_actions to clear this and skip internal logic
-#func set_action(value: Dictionary) -> void:
-	#if value.has("action") and value.action:
-		#current_turn_actions.action = value.action
-	## only update move if we went faster
-	#if (
-		#value.has("move")
-		#and (current_turn_actions.move == null or value.move > current_turn_actions.move)
-	#):
-		#current_turn_actions.move = value.move
+		inventory_left_marker.remote_path = ''
 
 
 func _set_turn(value: int) -> void:
 	if label and value != turn:
 		_update_label()
 	turn = value
+
 
 func calculate_warp() -> void:
 	var closest: WarpMonument = null
@@ -309,6 +286,7 @@ func server_jump() -> void:
 		character.velocity.y = JUMP_VELOCITY * min(warp_speed, MAX_CONTROLLED_WARP)
 	elif flying:
 		character.velocity.y = JUMP_VELOCITY * min(warp_speed, MAX_CONTROLLED_WARP)
+
 
 @rpc("any_peer", "call_local")
 func server_fly() -> void:
@@ -455,6 +433,7 @@ func load_post_ready(data: Dictionary) -> void:
 				if child.name == data.left_inventory:
 					left_inventory = child
 					add_collision_exception_with(left_inventory)
+					inventory_left_marker.remote_path = left_inventory.get_path()
 					#world.items.child_entered_tree.disconnect(f)
 
 			world.items.child_entered_tree.connect(f)
@@ -468,6 +447,7 @@ func load_post_ready(data: Dictionary) -> void:
 				if child.name == data.right_inventory:
 					right_inventory = child
 					add_collision_exception_with(right_inventory)
+					inventory_right_marker.remote_path = right_inventory.get_path()
 					#world.items.child_entered_tree.disconnect(f)
 
 			world.items.child_entered_tree.connect(f)

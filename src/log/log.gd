@@ -40,12 +40,11 @@ func _ready() -> void:
 		print("The cylinder has fallen over.")
 
 
-func get_object_verbs(action: String = "saw") -> Array[Callable]:
-	match action:
-		'saw':
-			return [saw]
-		_:
-			return []
+func get_object_verbs(subject_verbs: Array[String]) -> Array[Callable]:
+	var verbs: Array[Callable] = []
+	if subject_verbs.has("saw"):
+		verbs.append(saw)
+	return verbs
 
 
 func saw(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:

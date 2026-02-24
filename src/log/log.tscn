@@ -27,7 +27,7 @@ properties/2/spawn = true
 properties/2/replication_mode = 2
 
 [node name="MarbleLog" type="RigidBody3D" unique_id=100295696 groups=["persist"]]
-collision_layer = 4
+collision_layer = 32
 collision_mask = 31
 mass = 20000.0
 physics_material_override = SubResource("PhysicsMaterial_8x860")

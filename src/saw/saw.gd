@@ -5,8 +5,10 @@ extends RigidBody3D
 static var scene: Resource = preload("res://src/saw/saw.tscn")
 
 
-func get_object_verbs() -> Array[Callable]:
-	return [pick_up]
+func get_object_verbs(subject_verbs: Array[String]) -> Array[Callable]:
+	if subject_verbs.has("pick_up"):
+		return [pick_up]
+	return []
 
 
 func get_subject_verbs() -> Array[Callable]:

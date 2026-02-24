@@ -8,22 +8,18 @@ static var scene: Resource = preload("res://src/cant/cant.tscn")
 func debug(...args: Array) -> void:
 	Debug.debug.emit(args)
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+
+func pick_up(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
+	return [ self ]
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-
-
-func get_object_verbs(action: String = "saw") -> Array[Callable]:
-	match action:
-		'saw':
-			return [saw]
-		_:
-			return []
+func get_object_verbs(subject_verbs: Array[String]) -> Array[Callable]:
+	var verbs: Array[Callable] = []
+	if subject_verbs.has("saw"):
+		verbs.append(saw)
+	if subject_verbs.has("pick_up"):
+		verbs.append(pick_up)
+	return verbs
 
 
 func saw(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:

@@ -6,14 +6,15 @@ static var scene: Resource = preload("res://src/board/board.tscn")
 @onready var server: Server = $/root/Game/Server
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+func get_object_verbs(subject_verbs: Array) -> Array[Callable]:
+	var verbs: Array[Callable] = []
+	if subject_verbs.has("pick_up"):
+		verbs.append(pick_up)
+	return verbs
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func pick_up(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
+	return [ self ]
 
 
 func load_pre_ready(data: Dictionary) -> void:
