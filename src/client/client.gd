@@ -117,57 +117,48 @@ func _unhandled_input(event: InputEvent) -> void:
 				#current_character.server_move(input_dir)
 
 
-			#rotate left hand inventory
+			#rotate right hand inventory
 			if Input.is_key_pressed(KEY_ALT) and current_character.right_inventory:
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 				if event is InputEventMouseButton:
-					print(event.factor)
 					var scroll_amount: float = 0
 					if (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP)):
 						scroll_amount = - event.factor if event.factor else -1.0
 					elif (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN)):
 						scroll_amount = event.factor if event.factor else 1.0
-					#spin
-					current_character.right_inventory.rotate_object_local(
-						Vector3.UP,
-						scroll_amount * 0.1)
+					# SPIN: Update the Y equilibrium point
+					var current_y: float = current_character.inventory_right_marker.get_param_y(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
+					current_character.inventory_right_marker.set_param_y(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, current_y + (scroll_amount * 0.3))
 
 				if event is InputEventMouseMotion:
-					#side to side
-					current_character.right_inventory.rotate(
-						#current_character.transform.basis.z,
-						Vector3.FORWARD,
-						event.relative.x * 0.005)
-					#front to back
-					current_character.right_inventory.rotate(
-						#current_character.global_transform.basis.x,
-						Vector3.RIGHT,
-						event.relative.y * 0.005)
+	   				# SIDE-TO-SIDE: Update the Z equilibrium point (Forward axis)
+					var current_z: float = current_character.inventory_right_marker.get_param_z(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
+					current_character.inventory_right_marker.set_param_z(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, current_z + (event.relative.x * 0.005))
 
-			#rotate right hand inventory
+					# FRONT-TO-BACK: Update the X equilibrium point (Right axis)
+					var current_x: float = current_character.inventory_right_marker.get_param_x(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
+					current_character.inventory_right_marker.set_param_x(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, current_x + (-event.relative.y * 0.005))
+
+			#rotate left hand inventory
 			elif Input.is_key_pressed(KEY_CTRL) and current_character.left_inventory:
 				if event is InputEventMouseButton:
-					print(event.factor)
 					var scroll_amount: float = 0
 					if (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP)):
 						scroll_amount = - event.factor if event.factor else -1.0
 					elif (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN)):
 						scroll_amount = event.factor if event.factor else 1.0
-					#spin
-					current_character.left_inventory.rotate_object_local(
-						Vector3.UP,
-						scroll_amount * 0.1)
+					# SPIN: Update the Y equilibrium point
+					var current_y: float = current_character.inventory_left_marker.get_param_y(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
+					current_character.inventory_left_marker.set_param_y(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, current_y + (scroll_amount * 0.1))
 
 				if event is InputEventMouseMotion:
-					#side to side
-					current_character.left_inventory.rotate(
-						#current_character.transform.basis.z,
-						Vector3.FORWARD,
-						event.relative.x * 0.005)
-					#front to back
-					current_character.left_inventory.rotate(
-						#current_character.global_transform.basis.x,
-						Vector3.RIGHT,
-						event.relative.y * 0.005)
+					# SIDE-TO-SIDE: Update the Z equilibrium point (Forward axis)
+					var current_z: float = current_character.inventory_left_marker.get_param_z(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
+					current_character.inventory_left_marker.set_param_z(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, current_z + (event.relative.x * 0.005))
+
+					# FRONT-TO-BACK: Update the X equilibrium point (Right axis)
+					var current_x: float = current_character.inventory_left_marker.get_param_x(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
+					current_character.inventory_left_marker.set_param_x(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, current_x + (event.relative.y * 0.005))
 
 			else:
 				#handle moving the camera forward

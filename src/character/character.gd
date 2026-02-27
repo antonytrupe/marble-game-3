@@ -181,7 +181,7 @@ func pick_up(hand: INTERACT, entities: Array) -> bool:
 
 			if hand == INTERACT.RIGHT:
 				right_inventory = entity
-				right_inventory.global_transform = inventory_right_marker.global_transform
+				right_inventory.global_position = inventory_right_marker.global_position
 				inventory_right_marker.node_b = right_inventory.get_path()
 				#add_collision_exception_with(right_inventory)
 				raycast.add_exception(right_inventory)
@@ -248,6 +248,9 @@ func _handle_drop(hand: INTERACT) -> void:
 		raycast.remove_exception(right_inventory)
 		right_inventory = null
 		inventory_right_marker.node_b = NodePath()
+		inventory_right_marker.set_param_x(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, 0)
+		inventory_right_marker.set_param_y(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, 0)
+		inventory_right_marker.set_param_z(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, 0)
 
 	elif hand == INTERACT.LEFT and left_inventory:
 		if left_inventory is RigidBody3D:
@@ -256,6 +259,9 @@ func _handle_drop(hand: INTERACT) -> void:
 		raycast.remove_exception(left_inventory)
 		left_inventory = null
 		inventory_left_marker.node_b = NodePath()
+		inventory_left_marker.set_param_x(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, 0)
+		inventory_left_marker.set_param_y(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, 0)
+		inventory_left_marker.set_param_z(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, 0)
 
 
 func _set_turn(value: int) -> void:

@@ -79,9 +79,34 @@ skeleton = NodePath("../..")
 transform = Transform3D(1, 0, 0, 0, 0.34202015, -0.9396926, 0, 0.9396926, 0.34202015, -0.55, 0.2, -0.25)
 mesh = SubResource("CapsuleMesh_tntuy")
 
+[node name="InventoryLeftMarker" type="Generic6DOFJoint3D" parent="BodyMesh/LeftArmMesh" unique_id=1677119665]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.34202015, 0.9396926, 0, -0.9396926, 0.34202015, 0, -0.36309445, -0.025737882)
+node_a = NodePath("../../..")
+angular_limit_x/enabled = false
+angular_limit_y/enabled = false
+angular_limit_z/enabled = false
+
 [node name="RightArmMesh" type="MeshInstance3D" parent="BodyMesh" unique_id=1623668904]
 transform = Transform3D(1, 0, 0, 0, 0.34202015, -0.9396926, 0, 0.9396926, 0.34202015, 0.55, 0.2, -0.25)
 mesh = SubResource("CapsuleMesh_tntuy")
+
+[node name="InventoryRightMarker" type="Generic6DOFJoint3D" parent="BodyMesh/RightArmMesh" unique_id=1207482372]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.34202015, 0.9396926, 0, -0.9396926, 0.34202015, 0, -0.36309445, -0.025737882)
+node_a = NodePath("../../..")
+angular_limit_x/enabled = false
+angular_limit_y/enabled = false
+angular_limit_z/enabled = false
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 200.0
+angular_spring_x/damping = 30.0
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 200.0
+angular_spring_y/damping = 30.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 200.0
+angular_spring_z/damping = 30.0
 
 [node name="Label3D" type="Label3D" parent="." unique_id=244575978]
 unique_name_in_owner = true
@@ -97,7 +122,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, -0.52)
 unique_name_in_owner = true
 attributes = SubResource("CameraAttributesPractical_k8eue")
 
-[node name="RayCast3D" type="RayCast3D" parent="CameraPivot/Camera3D" unique_id=917288751]
+[node name="RayCast3D" type="RayCast3D" parent="CameraPivot" unique_id=917288751]
 unique_name_in_owner = true
 target_position = Vector3(0, 0, -4)
 collision_mask = 63
@@ -114,22 +139,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
 [node name="Age" parent="." unique_id=781584009 instance=ExtResource("4_k8eue")]
 unique_name_in_owner = true
-
-[node name="InventoryRightMarker" type="Generic6DOFJoint3D" parent="." unique_id=1207482372]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 1, -0.6)
-node_a = NodePath("..")
-angular_limit_x/enabled = false
-angular_limit_y/enabled = false
-angular_limit_z/enabled = false
-
-[node name="InventoryLeftMarker" type="Generic6DOFJoint3D" parent="." unique_id=1677119665]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 1, -0.6)
-node_a = NodePath("..")
-angular_limit_x/enabled = false
-angular_limit_y/enabled = false
-angular_limit_z/enabled = false
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1774699100]
 _spawnable_scenes = PackedStringArray("uid://d4h758w873o1j")
