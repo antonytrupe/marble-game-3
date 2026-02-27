@@ -11,8 +11,8 @@ static var scene: Resource = preload("res://src/apple/apple_3d.tscn")
 #@export var warp_speed: float = 1
 
 var turn: int = 0
-var _is_on_floor: bool = false
 var tree: MarbleTree
+var _is_on_floor: bool = false
 
 @onready var collision_shape_3d: CollisionShape3D = %CollisionShape3D
 @onready var mesh_instance_3d: MeshInstance3D = $MeshInstance3D
@@ -105,7 +105,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		# Use a dot product to allow for slopes (e.g., > 0.7 for ~45 degrees).
 		if normal.dot(Vector3.UP) > 0.7:
 			_is_on_floor = true
-			print('is on floor')
+			#print('is on floor')
 			break
 
 
@@ -113,12 +113,11 @@ func get_subject_verbs() -> Array[Callable]:
 	return []
 
 
-func get_object_verbs(action: String = "pick_up") -> Array[Callable]:
-	match action:
-		'pick_up':
-			return [pick_up]
-		_:
-			return []
+func get_object_verbs(subject_verbs: Array[String]) -> Array[Callable]:
+	var verbs: Array[Callable] = []
+	if subject_verbs.has("pick_up"):
+		verbs.append(pick_up)
+	return verbs
 
 
 func calculate_warp() -> void:

@@ -26,7 +26,7 @@ func generate_map() -> void:
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for z: int in range(size + 1):
 		for x: int in range(size + 1):
-			var y: float = abs(noise.get_noise_2d(x, z)) * 32.0 - 10
+			var y: float = abs(noise.get_noise_2d(x, z)) * 32.0 - 10 + x * 0.05
 			st.set_color(Color(0.0, 0.4, 0.0, 1.0))
 			st.set_uv(Vector2(0, 0))
 			st.add_vertex(Vector3(x, y, z))

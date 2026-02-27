@@ -177,7 +177,7 @@ func pick_up(hand: INTERACT, entities: Array) -> bool:
 		if entity is PhysicsBody3D:
 			if entity is RigidBody3D:
 				pass
-				#entity.freeze = true
+				entity.freeze = false
 
 			if hand == INTERACT.RIGHT:
 				right_inventory = entity
