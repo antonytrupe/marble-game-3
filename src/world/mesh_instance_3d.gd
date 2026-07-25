@@ -6,9 +6,13 @@ extends MeshInstance3D
 var noise: FastNoiseLite = FastNoiseLite.new()
 var st: SurfaceTool = SurfaceTool.new()
 
-#@onready var world: World = $".."
-@onready var world: World = $".."
+@onready var world: World = $/root/Game/World
 @onready var navigation_region_3d: NavigationRegion3D = %NavigationRegion3D
+#@onready var spring: Spring = $"../Spring"
+@onready var spring: Spring = %Spring
+
+#const SPRING_SCENE: PackedScene = preload("res://src/spring/spring.tscn")
+
 
 func _ready() -> void:
 	randomize()
@@ -19,7 +23,13 @@ func _ready() -> void:
 	position.x -= size / 2.0
 	position.z -= size / 2.0
 	generate_map()
-	#navigation_region_3d.bake_navigation_mesh()
+
+	#var spring:Spring=SPRING_SCENE.instantiate()
+	#world.add_child(spring)
+	#spring.position.y=24
+	#await spring.ready
+	#await get_tree().physics_frame
+	#spring.generate_downhill_path(spring.global_position)
 
 
 func generate_map() -> void:
@@ -53,17 +63,9 @@ func generate_map() -> void:
 	material.vertex_color_use_as_albedo = true
 	material_override = material
 
-	#create_trimesh_collision()
-
 	var static_body: StaticBody3D = StaticBody3D.new()
 	static_body.position = position
 	static_body.set_collision_layer_value(1, true)
-	#static_body.set_collision_mask_value(1,true)
-	#static_body.set_collision_mask_value(2,true)
-	#static_body.set_collision_mask_value(3,true)
-	#static_body.set_collision_mask_value(4,true)
-	#static_body.set_collision_mask_value(4,true)
-	#static_body.set_collision_mask_value(4,true)
 
 
 	var physics_material: PhysicsMaterial = PhysicsMaterial.new()
