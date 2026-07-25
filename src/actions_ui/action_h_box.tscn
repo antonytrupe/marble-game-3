@@ -107,10 +107,10 @@ text = "∞"
 [node name="Count" type="SpinBox" parent="PanelContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1148242626]
 unique_name_in_owner = true
 visible = false
-layout_direction = 3
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+layout_direction = 3
 value = 23.0
 rounded = true
 allow_greater = true

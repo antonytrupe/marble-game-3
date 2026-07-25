@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://cxdxuhs5yk36t"]
+[gd_scene format=3 uid="uid://cxdxuhs5yk36t"]
 
-[ext_resource type="Script" uid="uid://dg7ytwyxkdyqq" path="res://objects/stone/stone.gd" id="1_qlija"]
+[ext_resource type="Script" uid="uid://dg7ytwyxkdyqq" path="res://src/stone/stone.gd" id="1_qlija"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_gvsq1"]
 radius = 0.1
@@ -13,23 +13,23 @@ properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
 
-[node name="Stone" type="RigidBody3D" groups=["persist"]]
+[node name="Stone" type="RigidBody3D" unique_id=1269038219 groups=["persist"]]
 collision_layer = 16
 script = ExtResource("1_qlija")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1286963386]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 shape = SubResource("SphereShape3D_gvsq1")
 
-[node name="CSGSphere3D" type="CSGSphere3D" parent="."]
+[node name="CSGSphere3D" type="CSGSphere3D" parent="." unique_id=985634422]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 radius = 0.1
 material = SubResource("StandardMaterial3D_gqhnq")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=343591869]
 replication_config = SubResource("SceneReplicationConfig_gomn2")
 
-[node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="."]
+[node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="." unique_id=335702795]
 radius = 0.2
 height = 0.1
 affect_navigation_mesh = true

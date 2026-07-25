@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://d0gg3xuxeqxg1"]
+[gd_scene format=3 uid="uid://d0gg3xuxeqxg1"]
 
 [ext_resource type="Shader" uid="uid://dtl1y23tl3kfx" path="res://src/warp_monument/warp_sphere.gdshader" id="1_3omkl"]
 
@@ -19,5 +19,5 @@ material = SubResource("ShaderMaterial_3omkl")
 radius = 1.0
 height = 2.0
 
-[node name="MeshInstance3D2" type="MeshInstance3D"]
+[node name="MeshInstance3D2" type="MeshInstance3D" unique_id=1877126231]
 mesh = SubResource("SphereMesh_3omkl")

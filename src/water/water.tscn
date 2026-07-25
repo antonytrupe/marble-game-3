@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dg5pngnp7smv8"]
+[gd_scene format=3 uid="uid://dg5pngnp7smv8"]
 
 [ext_resource type="Shader" uid="uid://by6nn2of3a1ig" path="res://src/water/water.gdshader" id="1_mxv3a"]
 
@@ -15,5 +15,5 @@ size = Vector2(100, 100)
 subdivide_width = 32
 subdivide_depth = 32
 
-[node name="MeshInstance3D" type="MeshInstance3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" unique_id=1981360980]
 mesh = SubResource("PlaneMesh_lr5sy")

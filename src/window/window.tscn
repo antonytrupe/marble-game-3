@@ -4,8 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://d2ytvny64xpfk" path="res://src/window/9patchpanel.png" id="1_lhejw"]
 
 [node name="MarbleWindow" type="Control" unique_id=172443875]
-clip_contents = true
 custom_minimum_size = Vector2(96, 96)
+clip_contents = true
 layout_mode = 3
 anchors_preset = 0
 offset_right = 96.0

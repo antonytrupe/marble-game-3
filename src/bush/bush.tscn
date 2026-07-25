@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://damvmfs7dqebu"]
+[gd_scene format=3 uid="uid://damvmfs7dqebu"]
 
 [ext_resource type="Script" uid="uid://bsctidn2uowx1" path="res://src/bush/bush.gd" id="1_ww0ai"]
 [ext_resource type="Script" uid="uid://bv3dl61gkc7tm" path="res://src/bush/bush_staticbody.gd" id="2_ggt4o"]
@@ -85,69 +85,69 @@ properties/1/path = NodePath(".:position")
 properties/1/spawn = true
 properties/1/replication_mode = 2
 
-[node name="Bush" type="Node3D" groups=["flora", "persist"]]
+[node name="Bush" type="Node3D" unique_id=2087126564 groups=["flora", "persist"]]
 script = ExtResource("1_ww0ai")
 
-[node name="BushMeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="BushMeshInstance3D" type="MeshInstance3D" parent="." unique_id=1273031218]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49961, 0)
 mesh = SubResource("CapsuleMesh_vjxuo")
 surface_material_override/0 = SubResource("StandardMaterial3D_6vxsv")
 
-[node name="BerryMeshInstance3D1" type="MeshInstance3D" parent="BushMeshInstance3D"]
+[node name="BerryMeshInstance3D1" type="MeshInstance3D" parent="BushMeshInstance3D" unique_id=942638252]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.991211, 0.533531, 0)
 mesh = SubResource("SphereMesh_1wivi")
 surface_material_override/0 = SubResource("StandardMaterial3D_ugvs8")
 
-[node name="BerryMeshInstance3D2" type="MeshInstance3D" parent="BushMeshInstance3D"]
+[node name="BerryMeshInstance3D2" type="MeshInstance3D" parent="BushMeshInstance3D" unique_id=1753951382]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.489995, 1.18722, -0.499398)
 mesh = SubResource("SphereMesh_ng8vl")
 surface_material_override/0 = SubResource("StandardMaterial3D_qfen0")
 
-[node name="BerryMeshInstance3D3" type="MeshInstance3D" parent="BushMeshInstance3D"]
+[node name="BerryMeshInstance3D3" type="MeshInstance3D" parent="BushMeshInstance3D" unique_id=125610933]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.664762, 1.19579, 0)
 mesh = SubResource("SphereMesh_g31xs")
 surface_material_override/0 = SubResource("StandardMaterial3D_fexpp")
 
-[node name="BerryMeshInstance3D4" type="MeshInstance3D" parent="BushMeshInstance3D"]
+[node name="BerryMeshInstance3D4" type="MeshInstance3D" parent="BushMeshInstance3D" unique_id=2103311637]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.117649, 0.55591, -1.00287)
 mesh = SubResource("SphereMesh_jpa8f")
 surface_material_override/0 = SubResource("StandardMaterial3D_1nwxo")
 
-[node name="BerryMeshInstance3D5" type="MeshInstance3D" parent="BushMeshInstance3D"]
+[node name="BerryMeshInstance3D5" type="MeshInstance3D" parent="BushMeshInstance3D" unique_id=685721007]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.707369, 0.738103, 0.689769)
 mesh = SubResource("SphereMesh_eca8h")
 surface_material_override/0 = SubResource("StandardMaterial3D_vit7c")
 
-[node name="BerryMeshInstance3D6" type="MeshInstance3D" parent="BushMeshInstance3D"]
+[node name="BerryMeshInstance3D6" type="MeshInstance3D" parent="BushMeshInstance3D" unique_id=213557680]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.117649, 1.14673, 0.73837)
 mesh = SubResource("SphereMesh_4m2bj")
 surface_material_override/0 = SubResource("StandardMaterial3D_a7r0q")
 
-[node name="BerryMeshInstance3D7" type="MeshInstance3D" parent="BushMeshInstance3D"]
+[node name="BerryMeshInstance3D7" type="MeshInstance3D" parent="BushMeshInstance3D" unique_id=1319280863]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.21808, 1.33234, -0.49546)
 mesh = SubResource("SphereMesh_b2hbs")
 surface_material_override/0 = SubResource("StandardMaterial3D_25hny")
 
-[node name="BerryMeshInstance3D8" type="MeshInstance3D" parent="BushMeshInstance3D"]
+[node name="BerryMeshInstance3D8" type="MeshInstance3D" parent="BushMeshInstance3D" unique_id=816262655]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.788989, 0.687007, -0.565958)
 mesh = SubResource("SphereMesh_uxwtj")
 surface_material_override/0 = SubResource("StandardMaterial3D_pu3n6")
 
-[node name="BerryMeshInstance3D9" type="MeshInstance3D" parent="BushMeshInstance3D"]
+[node name="BerryMeshInstance3D9" type="MeshInstance3D" parent="BushMeshInstance3D" unique_id=1311379039]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55841, 1.05764, 0.555924)
 mesh = SubResource("SphereMesh_gs0sy")
 surface_material_override/0 = SubResource("StandardMaterial3D_v7oee")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="." node_paths=PackedStringArray("root")]
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=834666726 node_paths=PackedStringArray("root")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("2_ggt4o")
 root = NodePath("..")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=739216962]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.372366, 0)
 shape = SubResource("CapsuleShape3D_olmtm")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1152597856]
 replication_config = SubResource("SceneReplicationConfig_wxu3a")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dhtfh7aumk85c"]
+[gd_scene format=3 uid="uid://dhtfh7aumk85c"]
 
 [ext_resource type="Shader" uid="uid://0e2onyl67kre" path="res://src/highlight/select_outline.gdshader" id="1_nh771"]
 
@@ -17,5 +17,5 @@ top_radius = 0.8
 bottom_radius = 1.0
 height = 10.0
 
-[node name="HighlightMeshInstance3D" type="MeshInstance3D"]
+[node name="HighlightMeshInstance3D" type="MeshInstance3D" unique_id=123125157]
 mesh = SubResource("CylinderMesh_jrthf")
