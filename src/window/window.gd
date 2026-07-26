@@ -1,5 +1,5 @@
 class_name MarbleWindow
-extends Control
+extends PanelContainer
 
 ## add a child node margincontainer that has mouse filter set to "ignore"
 
