@@ -190,71 +190,40 @@ func command(cmd: String, _player: Player, character: MarbleCharacter) -> void:
 
 
 func _spawn(character: MarbleCharacter, parts: Array) -> void:
-	if parts.size() < 2:
+	if parts.size() < 2: # must have at least /spawn <item>
 		return
-	match parts[1]:
-		"saw", "saws":
-			var count: int = 1
-			if parts.size() >= 3:
-				count = int(parts[2])
-			_spawn_saws(count, character.position)
-		"board", "boards":
-			var count: int = 1
-			if parts.size() >= 3:
-				count = int(parts[2])
-			_spawn_boards(character.position, count)
+
+	var count: int = 1
+	if parts.size() >= 3 and parts[2].is_valid_int():
+		count = int(parts[2])
+
+	var maturity_ratio: float = 0.0
+	if parts.size() >= 4 and parts[3].is_valid_float():
+		maturity_ratio = float(parts[3])
+
+	var spawn_map: Dictionary = {
+		"saw": _spawn_saws, "saws": _spawn_saws,
+		"board": _spawn_boards, "boards": _spawn_boards,
+		"log": _spawn_logs, "logs": _spawn_logs,
+		"axe": _spawn_axe,
+		"mob": _spawn_mob, "monster": _spawn_mob, "mobs": _spawn_mob, "monsters": _spawn_mob,
+		"stone": _spawn_stones, "stones": _spawn_stones, "rock": _spawn_stones, "rocks": _spawn_stones,
+		"acorn": _spawn_acorns, "acorns": _spawn_acorns,
+		"bush": _spawn_bushes, "bushes": _spawn_bushes,
+		"apple": _spawn_apples, "apples": _spawn_apples,
+	}
+
+	var spawn_type: String = parts[1]
+	match spawn_type:
+		"tree", "trees":
+			_spawn_trees(count, character.position, maturity_ratio)
 		"cant", "cants":
-			# var count: int = 1
-			# if parts.size() >= 3:
-			# 	count = int(parts[2])
 			_spawn_cants(character.position)
-		"log", "logs":
-			var count: int = 1
-			if parts.size() >= 3:
-				count = int(parts[2])
-			_spawn_logs(count, character.position)
-		"axe":
-			_spawn_axe(1, character.position)
 		"monument", "warp":
 			_spawn_warp_monument(character.position)
-		"mob", "monster", "mobs", "monsters":
-			var count: int = 1
-			if parts.size() >= 3:
-				count = int(parts[2])
-			_spawn_mob(count, character.position)
-		"stone", "stones", "rocks", "rock":
-			var count: int = 1
-			if parts.size() >= 3:
-				count = int(parts[2])
-			_spawn_stones(count, character.position)
-
-		"acorn", "acorns":
-			var count: int = 1
-			if parts.size() >= 3:
-				count = int(parts[2])
-			count = clampi(count, 1, 100)
-			_spawn_acorns(count, character.position)
-
-		"bush", "bushes":
-			var count: int = 1
-			if parts.size() >= 3:
-				count = int(parts[2])
-			_spawn_bushes(count, character.position)
-
-		"tree", "trees":
-			var count: int = 1
-			if parts.size() >= 3:
-				count = int(parts[2])
-			var maturity_ratio: float = 0.0
-			if parts.size() >= 4:
-				maturity_ratio = float(parts[3])
-			_spawn_trees(count, character.position, maturity_ratio)
-
-		"apple", "apples":
-			var count: int = 1
-			if parts.size() >= 3:
-				count = int(parts[2])
-			_spawn_apples(count, character.position)
+		_:
+			if spawn_map.has(spawn_type):
+				spawn_map[spawn_type].call(count, character.position)
 
 
 func _get_random_vector(radius: float, center: Vector3) -> Vector3:
