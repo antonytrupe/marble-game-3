@@ -316,15 +316,18 @@ func _spawn_axe(count: int, center: Vector3) -> void:
 
 func _spawn_trees(count: int, center: Vector3, maturity_ratio: float = 0.0) -> void:
 	count = clampi(count, 1, 100)
+	var max_maturity_ratio: float = 1.0 if maturity_ratio <= 0.0 else maturity_ratio
+
 	for i: int in count:
 		var tree: MarbleTree = MarbleTree.scene.instantiate()
 		tree.name = tree.name + "%010d" % randi()
 		#TODO do this more righter
 		tree.position = _get_random_vector(10 + count, center)
 
+		var random_maturity_ratio: float = randf() * max_maturity_ratio
 		tree.ready.connect(tree.load_post_ready.bind({
-			"age": tree.maturity * maturity_ratio,
-			"turn": (tree.maturity * maturity_ratio) / MarbleAge.SECONDS_IN_TURN
+			"age": tree.maturity * random_maturity_ratio,
+			"turn": (tree.maturity * random_maturity_ratio) / MarbleAge.SECONDS_IN_TURN
 		}))
 
 
