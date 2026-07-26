@@ -52,21 +52,30 @@ func get_actions() -> Array:
 	#return world.world_age + extra_age + Time.get_ticks_msec() - birth_date
 
 
-func save_node() -> Dictionary:
-	var save_dict: Dictionary = {
+func get_data() -> Dictionary:
+	return {
+		"name": name,
+		"parent": str(get_parent().get_path()) if get_parent() else "",
+		"scene_file_path": get_scene_file_path(),
 		"transform": var_to_str(transform),
 		"age": age,
-		#"extra_age": extra_age,
+		"berries": berries,
+		"warp_speed": warp_speed,
 	}
-	return save_dict
 
 
-func load_post_ready(node_data: Dictionary) -> void:
-	transform = str_to_var(node_data["transform"])
-	if "age" in node_data:
-		age = node_data.age
-	#if "extra_age" in node_data:
-		#extra_age = node_data.extra_age
+func load_pre_ready(data: Dictionary) -> void:
+	if "transform" in data:
+		transform = str_to_var(data.transform)
+
+
+func load_post_ready(data: Dictionary) -> void:
+	if "age" in data:
+		age = data.age
+	if "berries" in data:
+		berries = data.berries
+	if "warp_speed" in data:
+		warp_speed = data.warp_speed
 
 
 func pick_berry() -> Dictionary:

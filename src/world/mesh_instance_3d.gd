@@ -9,7 +9,7 @@ var st: SurfaceTool = SurfaceTool.new()
 @onready var world: World = $/root/Game/World
 @onready var navigation_region_3d: NavigationRegion3D = %NavigationRegion3D
 #@onready var spring: Spring = $"../Spring"
-@onready var spring: Spring = %Spring
+#@onready var spring: Spring = %Spring
 
 #const SPRING_SCENE: PackedScene = preload("res://src/spring/spring.tscn")
 
