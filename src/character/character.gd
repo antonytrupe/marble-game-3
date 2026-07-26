@@ -351,6 +351,12 @@ func do_actions() -> void:
 
 
 @rpc("any_peer", "call_local")
+func server_set_mode(new_mode: int) -> void:
+	if new_mode in [MODE.WALK, MODE.HUSTLE, MODE.CROUCH, MODE.RUN]:
+		mode = new_mode as MODE
+
+
+@rpc("any_peer", "call_local")
 func server_move(d: Vector2) -> void:
 	#if !is_server():
 		#return

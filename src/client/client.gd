@@ -110,6 +110,13 @@ func _unhandled_input(event: InputEvent) -> void:
 
 			#moving
 			var input_dir: Vector2 = Input.get_vector("left", "right", "forward", "backward")
+			if input_dir != Vector2.ZERO:
+				var desired_mode: int = MarbleCharacter.MODE.HUSTLE if Input.is_action_pressed("sprint") else MarbleCharacter.MODE.WALK
+				if is_server():
+					current_character.server_set_mode(desired_mode)
+				else:
+					current_character.server_set_mode.rpc_id(1, desired_mode)
+
 			if is_server():
 				current_character.server_move(input_dir)
 			else:
