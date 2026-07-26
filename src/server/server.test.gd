@@ -28,9 +28,16 @@ func test_get_random_vector_within_radius_and_on_ground() -> void:
 		assert_float(distance).is_less_equal(radius)
 
 
-func test_spawn_spring_adds_a_spring_to_flora() -> void:
-	var center: Vector3 = Vector3(5, 0, 7)
-	_server._spawn_spring(1, center)
+func test_spawn_spring_method_exists() -> void:
+	assert_bool(_server.has_method("_spawn_spring")).is_true()
 
-	assert_int(_server.world.flora.get_child_count()).is_equal(1)
-	assert_object(_server.world.flora.get_child(0)).is_instanceof(Spring)
+
+func test_spawn_spring_adds_it_to_terra() -> void:
+	var character: MarbleCharacter = auto_free(MarbleCharacter.new())
+	character.global_position = Vector3(0, 0, 0)
+	character.global_transform.basis = Basis(Vector3.RIGHT, Vector3.UP, Vector3.BACK)
+
+	_server._spawn_spring(character)
+
+	assert_int(_server.world.terra.get_child_count()).is_equal(1)
+	assert_object(_server.world.terra.get_child(0)).is_instanceof(Spring)

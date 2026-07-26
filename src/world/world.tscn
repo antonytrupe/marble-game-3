@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://bod6lvq43qjsc" path="res://src/world/world.gd" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://bga3y3kuercqk" path="res://src/world/mesh_instance_3d.gd" id="2_bsf3i"]
-[ext_resource type="PackedScene" uid="uid://dwufcmotevel0" path="res://src/spring/spring.tscn" id="3_jte2u"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f3sb7"]
 properties/0/path = NodePath("Terrain:noise_seed")
@@ -34,18 +33,6 @@ sample_partition_type = 2
 
 [node name="World" type="Node3D" unique_id=691290096]
 script = ExtResource("1_f3sb7")
-
-[node name="Spring" parent="." unique_id=2118580138 instance=ExtResource("3_jte2u")]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 24, 0)
-
-[node name="Spring2" parent="." unique_id=298711903 instance=ExtResource("3_jte2u")]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 22, 10)
-
-[node name="Spring3" parent="." unique_id=734714325 instance=ExtResource("3_jte2u")]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 28, 9)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=108575644]
 replication_config = SubResource("SceneReplicationConfig_f3sb7")
@@ -103,6 +90,10 @@ spawn_path = NodePath("../Items")
 
 [node name="Terra" type="Node3D" parent="." unique_id=1511932569]
 unique_name_in_owner = true
+
+[node name="TerraMultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1890136783]
+_spawnable_scenes = PackedStringArray("uid://dwufcmotevel0")
+spawn_path = NodePath("../Terra")
 
 [node name="Terrain" type="MeshInstance3D" parent="." unique_id=107141754]
 unique_name_in_owner = true
