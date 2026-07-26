@@ -16,7 +16,7 @@ func test_get_random_vector_within_radius_and_on_ground() -> void:
 	var center: Vector3 = Vector3(10, 0, 20)
 
 	# Act & Assert - Verify random points stay within radius
-	for i in range(100):
+	for i: int in range(100):
 		# Replicate the calculation from _get_random_vector
 		var r: float = radius * sqrt(randf())
 		var theta: float = randf() * 2 * PI
@@ -26,3 +26,11 @@ func test_get_random_vector_within_radius_and_on_ground() -> void:
 		# Assert XZ distance is within the radius
 		var distance: float = Vector2(x - center.x, z - center.z).length()
 		assert_float(distance).is_less_equal(radius)
+
+
+func test_spawn_spring_adds_a_spring_to_flora() -> void:
+	var center: Vector3 = Vector3(5, 0, 7)
+	_server._spawn_spring(1, center)
+
+	assert_int(_server.world.flora.get_child_count()).is_equal(1)
+	assert_object(_server.world.flora.get_child(0)).is_instanceof(Spring)

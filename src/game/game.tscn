@@ -23,6 +23,7 @@ visible = false
 [node name="Server" parent="." unique_id=2110552324 instance=ExtResource("3_n7s5x")]
 unique_name_in_owner = true
 mouse_filter = 1
+connected_players = null
 
 [node name="MainMenu" parent="." unique_id=2004564897 instance=ExtResource("5_jhw8o")]
 unique_name_in_owner = true

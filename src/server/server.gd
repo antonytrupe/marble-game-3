@@ -211,6 +211,7 @@ func _spawn(character: MarbleCharacter, parts: Array) -> void:
 		"acorn": _spawn_acorns, "acorns": _spawn_acorns,
 		"bush": _spawn_bushes, "bushes": _spawn_bushes,
 		"apple": _spawn_apples, "apples": _spawn_apples,
+		"spring": func(_count: int, center: Vector3) -> void: _spawn_spring(center),
 	}
 
 	var spawn_type: String = parts[1]
@@ -427,6 +428,14 @@ func _spawn_stones(quantity: int, p: Vector3) -> void:
 		stone.position = _get_random_vector(10, p)
 		#var chunk: Chunk = chunks.get_chunk(stone.global_position)
 		world.terra.add_child(stone)
+
+
+func _spawn_spring(center: Vector3) -> void:
+	var spring: Spring = Spring.scene.instantiate()
+	spring.name = spring.name + "%010d" % randi()
+	spring.position = _get_random_vector(10, center)
+	world.terra.add_child(spring)
+	Persistance.persist.emit.call_deferred(spring)
 
 
 func _spawn_mob(count: int, center: Vector3) -> void:

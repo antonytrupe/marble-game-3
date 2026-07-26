@@ -1,6 +1,10 @@
 class_name Spring
 extends Node3D
 
+static var scene: Resource = preload("res://src/spring/spring.tscn")
+
+@onready var world: World = $/root/Game/World
+
 @export_group("Path Settings")
 @export var max_points: int = 50
 @export var step_distance: float = .5
@@ -14,6 +18,25 @@ func _ready() -> void:
 	# and collision data is ready for raycasting.
 	await get_tree().physics_frame
 	generate_downhill_path.call_deferred(position)
+	Persistance.persist.emit(self)
+
+
+func get_data() -> Dictionary:
+	return {
+		"name": name,
+		"parent": str(get_parent().get_path()) if get_parent() else "",
+		"scene_file_path": get_scene_file_path(),
+		"transform": var_to_str(transform),
+	}
+
+
+func load_pre_ready(data: Dictionary) -> void:
+	if "transform" in data:
+		transform = str_to_var(data.transform)
+
+
+func load_post_ready(_data: Dictionary) -> void:
+	pass
 
 func generate_downhill_path(start_pos: Vector3) -> void:
 	if not path_3d:
@@ -66,7 +89,11 @@ func find_lowest_neighbor(origin: Vector3) -> Dictionary:
 		# Raycast down to find the ground height at this neighbor
 		var ray_start: Vector3 = check_pos + Vector3.UP * 10.0
 		var ray_end: Vector3 = check_pos + Vector3.DOWN * 40.0
-		var query: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(ray_start, ray_end, 1 << (terrain_mask - 1))
+		var query: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(
+			ray_start,
+			ray_end,
+			1 << (terrain_mask - 1)
+		)
 		var result: Dictionary = space_state.intersect_ray(query)
 
 		if result:

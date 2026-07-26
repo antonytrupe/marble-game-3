@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dwufcmotevel0"]
 
-[ext_resource type="Script" uid="uid://cn37voyuh47g1" path="res://src/spring/path_3d.gd" id="1_kk480"]
+[ext_resource type="Script" uid="uid://cn37voyuh47g1" path="res://src/spring/spring.gd" id="1_kk480"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_6fy3g"]
 angle_min = 1.0728835e-05
