@@ -115,6 +115,7 @@ enum NAMING_CONVENTIONS {
 	AUTO_DETECT,
 	SNAKE_CASE,
 	PASCAL_CASE,
+	TONY_CASE,
 }
 
 static var _property_help :Dictionary[String, String] = {}

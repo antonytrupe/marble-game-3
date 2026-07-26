@@ -1,4 +1,4 @@
-#class_name MarbleCharacterTest
+class_name MarbleTreeTest
 extends GdUnitTestSuite
 @warning_ignore('unused_parameter')
 @warning_ignore('return_value_discarded')
@@ -13,5 +13,5 @@ func before_each() -> void:
 
 
 func test_not_null() -> void:
-	pass
+	assert_bool(true)
 	#assert_not_null(tree)

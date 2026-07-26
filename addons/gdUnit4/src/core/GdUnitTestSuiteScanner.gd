@@ -241,7 +241,9 @@ static func _is_script_format_supported(resource_path: String) -> bool:
 
 
 static func parse_test_suite_name(script: Script) -> String:
-	return script.resource_path.get_file().replace(".gd", "")
+	var file_name := script.resource_path.get_file().replace(".gd", "")  # "apple_3d.test"
+	var source_name := file_name.replace(".test", "")  # Remove .test suffix to get "apple_3d"
+	return _to_naming_convention(source_name)  # Apply naming convention to get the expected class name
 
 
 func _handle_test_suite_arguments(test_suite: GdUnitTestSuite, script: GDScript, fd: GdFunctionDescriptor) -> void:
@@ -265,12 +267,14 @@ static func _to_naming_convention(file_name: String) -> String:
 	var nc :int = GdUnitSettings.get_setting(GdUnitSettings.TEST_SUITE_NAMING_CONVENTION, 0)
 	match nc:
 		GdUnitSettings.NAMING_CONVENTIONS.AUTO_DETECT:
-			if GdObjects.is_snake_case(file_name):
-				return GdObjects.to_snake_case(file_name + "Test")
+			# Always use PascalCase for test class names to match class naming conventions
 			return GdObjects.to_pascal_case(file_name + "Test")
 		GdUnitSettings.NAMING_CONVENTIONS.SNAKE_CASE:
 			return GdObjects.to_snake_case(file_name + "Test")
 		GdUnitSettings.NAMING_CONVENTIONS.PASCAL_CASE:
+			return GdObjects.to_pascal_case(file_name + "Test")
+		GdUnitSettings.NAMING_CONVENTIONS.TONY_CASE:
+			# TONY_CASE: file.gd -> file.test.gd with class FileTest
 			return GdObjects.to_pascal_case(file_name + "Test")
 	push_error("Unexpected case")
 	return "-<Unexpected>-"

@@ -1,5 +1,5 @@
 {
-    "godotTools.editorPath.godot4": "C:\\Program Files\\Godot\\godot.exe",
+    "godotTools.editorPath.godot4": "c:\\Program Files\\Godot\\Godot_v4.7.1-stable_mono_win64\\Godot_v4.7.1-stable_mono_win64.exe",
     "terminal.integrated.windowsEnableConpty": false,
     "terminal.integrated.profiles.windows": {
         "Git Bash": {

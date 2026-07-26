@@ -1,5 +1,5 @@
 # GdUnit generated TestSuite
-class_name WorldTest
+#class_name WorldTest
 extends GdUnitTestSuite
 @warning_ignore('unused_parameter')
 @warning_ignore('return_value_discarded')

@@ -753,7 +753,14 @@ func show_failed_report(selected_item: TreeItem) -> void:
 
 
 func update_test_suite(event: GdUnitEvent) -> void:
-	var item := _find_tree_item_by_test_suite(_tree_root, event.resource_path(), event.suite_name())
+	# Extract suite name the same way it was stored during discovery
+	# event.suite_name() might be in a different format, so extract from the filename
+	var resource_path := event.resource_path()
+	var file_name := resource_path.get_file().trim_suffix(".gd").trim_suffix(".test")
+	# Apply naming convention to get the expected suite name format
+	var suite_name := GdUnitTestSuiteScanner.parse_test_suite_name(load(resource_path))
+	
+	var item := _find_tree_item_by_test_suite(_tree_root, resource_path, suite_name)
 	if not item:
 		push_error("[InspectorTreeMainPanel#update_test_suite] Internal Error: Can't find test suite item '{_suite_name}' for {_resource_path} ".format(event))
 		return

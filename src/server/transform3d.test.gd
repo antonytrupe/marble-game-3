@@ -1,5 +1,5 @@
 # Use the GdUnitTestSuite base class
-class_name GdUnitTransform3DSerializationTest
+class_name Transform3dTest
 extends GdUnitTestSuite
 
 # Individual test case

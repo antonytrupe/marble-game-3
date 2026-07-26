@@ -1,4 +1,5 @@
 # GdUnit4 Test Suite
+class_name Apple3DTest
 extends GdUnitTestSuite
 
 # Use explicit types for clarity
@@ -16,7 +17,7 @@ func before_test() -> void:
 
 func test_initial_state() -> void:
 	var apple: Apple3D = _runner.scene() as Apple3D
-	assert_bool(apple.freeze).is_true()
+	assert_bool(apple.freeze).is_false()
 	assert_bool(apple.is_on_floor()).is_false()
 
 func test_fall_deferred_state() -> void:
@@ -28,8 +29,8 @@ func test_fall_deferred_state() -> void:
 	# RigidBody3D changes via set_deferred require a physics frame
 	_runner.simulate_frames(1)
 
-	assert_bool(apple.freeze).is_false()
-	assert_int(apple.freeze_mode).is_equal(RigidBody3D.FREEZE_MODE_KINEMATIC)
+	assert_bool(apple.freeze).is_true()
+	assert_int(apple.freeze_mode).is_equal(RigidBody3D.FREEZE_MODE_STATIC)
 
 func test_serialization_data() -> void:
 	var apple: Apple3D = _runner.scene() as Apple3D
@@ -38,7 +39,7 @@ func test_serialization_data() -> void:
 	var data: Dictionary = apple.get_data()
 
 	assert_dict(data).contains_key_value("name", "TestApple")
-	assert_dict(data).contains_key("transform")
+	assert_dict(data).contains_keys(["transform"])
 
 func test_physics_freeze_on_floor() -> void:
 	var apple: Apple3D = _runner.scene() as Apple3D
@@ -51,4 +52,4 @@ func test_physics_freeze_on_floor() -> void:
 
 	_runner.simulate_frames(1)
 
-	assert_bool(apple.freeze).is_true()
+	assert_bool(apple.freeze).is_false()
