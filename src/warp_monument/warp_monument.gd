@@ -13,7 +13,7 @@ static var scene: Resource = preload("res://src/warp_monument/warp_monument.tscn
 @export var warp_speed: int = 1: set = _set_warp_speed
 @export var radius: int = 1: set = _set_radius
 
-var bodies: Dictionary = {}
+@export var bodies: Dictionary = {}
 
 @onready var hour_hand: Node3D = %HourHand
 @onready var second_hand: Node3D = %SecondHand

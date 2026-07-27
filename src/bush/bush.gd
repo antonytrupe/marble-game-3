@@ -5,8 +5,8 @@ extends Node3D
 static var scene: Resource = preload("res://src/bush/bush.tscn")
 
 
-#10 years
-@export var maturity: int = int(1000 * 60 * 60 * 24 * 360 * (10))
+#8 years
+@export var maturity: int = MarbleAge.SECONDS_IN_YEAR * 8
 
 @export var berries: int = 9:
 	set(value):
@@ -15,11 +15,14 @@ static var scene: Resource = preload("res://src/bush/bush.tscn")
 
 
 ##milliseconds
-@export var age: float = 0
+#@export var age: float = 0
 @export var warp_speed: float = 1
 
+var turn: int = 0
+
 @onready var world: World = $/root/Game/World
-#@onready var ageLabel = %AgeLabel
+@onready var age: MarbleAge = %MarbleAge
+@onready var warp_detector: WarpDetector = $WarpDetectorArea3D
 
 #var rng = RandomNumberGenerator.new()
 
@@ -34,22 +37,27 @@ static var scene: Resource = preload("res://src/bush/bush.tscn")
 	$BushMeshInstance3D/BerryMeshInstance3D8,
 	$BushMeshInstance3D/BerryMeshInstance3D9,
 ]
+@onready var label_3d: Label3D = $Label3D
 
 
 func get_actions() -> Array:
 	return ["pick_berry"]
 
 
-#func set_birth_date(value):
-	#birth_date = value
+#delta is in seconds
+func _physics_process(delta: float) -> void:
+	if is_server():
+		age.age += delta * warp_speed
+		@warning_ignore("narrowing_conversion")
+		var new_turn: int = age.age / MarbleAge.SECONDS_IN_TURN + 1
+		_start_turn(range(self.turn + 1, new_turn + 1))
+		self.turn = new_turn
 
+func _start_turn(_turns: Array) -> void:
+	pass
 
-#func set_extra_age(value):
-	#extra_age = value
-#
-#
-#func calculate_age():
-	#return world.world_age + extra_age + Time.get_ticks_msec() - birth_date
+func is_server() -> bool:
+	return multiplayer.is_server()
 
 
 func get_data() -> Dictionary:
@@ -71,7 +79,7 @@ func load_pre_ready(data: Dictionary) -> void:
 
 func load_post_ready(data: Dictionary) -> void:
 	if "age" in data:
-		age = data.age
+		age.age = data.age
 	if "berries" in data:
 		berries = data.berries
 	if "warp_speed" in data:
@@ -105,13 +113,35 @@ func setup() -> void:
 				b[i].hide()
 
 
+# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	var s: float = clampf(float(age) / maturity, .1, 1.0)
+	#print('tool')
+	#age.age += _delta * warp_speed
+	var r: float = float(age.age) / float(maturity)
+	var s: float = clampf(r, .01, 1.0)
+	#TODO don't scale the whole scene
+	#scaling collisionbody is no good
 	scale = Vector3(s, s, s)
+	label_3d.text = "Age:%.f\nWarp:%.f\nScale:%.2f" % [age.age, warp_speed, scale.x]
 
-	if multiplayer.is_server():
-		age += _delta * 1000 * warp_speed
-		if berries < 9:
-			if randi_range(0, 1000) <= 1:
-				print("spawn a berry")
-				berries = berries + 1
+
+	#if multiplayer.is_server():
+		#age += _delta * 1000 * warp_speed
+		#if berries < 9:
+			#if randi_range(0, 1000) <= 1:
+				#print("spawn a berry")
+				#berries = berries + 1
+
+
+func calculate_warp() -> void:
+	var closest: WarpMonument = null
+	#var closest_distance=0
+	for w: WarpMonument in warp_detector.warp_monuments.values():
+		var distance: float = w.position.distance_to(position)
+		if !closest or distance < closest.position.distance_to(position):
+			closest = w
+			#closest_distance=distance
+	if closest:
+		warp_speed = closest.warp_speed
+	else:
+		warp_speed = 1

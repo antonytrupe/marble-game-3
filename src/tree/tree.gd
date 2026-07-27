@@ -18,7 +18,7 @@ var apples: Array = []
 	%TrunkMesh0, %TrunkMesh1, %TrunkMesh2, %TrunkMesh3, %TrunkMesh4, %TrunkMesh5,
 	%TrunkMesh6, %TrunkMesh7, %TrunkMesh8, %TrunkMesh9, %TrunkMesh10,
 	]
-@onready var age: MarbleAge = $Age
+@onready var age: MarbleAge = %MarbleAge
 @onready var warp_detector: WarpDetector = $WarpDetectorArea3D
 @onready var label_3d: Label3D = $Label3D
 @onready var flora: Node = $/root/Game/World/Flora

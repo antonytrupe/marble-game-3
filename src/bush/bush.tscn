@@ -1,7 +1,12 @@
 [gd_scene format=3 uid="uid://damvmfs7dqebu"]
 
 [ext_resource type="Script" uid="uid://bsctidn2uowx1" path="res://src/bush/bush.gd" id="1_ww0ai"]
-[ext_resource type="Script" uid="uid://bv3dl61gkc7tm" path="res://src/bush/bush_staticbody.gd" id="2_ggt4o"]
+[ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="3_c5m5f"]
+[ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/marble_age.tscn" id="4_cba4y"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_olmtm"]
+radius = 1.0
+height = 3.0
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_vjxuo"]
 radius = 1.0
@@ -73,10 +78,6 @@ height = 0.2
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v7oee"]
 albedo_color = Color(0.529947, 0.0159607, 1.44392e-07, 1)
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_olmtm"]
-radius = 1.0
-height = 3.0
-
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_wxu3a"]
 properties/0/path = NodePath(".:berries")
 properties/0/spawn = true
@@ -85,8 +86,14 @@ properties/1/path = NodePath(".:position")
 properties/1/spawn = true
 properties/1/replication_mode = 2
 
-[node name="Bush" type="Node3D" unique_id=2087126564 groups=["flora", "persist"]]
+[node name="Bush" type="StaticBody3D" unique_id=834666726 groups=["flora", "persist"]]
+collision_layer = 4
+collision_mask = 31
 script = ExtResource("1_ww0ai")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=739216962]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("CapsuleShape3D_olmtm")
 
 [node name="BushMeshInstance3D" type="MeshInstance3D" parent="." unique_id=1273031218]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49961, 0)
@@ -138,16 +145,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55841, 1.05764, 0.555924)
 mesh = SubResource("SphereMesh_gs0sy")
 surface_material_override/0 = SubResource("StandardMaterial3D_v7oee")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=834666726 node_paths=PackedStringArray("root")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
-collision_layer = 4
-collision_mask = 0
-script = ExtResource("2_ggt4o")
-root = NodePath("..")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=739216962]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.372366, 0)
-shape = SubResource("CapsuleShape3D_olmtm")
-
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1152597856]
 replication_config = SubResource("SceneReplicationConfig_wxu3a")
+
+[node name="WarpDetectorArea3D" parent="." unique_id=534815593 instance=ExtResource("3_c5m5f")]
+
+[node name="MarbleAge" parent="." unique_id=1789449314 instance=ExtResource("4_cba4y")]
+unique_name_in_owner = true
+
+[node name="Label3D" type="Label3D" parent="." unique_id=556824358]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.738162, 0)
