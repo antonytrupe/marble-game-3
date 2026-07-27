@@ -220,7 +220,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.74801326, 0, 0)
 custom_values = Array[int]([1, 2, 3, 6, 10, 20, 60, 300, 600])
 show_label = true
 
-[node name="ScannerArea" type="Area3D" parent="." unique_id=763033880 groups=["persist"]]
+[node name="ScannerArea" type="Area3D" parent="." unique_id=763033880]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
 collision_layer = 0
