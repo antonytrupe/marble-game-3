@@ -110,6 +110,7 @@ func _process(_delta: float) -> void:
 	scale = Vector3(s, s, s)
 
 	if multiplayer.is_server():
+		age += _delta * 1000 * warp_speed
 		if berries < 9:
 			if randi_range(0, 1000) <= 1:
 				print("spawn a berry")
