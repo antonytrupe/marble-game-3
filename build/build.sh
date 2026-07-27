@@ -58,8 +58,8 @@ build_steam() {
 
 # Build each platform
 build_godot "Windows Desktop" "./godot/exports/win-64" "marblegame.exe"
-# build_godot "Linux" "./godot/exports/linux-x64" "marblegame.x86_64"
-# build_godot "macOS" "./godot/exports/macOS" "marblegame.app"
+build_godot "Linux" "./godot/exports/linux-x64" "marblegame.x86_64"
+build_godot "macOS" "./godot/exports/macOS" "marblegame.app"
 
 # Finalize with Steam
 build_steam
