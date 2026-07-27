@@ -75,7 +75,12 @@ func _set_chop_stage(v: int) -> void:
 
 func chop(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
 	#print('tree chop')
-	chop_progress += 0.05
+	# The number of chops depends on the size of the tree.
+	var min_chops: float = 1.0
+	var max_chops: float = 40.0
+	var total_chops: float = lerp(min_chops, max_chops, current_scale)
+	chop_progress += 1.0 / total_chops
+
 	chop_progress = clampf(chop_progress, 0.0, 1.0)
 	chop_stage = floori(chop_progress * (meshes.size() - 0))
 	#if chop_stage < meshes.size():
