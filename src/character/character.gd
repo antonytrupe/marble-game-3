@@ -171,25 +171,28 @@ func get_object_verbs(_subject_verbs: Array[String]) -> Array[Callable]:
 	return []
 
 
-func pick_up(hand: INTERACT, entities: Array) -> bool:
+func pick_up(hand: INTERACT, entities: Array, collision_point: Vector3) -> bool:
 	#TODO pickup multiple things at once?!
 	for entity: Object in entities:
 		if entity is PhysicsBody3D:
 			if entity is RigidBody3D:
-				pass
 				entity.freeze = false
 
 			if hand == INTERACT.RIGHT:
 				right_inventory = entity
-				right_inventory.global_position = inventory_right_marker.global_position
+				# Move the object so the point of collision is at the hand marker, preserving object rotation
+				right_inventory.global_position += inventory_right_marker.global_position - collision_point
 				inventory_right_marker.node_b = right_inventory.get_path()
-				#add_collision_exception_with(right_inventory)
 				raycast.add_exception(right_inventory)
 			else:
 				left_inventory = entity
-				left_inventory.global_transform = inventory_left_marker.global_transform
+				# Move the object so the point of collision is at the hand marker, and align rotation with hand
+				var local_collision_point: Vector3 = left_inventory.to_local(collision_point)
+				var target_transform := inventory_left_marker.global_transform
+				var world_offset: Vector3 = target_transform.basis * local_collision_point
+				target_transform.origin = inventory_left_marker.global_position - world_offset
+				left_inventory.global_transform = target_transform
 				inventory_left_marker.node_b = left_inventory.get_path()
-				#add_collision_exception_with(left_inventory)
 				raycast.add_exception(left_inventory)
 
 			return true
@@ -200,9 +203,14 @@ func pick_up(hand: INTERACT, entities: Array) -> bool:
 func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
 	if !is_server():
 		return
+
+	# Perform the raycast once at the start of interaction.
+	raycast.force_raycast_update()
+
 	var did_action: bool = false
 	# 1. Check for interaction targets first
 	if raycast.is_colliding():
+		var collision_point := raycast.get_collision_point()
 		var object: Object = get_target()
 
 		if object.has_method("get_object_verbs"):
@@ -224,16 +232,18 @@ func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
 
 				did_action = object_verbs.any(func(object_verb: Callable) -> bool:
 					#print(object_verb.get_method())
-					return subject_verbs.any(func(subject_verb: Callable) -> bool:
-						#print(subject_verb.get_method())
+					return subject_verbs.any(func(subject_verb: Callable) -> bool:						#print(subject_verb.get_method())
 						if object_verb.get_method() == subject_verb.get_method():
-							#print('match')
-							action_add(Action.new(hand, subject, subject_verb, object_verb, object))
-							do_actions()
+							if subject_verb.get_method() == "pick_up":
+								# Directly call pick_up with collision info, bypassing action queue for this specific case
+								pick_up(hand, [object], collision_point)
+								standard_action = false
+							else:
+								action_add(Action.new(hand, subject, subject_verb, object_verb, object))
+								do_actions()
 							return true
 						return false
-						)
-					)
+					))
 	#print(did_action)
 
 	if not did_action:
