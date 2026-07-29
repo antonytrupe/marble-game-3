@@ -18,9 +18,12 @@ var scenes: Dictionary[String, Resource] = {}
 
 
 var lobby_id: int = 0
+var use_steam: bool = true
 
 
 func _steam_signals() -> void:
+	if not use_steam:
+		return
 	Steam.lobby_created.connect(_on_lobby_created)
 	# just for information
 	#Steam.join_requested.connect(_on_lobby_join_requested)
@@ -85,7 +88,8 @@ func _persist() -> void:
 func quit() -> void:
 	world.visible = false
 	print("server quit")
-	Steam.leaveLobby(lobby_id)
+	if use_steam:
+		Steam.leaveLobby(lobby_id)
 	_persist()
 
 
@@ -127,6 +131,7 @@ func _on_lobby_created(result: int, lobby_id: int) -> void:
 
 
 func start() -> void:
+	use_steam = Steam.isSteamRunning()
 	_multiplayer_signals()
 	_persistance_signals()
 	_steam_signals()
@@ -137,9 +142,16 @@ func start() -> void:
 
 	get_viewport().get_window().title += " - " + "SERVER"
 
-	var lobby_members_max: int = 4
-	#fires _on_lobby_created
-	Steam.createLobby(Steam.LobbyType.LOBBY_TYPE_PUBLIC, lobby_members_max)
+	if use_steam:
+		var lobby_members_max: int = 4
+		#fires _on_lobby_created
+		Steam.createLobby(Steam.LobbyType.LOBBY_TYPE_PUBLIC, lobby_members_max)
+	else:
+		print("Starting server without Steam (using ENet)")
+		var peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
+		peer.create_server(9999)
+		multiplayer.multiplayer_peer = peer
+		_on_peer_connected(multiplayer.get_unique_id())
 
 
 @rpc("any_peer", "call_local")
@@ -147,11 +159,13 @@ func chat(message: String) -> void:
 	debug(message)
 	#find the character that sent
 	var peer_id: int = multiplayer.get_remote_sender_id()
-	var steam_id: int = multiplayer.multiplayer_peer.get_steam_id_for_peer_id(peer_id)
-
-
-	#debug('steam_id:%s' % steam_id)
-	var player: Player = players.get_node('Steam_%s' % steam_id)
+	var player: Player
+	if use_steam:
+		var steam_id: int = (multiplayer.multiplayer_peer as SteamMultiplayerPeer).get_steam_id_for_peer_id(peer_id)
+		#debug('steam_id:%s' % steam_id)
+		player = players.get_node('Steam_%s' % steam_id)
+	else:
+		player = connected_players.get(peer_id)
 	#debug('p.current_character_id:%s' % p.current_character_id)
 	var c_name: String = str(player.current_character_id)
 	var character: MarbleCharacter = world.characters.get_node(c_name)
@@ -503,15 +517,20 @@ func _create_player(peer_id: int, player_id: String) -> Player:
 ## peer_id from multiplayer_peer, 1 for host
 func _on_peer_connected(peer_id: int = 1) -> void:
 	#debug("Peer connected with ID: %s" % peer_id)
-	var steam_id: int
-	var friend_name: String
-	if multiplayer.has_multiplayer_peer():
+	var steam_id: int = 0
+	var friend_name: String = ""
+	if use_steam and multiplayer.has_multiplayer_peer():
 		steam_id = (multiplayer.multiplayer_peer as SteamMultiplayerPeer).get_steam_id_for_peer_id(peer_id)
 		#debug("steam id: %s" % steam_id)
 		friend_name = Steam.getFriendPersonaName(steam_id)
 		#debug("friend_name: %s" % friend_name)
 
-	var player_id: String = "Steam_" + str(steam_id)
+	var player_id: String
+	if use_steam:
+		player_id = "Steam_" + str(steam_id)
+	else:
+		player_id = "ENet_" + str(peer_id)
+		friend_name = "Player_" + str(peer_id)
 	# see if the player exists already
 	var p: Player
 	if players.has_node(player_id):
