@@ -2,21 +2,13 @@
 
 [ext_resource type="Script" uid="uid://duyhummlm0gr1" path="res://src/tree/tree.gd" id="1_2omd0"]
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_e4g3r"]
+[ext_resource type="SphereMesh" uid="uid://djjnwcbtjqhhi" path="res://src/tree/leafball.tres" id="2_jrthf"]
 [ext_resource type="PackedScene" uid="uid://dhtfh7aumk85c" path="res://src/highlight/highlight.tscn" id="3_kguxu"]
 [ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/marble_age.tscn" id="4_tqj8e"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_k6sc6"]
 height = 10.0
 radius = 1.0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7gadc"]
-albedo_color = Color(0.05882353, 0.24705882, 0.1254902, 1)
-stencil_flags = 2
-
-[sub_resource type="SphereMesh" id="SphereMesh_7felh"]
-material = SubResource("StandardMaterial3D_7gadc")
-radius = 3.0
-height = 6.0
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cbetc"]
 properties/0/path = NodePath(".:maturity")
@@ -35,7 +27,7 @@ properties/4/path = NodePath(".:chop_stage")
 properties/4/spawn = true
 properties/4/replication_mode = 2
 
-[sub_resource type="Shader" id="Shader_tqj8e"]
+[sub_resource type="Shader" id="Shader_5lsbm"]
 resource_local_to_scene = true
 code = "shader_type spatial;
 render_mode cull_front, unshaded;
@@ -54,17 +46,17 @@ void fragment() {
     ALPHA = intensity;
 }"
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jrthf"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mnorw"]
 resource_local_to_scene = true
 render_priority = 0
-shader = SubResource("Shader_tqj8e")
+shader = SubResource("Shader_5lsbm")
 shader_parameter/highlight_color = Color(0, 0, 1, 1)
 shader_parameter/intensity = 0.0
 shader_parameter/outline_width = 0.1
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_5lsbm"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_c5k3m"]
 resource_local_to_scene = true
-material = SubResource("ShaderMaterial_jrthf")
+material = SubResource("ShaderMaterial_mnorw")
 top_radius = 0.8
 bottom_radius = 1.0
 height = 10.0
@@ -127,11 +119,9 @@ height = 9.1
 radius = 1.0
 height = 9.0
 
-[node name="Tree" type="RigidBody3D" unique_id=1643654767 groups=["persist"]]
+[node name="Tree" type="StaticBody3D" unique_id=1643654767 groups=["persist"]]
 collision_layer = 4
 collision_mask = 31
-mass = 20000.0
-freeze = true
 script = ExtResource("1_2omd0")
 metadata/_custom_type_script = "uid://duyhummlm0gr1"
 
@@ -144,27 +134,27 @@ debug_fill = false
 [node name="LeftLeaves" type="MeshInstance3D" parent="." unique_id=100127190]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 11, 0)
-mesh = SubResource("SphereMesh_7felh")
+mesh = ExtResource("2_jrthf")
 
 [node name="FrontLeaves" type="MeshInstance3D" parent="." unique_id=1942172905]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11, -2.5)
-mesh = SubResource("SphereMesh_7felh")
+mesh = ExtResource("2_jrthf")
 
 [node name="RightLeaves" type="MeshInstance3D" parent="." unique_id=674477800]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 11, 0)
-mesh = SubResource("SphereMesh_7felh")
+mesh = ExtResource("2_jrthf")
 
 [node name="BackLeaves" type="MeshInstance3D" parent="." unique_id=882120366]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11, 2.5)
-mesh = SubResource("SphereMesh_7felh")
+mesh = ExtResource("2_jrthf")
 
 [node name="TopLeaves" type="MeshInstance3D" parent="." unique_id=513317713]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0)
-mesh = SubResource("SphereMesh_7felh")
+mesh = ExtResource("2_jrthf")
 
 [node name="WarpDetectorArea3D" parent="." unique_id=1771521341 instance=ExtResource("2_e4g3r")]
 
@@ -183,7 +173,7 @@ font_size = 128
 [node name="HighlightMeshInstance3D" parent="." unique_id=973307759 instance=ExtResource("3_kguxu")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
-mesh = SubResource("CylinderMesh_5lsbm")
+mesh = SubResource("CylinderMesh_c5k3m")
 
 [node name="MarbleAge" parent="." unique_id=1655969799 instance=ExtResource("4_tqj8e")]
 unique_name_in_owner = true
@@ -267,3 +257,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, 0)
 visible = false
 mesh = SubResource("CapsuleMesh_31uea")
 surface_material_override/0 = SubResource("StandardMaterial3D_jrthf")
+
+[node name="GrowthTimer" type="Timer" parent="." unique_id=1879546842]
+wait_time = 6.0

@@ -1,5 +1,5 @@
 class_name MarbleTree
-extends RigidBody3D
+extends StaticBody3D
 
 
 const APPLE_SCENE: Resource = preload("res://src/apple/apple_3d.tscn")
@@ -29,28 +29,36 @@ var apples: Array = []
 @onready var trunk_collision: CollisionShape3D = %TrunkCollision
 @onready var server: Server = $/root/Game/Server
 @onready var world: World = $/root/Game/World
+@onready var growth_timer: Timer = $GrowthTimer
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
-	#print('tool')
-	#age.age += _delta * warp_speed
+func _ready() -> void:
+	# The growth timer handles age updates on the server to avoid running logic every frame.
+	if is_server():
+		growth_timer.timeout.connect(_on_growth_timer_timeout)
+		# Stagger the first timer tick by a random amount up to its wait_time.
+		# This prevents all trees from updating on the exact same frame, spreading the load.
+		growth_timer.start(randf_range(0.0, growth_timer.wait_time))
+	update_visuals()
+
+
+func update_visuals() -> void:
 	var r: float = float(age.age) / float(maturity)
 	var s: float = clampf(r, .01, 1.0)
-	#TODO don't scale the whole scene
-	#scaling collisionbody is no good
-	scale = Vector3(s, s, s)
+	# WARNING: Scaling a physics body is not ideal for performance.
+	# This forces a rebuild of the physics shape. This should be called infrequently.
+	# For better performance, consider using different-sized models instead of scaling.
+	var new_scale := Vector3(s, s, s)
+	if not scale.is_equal_approx(new_scale):
+		scale = new_scale
 	label_3d.text = "Age:%.f\nWarp:%.f\nScale:%.2f" % [age.age, warp_speed, scale.x]
 
 
-#delta is in seconds
-func _physics_process(delta: float) -> void:
-	if is_server():
-		age.age += delta * warp_speed
-		@warning_ignore("narrowing_conversion")
-		var new_turn: int = age.age / MarbleAge.SECONDS_IN_TURN + 1
-		_start_turn(range(self.turn + 1, new_turn + 1))
-		self.turn = new_turn
+func _on_growth_timer_timeout() -> void:
+	# This function only runs on the server, as connected in _ready().
+	age.age += growth_timer.wait_time * warp_speed
+	update_visuals()
+	_check_for_turn_updates()
 
 
 func _start_turn(_turns: Array) -> void:
@@ -63,6 +71,14 @@ func _start_turn(_turns: Array) -> void:
 			if i == 1:
 				#pass
 				_add_apple()
+
+
+func _check_for_turn_updates() -> void:
+	@warning_ignore("narrowing_conversion")
+	var new_turn: int = age.age / MarbleAge.SECONDS_IN_TURN + 1
+	if new_turn > self.turn:
+		_start_turn(range(self.turn + 1, new_turn + 1))
+		self.turn = new_turn
 
 
 func _set_chop_stage(v: int) -> void:
@@ -160,6 +176,7 @@ func load_pre_ready(data: Dictionary) -> void:
 func load_post_ready(data: Dictionary) -> void:
 	if "age" in data:
 		age.age = data.age
+		update_visuals()
 	if "warp_speed" in data:
 		warp_speed = data.warp_speed
 	if "turn" in data:

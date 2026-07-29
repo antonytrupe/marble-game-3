@@ -59,6 +59,8 @@ contact_monitor = true
 max_contacts_reported = 4
 angular_damp = 10.0
 script = ExtResource("1_k0cf5")
+maturity = null
+longevity = null
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=985549909]
 unique_name_in_owner = true

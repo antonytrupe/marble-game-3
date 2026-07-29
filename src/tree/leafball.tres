@@ -1,0 +1,10 @@
+[gd_resource type="SphereMesh" format=3 uid="uid://djjnwcbtjqhhi"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7gadc"]
+albedo_color = Color(0.05882353, 0.24705882, 0.1254902, 1)
+stencil_flags = 2
+
+[resource]
+material = SubResource("StandardMaterial3D_7gadc")
+radius = 3.0
+height = 6.0

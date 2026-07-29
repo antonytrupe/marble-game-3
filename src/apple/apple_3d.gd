@@ -24,6 +24,7 @@ var _is_on_floor: bool = false
 @onready var world: World = $/root/Game/World
 
 func _ready() -> void:
+	sleeping_state_changed.connect(_on_sleeping_state_changed)
 	#timer.wait_time=MarbleAge.SECONDS_IN_TURN/warp_speed
 	#timer.start()
 	#timer.stop()
@@ -32,35 +33,15 @@ func _ready() -> void:
 		fall()
 
 
-func _physics_process(_delta: float) -> void:
-	if not freeze and is_on_floor() and linear_velocity.length() < 0.01 and angular_velocity.length() < 0.01:
-		freeze = true
-	#if is_server():
-		#pass
-		#put it back to sleep when its done falling/rolling
-		#if is_on_floor() and not freeze and linear_velocity.distance_squared_to(Vector3(0, 0, 0)) < 1:
-			#print('freezing')
-			#set_deferred("freeze", true)
-			#set_deferred("sleeping", true)
-			#freeze_mode=RigidBody3D.FREEZE_MODE_STATIC
-#
-		#@warning_ignore("narrowing_conversion")
-		#var new_turn: int = item.age.age / MarbleAge.SECONDS_IN_TURN + 1
-		#_start_turn(range(self.turn + 1, new_turn + 1))
-		#self.turn = new_turn
-
-		#if item.age.age > longevity:
-			#set_deferred("freeze", true)
-			#set_deferred("sleeping", true)
-			#queue_free()
-
-		#var r = float(age.age) / float(maturity)
-		#var s = clampf(r, .1, 1.0)
-		#_set_scale( Vector3(s, s, s))
-
-
 func pick_up(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
 	return [ self ]
+
+
+func _on_sleeping_state_changed() -> void:
+	# When the apple stops moving, the physics engine puts it to sleep.
+	# We can use this to freeze it and stop further physics calculations for it.
+	if sleeping:
+		freeze = true
 
 
 func _set_scale(s: Vector3) -> void:
