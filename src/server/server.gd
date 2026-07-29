@@ -151,7 +151,7 @@ func chat(message: String) -> void:
 
 
 	#debug('steam_id:%s' % steam_id)
-	var player: Player = players.get_node('Steam_%s'%steam_id)
+	var player: Player = players.get_node('Steam_%s' % steam_id)
 	#debug('p.current_character_id:%s' % p.current_character_id)
 	var c_name: String = str(player.current_character_id)
 	var character: MarbleCharacter = world.characters.get_node(c_name)
@@ -217,7 +217,7 @@ func _spawn(character: MarbleCharacter, parts: Array) -> void:
 	var spawn_type: String = parts[1]
 	match spawn_type:
 		"tree", "trees":
-			_spawn_trees(count, character.position, maturity_ratio)
+			_spawn_trees(count, character.position, maturity_ratio, character)
 		"cant", "cants":
 			_spawn_cants(character.position)
 		"monument", "warp":
@@ -284,17 +284,41 @@ func _spawn_axe(count: int, center: Vector3) -> void:
 		world.items.add_child(axe)
 
 
-func _spawn_trees(count: int, center: Vector3, maturity_ratio: float = 0.0) -> void:
+func _spawn_trees(count: int, center: Vector3, maturity_ratio: float = 0.0, character: MarbleCharacter = null) -> void:
 	count = clampi(count, 1, 100)
 	var max_maturity_ratio: float = 1.0 if maturity_ratio <= 0.0 else maturity_ratio
+	var random_maturity_ratio: float = randf() * max_maturity_ratio
+
+	var existing_trees: Array[MarbleTree] = []
+	for node in world.flora.get_children():
+		if node is MarbleTree:
+			existing_trees.append(node)
 
 	for i: int in count:
+		var pos: Vector3
+		if count == 1 and character != null:
+			var forward: Vector3 = -character.transform.basis.z.normalized()
+			pos = center + (forward * 4.0)
+			pos.y = world.get_ground_y(pos.x, pos.z)
+		else:
+			pos = _get_random_vector(10 + count, center)
+
+		for attempt in 50:
+			var too_close: bool = false
+			for tree_node in existing_trees:
+				if pos.distance_to(tree_node.position) < 5.0:
+					too_close = true
+					break
+			if not too_close:
+				break
+			pos = _get_random_vector(10 + count, center)
+
 		var tree: MarbleTree = MarbleTree.scene.instantiate()
 		tree.name = tree.name + "%010d" % randi()
 		#TODO do this more righter
-		tree.position = _get_random_vector(10 + count, center)
+		tree.position = pos
 
-		var random_maturity_ratio: float = randf() * max_maturity_ratio
+		
 		tree.ready.connect(tree.load_post_ready.bind({
 			"age": tree.maturity * random_maturity_ratio,
 			"turn": (tree.maturity * random_maturity_ratio) / MarbleAge.SECONDS_IN_TURN
@@ -303,6 +327,7 @@ func _spawn_trees(count: int, center: Vector3, maturity_ratio: float = 0.0) -> v
 
 		#var chunk = chunks.get_chunk(tree.global_position)
 		world.flora.add_child(tree)
+		existing_trees.append(tree)
 
 
 func spawn_log(p_position: Vector3, p_scale: float) -> MarbleLog:
