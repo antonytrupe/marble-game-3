@@ -31,11 +31,6 @@ const SPEED_MULTIPLIER: float = 1.0 / 24.0
 const JUMP_VELOCITY: float = 5.0
 const MAX_CONTROLLED_WARP: int = 10
 
-const FACTION_ATTRACT_RANGE: float = 300.0
-const FACTION_REPEL_RANGE: float = 150.0
-const FACTION_ATTRACT_STRENGTH: float = 4.0
-const FACTION_REPEL_STRENGTH: float = 2.0
-const FACTION_MOVE_SPEED: float = 1.5
 #endregion
 
 #region turn actions flags
@@ -504,54 +499,7 @@ func _is_player_controlled() -> bool:
 
 
 func _apply_faction_movement(delta: float) -> void:
-	if not is_multiplayer_authority():
-		return
-	if _is_player_controlled():
-		return
-	if faction == Faction.Type.NONE:
-		return
-
-	var attract_dir: Vector3 = Vector3.ZERO
-	var repel_dir: Vector3 = Vector3.ZERO
-	var my_pos: Vector3 = global_position
-
-	var parent: Node = get_parent()
-	if not parent:
-		return
-
-	for sibling: Node in parent.get_children():
-		if sibling == self:
-			continue
-		if not sibling is MarbleCharacter:
-			continue
-		var other: MarbleCharacter = sibling as MarbleCharacter
-		if other.faction == Faction.Type.NONE:
-			continue
-
-		var to_other: Vector3 = other.global_position - my_pos
-		to_other.y = 0
-		var dist: float = to_other.length()
-		if dist < 0.1:
-			continue
-
-		var direction: Vector3 = to_other / dist
-		if other.faction == faction and dist <= FACTION_ATTRACT_RANGE:
-			attract_dir += direction * (1.0 / dist) * FACTION_ATTRACT_STRENGTH
-		elif other.faction != faction and dist <= FACTION_REPEL_RANGE:
-			repel_dir -= direction * (1.0 / dist) * FACTION_REPEL_STRENGTH
-
-	var desired: Vector3 = attract_dir + repel_dir
-	if desired.length() > 0.01:
-		desired = desired.normalized() * FACTION_MOVE_SPEED
-		character.velocity.x = move_toward(character.velocity.x, desired.x, FACTION_MOVE_SPEED * delta * 2.0)
-		character.velocity.z = move_toward(character.velocity.z, desired.z, FACTION_MOVE_SPEED * delta * 2.0)
-		# face movement direction
-		var look_target: Vector3 = my_pos + Vector3(desired.x, 0, desired.z)
-		if my_pos.distance_to(look_target) > 0.01:
-			character.look_at(look_target, Vector3.UP)
-	else:
-		character.velocity.x = move_toward(character.velocity.x, 0, FACTION_MOVE_SPEED * delta)
-		character.velocity.z = move_toward(character.velocity.z, 0, FACTION_MOVE_SPEED * delta)
+	FactionMovement.apply(self, delta)
 
 
 func _set_color(value: Color) -> void:

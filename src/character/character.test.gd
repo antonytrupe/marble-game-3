@@ -104,3 +104,19 @@ func test_faction_movement_repels_other_faction() -> void:
 	instance._apply_faction_movement(1.0)
 	# velocity should have negative x component (away from enemy)
 	assert_that(instance.velocity.x < 0).is_true()
+
+
+func test_separation_repels_same_faction_when_too_close() -> void:
+	instance.player_id = ""
+	instance.color = Faction.get_faction_color(Faction.Type.RED)
+	instance.global_position = Vector3.ZERO
+
+	var ally: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
+	ally.player_id = ""
+	ally.color = Faction.get_faction_color(Faction.Type.RED)
+	ally.global_position = Vector3(1, 0, 0)  # within SEPARATION_DISTANCE
+	add_child(ally)
+
+	instance._apply_faction_movement(1.0)
+	# velocity should have negative x component (pushed away despite same faction)
+	assert_that(instance.velocity.x < 0).is_true()
