@@ -196,7 +196,7 @@ func pick_up(hand: INTERACT, entities: Array, collision_point: Vector3) -> bool:
 				left_inventory = entity
 				# Move the object so the point of collision is at the hand marker, and align rotation with hand
 				var local_collision_point: Vector3 = left_inventory.to_local(collision_point)
-				var target_transform := inventory_left_marker.global_transform
+				var target_transform :Transform3D= inventory_left_marker.global_transform
 				var world_offset: Vector3 = target_transform.basis * local_collision_point
 				target_transform.origin = inventory_left_marker.global_position - world_offset
 				left_inventory.global_transform = target_transform
@@ -218,7 +218,7 @@ func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
 	var did_action: bool = false
 	# 1. Check for interaction targets first
 	if raycast.is_colliding():
-		var collision_point := raycast.get_collision_point()
+		var collision_point :Vector3= raycast.get_collision_point()
 		var object: Object = get_target()
 
 		if object.has_method("get_object_verbs"):

@@ -48,7 +48,7 @@ func update_visuals() -> void:
 	# WARNING: Scaling a physics body is not ideal for performance.
 	# This forces a rebuild of the physics shape. This should be called infrequently.
 	# For better performance, consider using different-sized models instead of scaling.
-	var new_scale := Vector3(s, s, s)
+	var new_scale :Vector3= Vector3(s, s, s)
 	if not scale.is_equal_approx(new_scale):
 		scale = new_scale
 	label_3d.text = "Age:%.f\nWarp:%.f\nScale:%.2f" % [age.age, warp_speed, scale.x]
