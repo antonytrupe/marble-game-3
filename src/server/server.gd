@@ -226,6 +226,9 @@ func _spawn(character: MarbleCharacter, parts: Array) -> void:
 		"bush": _spawn_bushes, "bushes": _spawn_bushes,
 		"apple": _spawn_apples, "apples": _spawn_apples,
 		"spring": func(_count: int, _center: Vector3) -> void: _spawn_spring(character),
+		"character": func(c: int, p: Vector3) -> void: _spawn_characters(c, p),
+		"char": func(c: int, p: Vector3) -> void: _spawn_characters(c, p),
+		"characters": func(c: int, p: Vector3) -> void: _spawn_characters(c, p),
 	}
 
 	var spawn_type: String = parts[1]
@@ -564,11 +567,26 @@ func _on_peer_disconnected(peer_id: int) -> void:
 	connected_players.erase(peer_id)
 
 
+func _spawn_characters(count: int, center: Vector3) -> void:
+	count = clampi(count, 1, 10)
+	for i: int in count:
+		var c: MarbleCharacter = _create_character()
+		c.position = _get_random_vector(10, center)
+
+
 func _create_character() -> MarbleCharacter:
 	#debug("_create_character")
 	var c: MarbleCharacter = MarbleCharacter.scene.instantiate()
 	c.name = str(randi())
-	c.position = Vector3(randf_range(-100, 100), 20, randf_range(-100, 100))
+	var rand_x: float = randf_range(-100, 100)
+	var rand_z: float = randf_range(-100, 100)
+	c.position = Vector3(rand_x, world.get_ground_y(rand_x, rand_z), rand_z)
+	var faction_types: Array = Faction.COLORS.keys().filter(
+		func(t: Faction.Type) -> bool: return t != Faction.Type.NONE
+	)
+	var random_faction: Faction.Type = faction_types.pick_random()
+	c.color = Faction.get_faction_color(random_faction)
+	c.rotation.y = randf_range(0, TAU)
 	world.characters.add_child(c)
 	Persistance.persist.emit(c)
 	return c

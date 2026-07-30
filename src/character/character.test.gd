@@ -42,3 +42,23 @@ func test_get_subject_verbs_returns_pick_up() -> void:
 func test_get_object_verbs_returns_empty() -> void:
 	var verbs: Array[Callable] = instance.get_object_verbs([])
 	assert_that(verbs).is_empty()
+
+
+func test_default_faction_is_none() -> void:
+	assert_that(instance.faction).is_equal(Faction.Type.NONE)
+
+
+func test_setting_color_assigns_faction() -> void:
+	instance.color = Color(0.8, 0.1, 0.1, 1)
+	assert_that(instance.faction).is_equal(Faction.Type.RED)
+
+
+func test_get_faction_name() -> void:
+	instance.color = Color(0.1, 0.2, 0.8, 1)
+	assert_str(instance.get_faction_name()).is_equal("Azure Covenant")
+
+
+func test_color_persisted_in_data() -> void:
+	instance.color = Color(0.1, 0.6, 0.15, 1)
+	var data: Dictionary = instance.get_data()
+	assert_that(data.has("color")).is_true()

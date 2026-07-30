@@ -34,6 +34,9 @@ properties/6/replication_mode = 2
 properties/7/path = NodePath(".:turn")
 properties/7/spawn = true
 properties/7/replication_mode = 2
+properties/8/path = NodePath(".:color")
+properties/8/spawn = true
+properties/8/replication_mode = 2
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_glpr6"]
 height = 1.8
@@ -62,6 +65,7 @@ debug_fill = false
 replication_config = SubResource("SceneReplicationConfig_glpr6")
 
 [node name="BodyMesh" type="MeshInstance3D" parent="." unique_id=1233194481]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 mesh = SubResource("CapsuleMesh_glpr6")
 
