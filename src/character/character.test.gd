@@ -62,3 +62,45 @@ func test_color_persisted_in_data() -> void:
 	instance.color = Color(0.1, 0.6, 0.15, 1)
 	var data: Dictionary = instance.get_data()
 	assert_that(data.has("color")).is_true()
+
+
+func test_player_controlled_skips_faction_movement() -> void:
+	instance.player_id = "Steam_123"
+	assert_that(instance._is_player_controlled()).is_true()
+
+
+func test_npc_is_not_player_controlled() -> void:
+	instance.player_id = ""
+	assert_that(instance._is_player_controlled()).is_false()
+
+
+func test_faction_movement_attracts_same_faction() -> void:
+	instance.player_id = ""
+	instance.color = Faction.get_faction_color(Faction.Type.RED)
+	instance.global_position = Vector3.ZERO
+
+	var ally: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
+	ally.player_id = ""
+	ally.color = Faction.get_faction_color(Faction.Type.RED)
+	ally.global_position = Vector3(10, 0, 0)
+	add_child(ally)
+
+	instance._apply_faction_movement(1.0)
+	# velocity should have positive x component (toward ally)
+	assert_that(instance.velocity.x > 0).is_true()
+
+
+func test_faction_movement_repels_other_faction() -> void:
+	instance.player_id = ""
+	instance.color = Faction.get_faction_color(Faction.Type.RED)
+	instance.global_position = Vector3.ZERO
+
+	var enemy: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
+	enemy.player_id = ""
+	enemy.color = Faction.get_faction_color(Faction.Type.BLUE)
+	enemy.global_position = Vector3(10, 0, 0)
+	add_child(enemy)
+
+	instance._apply_faction_movement(1.0)
+	# velocity should have negative x component (away from enemy)
+	assert_that(instance.velocity.x < 0).is_true()
