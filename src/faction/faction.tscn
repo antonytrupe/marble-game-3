@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bjhxd5e1usgtm"]
+
+[ext_resource type="Script" uid="uid://bvnrjwimeacg1" path="res://src/faction/faction.gd" id="1_jg45m"]
+
+[node name="Faction" type="Node" unique_id=1829302401]
+script = ExtResource("1_jg45m")

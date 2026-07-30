@@ -48,8 +48,6 @@ const MAX_CONTROLLED_WARP: int = 10
 @export var flying: bool = false
 @export var turn: int = 0:
 	set = _set_turn
-@export var color: Color = Color(0.7, 0.7, 0.7, 1):
-	set = _set_color
 #endregion
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -70,7 +68,6 @@ var player_id: String
 var right_inventory: Node3D
 var left_inventory: Node3D
 var actions: Array[Action]
-var faction: Faction.Type = Faction.Type.NONE
 
 #region onready variables
 @onready var label: Label3D = %Label3D
@@ -81,6 +78,7 @@ var faction: Faction.Type = Faction.Type.NONE
 @onready var world: World = $/root/Game/World
 @onready var warp_detector: WarpDetector = %WarpDetector
 @onready var age: MarbleAge = %Age
+@onready var faction: Faction = %Faction
 @onready var raycast: RayCast3D = %RayCast3D
 @onready var inventory_right_marker: Generic6DOFJoint3D = %InventoryRightMarker
 @onready var inventory_left_marker: Generic6DOFJoint3D = %InventoryLeftMarker
@@ -444,7 +442,8 @@ func get_data() -> Dictionary:
 		"age": age.age,
 		"turn": turn,
 		"transform": var_to_str(character.transform),
-		"color": var_to_str(color),
+		#"color": var_to_str(color),
+		"faction":var_to_str(faction.faction),
 		"left_inventory": left_inventory.name if left_inventory else StringName(""),
 		"right_inventory": right_inventory.name if right_inventory else StringName(""),
 	}
@@ -454,8 +453,7 @@ func get_data() -> Dictionary:
 func load_pre_ready(data: Dictionary) -> void:
 	if "transform" in data:
 		transform = str_to_var(data.transform)
-	if "color" in data:
-		color = str_to_var(data.color)
+	
 	if "player_id" in data:
 		player_id = data.player_id
 
@@ -464,6 +462,11 @@ func load_pre_ready(data: Dictionary) -> void:
 func load_post_ready(data: Dictionary) -> void:
 	if "age" in data:
 		age.age = data.age
+		
+	if "faction" in data:
+		faction.faction = str_to_var(data.faction)
+		_apply_color()
+		_update_label()
 
 	if "left_inventory" in data and data.left_inventory:
 		var f: Callable = func(child: Node) -> void:
@@ -494,30 +497,26 @@ func load_post_ready(data: Dictionary) -> void:
 		else: world.items.child_entered_tree.connect(f)
 #endregion
 
+
 func _is_player_controlled() -> bool:
 	return player_id != "" and player_id != null
 
 
 func _apply_faction_movement(delta: float) -> void:
 	FactionMovement.apply(self, delta)
-
-
-func _set_color(value: Color) -> void:
-	color = value
-	faction = Faction.from_color(color)
-	_apply_color()
-	_update_label()
-
+	
 
 func _apply_color() -> void:
 	if body_mesh:
 		var material: StandardMaterial3D = StandardMaterial3D.new()
+		var color=FactionStatic.get_faction_color(faction.faction)
+
 		material.albedo_color = color
 		body_mesh.material_override = material
 
 
 func get_faction_name() -> String:
-	return Faction.get_faction_name(faction)
+	return FactionStatic.get_faction_name(faction.faction)
 
 
 func _update_label() -> void:

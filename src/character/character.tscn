@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_2p3op"]
 [ext_resource type="Script" uid="uid://cv7le154j7bfo" path="res://src/character/ray_cast_3d.gd" id="2_8mo58"]
 [ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/marble_age.tscn" id="4_k8eue"]
+[ext_resource type="PackedScene" uid="uid://bjhxd5e1usgtm" path="res://src/faction/faction.tscn" id="5_tntuy"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vu45j"]
 resource_local_to_scene = true
@@ -151,6 +152,9 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
 [node name="Age" parent="." unique_id=781584009 instance=ExtResource("4_k8eue")]
+unique_name_in_owner = true
+
+[node name="Faction" parent="." unique_id=1829302401 instance=ExtResource("5_tntuy")]
 unique_name_in_owner = true
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1774699100]

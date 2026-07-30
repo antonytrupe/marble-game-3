@@ -9,39 +9,39 @@ const __source: String = 'res://src/faction/faction.gd'
 
 
 func test_get_faction_name_returns_correct_names() -> void:
-	assert_str(Faction.get_faction_name(Faction.Type.NONE)).is_equal("Unaligned")
-	assert_str(Faction.get_faction_name(Faction.Type.RED)).is_equal("Crimson Order")
-	assert_str(Faction.get_faction_name(Faction.Type.BLUE)).is_equal("Azure Covenant")
-	assert_str(Faction.get_faction_name(Faction.Type.GREEN)).is_equal("Emerald Pact")
-	assert_str(Faction.get_faction_name(Faction.Type.YELLOW)).is_equal("Golden Alliance")
-	assert_str(Faction.get_faction_name(Faction.Type.PURPLE)).is_equal("Violet Dominion")
+	assert_str(FactionStatic.get_faction_name(FactionStatic.Type.NONE)).is_equal("Unaligned")
+	assert_str(FactionStatic.get_faction_name(FactionStatic.Type.RED)).is_equal("Crimson Covenant")
+	assert_str(FactionStatic.get_faction_name(FactionStatic.Type.BLUE)).is_equal("Azure Alliance")
+	assert_str(FactionStatic.get_faction_name(FactionStatic.Type.GREEN)).is_equal("Emerald Dominion")
+	assert_str(FactionStatic.get_faction_name(FactionStatic.Type.YELLOW)).is_equal("Golden Order")
+	assert_str(FactionStatic.get_faction_name(FactionStatic.Type.PURPLE)).is_equal("Purple Pact")
 
 
 func test_get_faction_color_returns_correct_colors() -> void:
-	assert_that(Faction.get_faction_color(Faction.Type.RED)).is_equal(Color(0.8, 0.1, 0.1, 1))
-	assert_that(Faction.get_faction_color(Faction.Type.BLUE)).is_equal(Color(0.1, 0.2, 0.8, 1))
+	assert_that(FactionStatic.get_faction_color(FactionStatic.Type.RED)).is_equal(Color(0.8, 0.1, 0.1, 1))
+	assert_that(FactionStatic.get_faction_color(FactionStatic.Type.BLUE)).is_equal(Color(0.1, 0.2, 0.8, 1))
 
 
 func test_from_color_matches_red() -> void:
-	assert_that(Faction.from_color(Color(0.9, 0.0, 0.0, 1))).is_equal(Faction.Type.RED)
+	assert_that(FactionStatic.from_color(Color(0.9, 0.0, 0.0, 1))).is_equal(FactionStatic.Type.RED)
 
 
 func test_from_color_matches_blue() -> void:
-	assert_that(Faction.from_color(Color(0.0, 0.1, 0.9, 1))).is_equal(Faction.Type.BLUE)
+	assert_that(FactionStatic.from_color(Color(0.0, 0.1, 0.9, 1))).is_equal(FactionStatic.Type.BLUE)
 
 
 func test_from_color_matches_green() -> void:
-	assert_that(Faction.from_color(Color(0.0, 0.7, 0.1, 1))).is_equal(Faction.Type.GREEN)
+	assert_that(FactionStatic.from_color(Color(0.0, 0.7, 0.1, 1))).is_equal(FactionStatic.Type.GREEN)
 
 
 func test_from_color_matches_yellow() -> void:
-	assert_that(Faction.from_color(Color(1.0, 0.9, 0.0, 1))).is_equal(Faction.Type.YELLOW)
+	assert_that(FactionStatic.from_color(Color(1.0, 0.9, 0.0, 1))).is_equal(FactionStatic.Type.YELLOW)
 
 
 func test_from_color_matches_purple() -> void:
-	assert_that(Faction.from_color(Color(0.6, 0.0, 0.8, 1))).is_equal(Faction.Type.PURPLE)
+	assert_that(FactionStatic.from_color(Color(0.6, 0.0, 0.8, 1))).is_equal(FactionStatic.Type.PURPLE)
 
 
 func test_from_color_closest_match() -> void:
 	# A pinkish-red should still match RED
-	assert_that(Faction.from_color(Color(0.7, 0.2, 0.2, 1))).is_equal(Faction.Type.RED)
+	assert_that(FactionStatic.from_color(Color(0.7, 0.2, 0.2, 1))).is_equal(FactionStatic.Type.RED)

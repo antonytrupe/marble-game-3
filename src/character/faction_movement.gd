@@ -1,18 +1,18 @@
-﻿class_name FactionMovement
+class_name FactionMovement
 
 const FACTION_ATTRACT_RANGE: float = 300.0
 const FACTION_REPEL_RANGE: float = 150.0
 const FACTION_ATTRACT_STRENGTH: float = 4.0
 const FACTION_REPEL_STRENGTH: float = 2.0
 const FACTION_MOVE_SPEED: float = 1.5
-const SEPARATION_DISTANCE: float = 3.0
+const SEPARATION_DISTANCE: float = 6.0
 const SEPARATION_STRENGTH: float = 6.0
 ## How quickly velocity blends toward the desired direction (lower = smoother).
-const SMOOTHING_FACTOR: float = 3.0
+const SMOOTHING_FACTOR: float = 1.0
 ## How quickly the character rotates toward its movement direction (lower = smoother).
-const ROTATION_SMOOTHING: float = 5.0
+const ROTATION_SMOOTHING: float = 1.0
 ## Forces below this threshold are ignored to prevent micro-jitter.
-const DEAD_ZONE: float = 0.05
+const DEAD_ZONE: float = 1.0
 
 
 static func apply(character: MarbleCharacter, delta: float) -> void:
@@ -20,7 +20,7 @@ static func apply(character: MarbleCharacter, delta: float) -> void:
 		return
 	if character._is_player_controlled():
 		return
-	if character.faction == Faction.Type.NONE:
+	if character.faction.faction == FactionStatic.Type.NONE:
 		return
 
 	var attract_dir: Vector3 = Vector3.ZERO
@@ -37,7 +37,7 @@ static func apply(character: MarbleCharacter, delta: float) -> void:
 		if not sibling is MarbleCharacter:
 			continue
 		var other: MarbleCharacter = sibling as MarbleCharacter
-		if other.faction == Faction.Type.NONE:
+		if other.faction.faction == FactionStatic.Type.NONE:
 			continue
 
 		var to_other: Vector3 = other.global_position - my_pos
@@ -49,7 +49,7 @@ static func apply(character: MarbleCharacter, delta: float) -> void:
 		var direction: Vector3 = to_other / dist
 		if dist < SEPARATION_DISTANCE:
 			repel_dir -= direction * (1.0 / dist) * SEPARATION_STRENGTH
-		elif other.faction == character.faction and dist <= FACTION_ATTRACT_RANGE:
+		elif other.faction.faction == character.faction.faction and dist <= FACTION_ATTRACT_RANGE:
 			attract_dir += direction * (1.0 / dist) * FACTION_ATTRACT_STRENGTH
 		elif other.faction != character.faction and dist <= FACTION_REPEL_RANGE:
 			repel_dir -= direction * (1.0 / dist) * FACTION_REPEL_STRENGTH

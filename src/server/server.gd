@@ -568,7 +568,7 @@ func _on_peer_disconnected(peer_id: int) -> void:
 
 
 func _spawn_characters(count: int, center: Vector3) -> void:
-	count = clampi(count, 1, 10)
+	count = maxi(count, 1)
 	for i: int in count:
 		var c: MarbleCharacter = _create_character()
 		c.position = _get_random_vector(10, center)
@@ -581,13 +581,14 @@ func _create_character() -> MarbleCharacter:
 	var rand_x: float = randf_range(-100, 100)
 	var rand_z: float = randf_range(-100, 100)
 	c.position = Vector3(rand_x, world.get_ground_y(rand_x, rand_z), rand_z)
-	var faction_types: Array = Faction.COLORS.keys().filter(
-		func(t: Faction.Type) -> bool: return t != Faction.Type.NONE
+	var faction_types: Array = FactionStatic.COLORS.keys().filter(
+		func(t: FactionStatic.Type) -> bool: return t != FactionStatic.Type.NONE
 	)
-	var random_faction: Faction.Type = faction_types.pick_random()
-	c.color = Faction.get_faction_color(random_faction)
+	var random_faction: FactionStatic.Type = faction_types.pick_random()
 	c.rotation.y = randf_range(0, TAU)
 	world.characters.add_child(c)
+	c.faction.faction = random_faction
+	c._apply_color()
 	Persistance.persist.emit(c)
 	return c
 

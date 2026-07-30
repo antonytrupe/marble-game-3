@@ -45,23 +45,23 @@ func test_get_object_verbs_returns_empty() -> void:
 
 
 func test_default_faction_is_none() -> void:
-	assert_that(instance.faction).is_equal(Faction.Type.NONE)
+	assert_that(instance.faction.faction).is_equal(FactionStatic.Type.NONE)
 
 
-func test_setting_color_assigns_faction() -> void:
-	instance.color = Color(0.8, 0.1, 0.1, 1)
-	assert_that(instance.faction).is_equal(Faction.Type.RED)
+func test_setting_faction_assigns_faction() -> void:
+	instance.faction.faction = FactionStatic.Type.RED
+	assert_that(instance.faction.faction).is_equal(FactionStatic.Type.RED)
 
 
 func test_get_faction_name() -> void:
-	instance.color = Color(0.1, 0.2, 0.8, 1)
-	assert_str(instance.get_faction_name()).is_equal("Azure Covenant")
+	instance.faction.faction = FactionStatic.Type.BLUE
+	assert_str(instance.get_faction_name()).is_equal("Azure Alliance")
 
 
-func test_color_persisted_in_data() -> void:
-	instance.color = Color(0.1, 0.6, 0.15, 1)
+func test_faction_persisted_in_data() -> void:
+	instance.faction.faction = FactionStatic.Type.GREEN
 	var data: Dictionary = instance.get_data()
-	assert_that(data.has("color")).is_true()
+	assert_that(data.has("faction")).is_true()
 
 
 func test_player_controlled_skips_faction_movement() -> void:
@@ -76,14 +76,14 @@ func test_npc_is_not_player_controlled() -> void:
 
 func test_faction_movement_attracts_same_faction() -> void:
 	instance.player_id = ""
-	instance.color = Faction.get_faction_color(Faction.Type.RED)
+	instance.faction.faction = FactionStatic.Type.RED
 	instance.global_position = Vector3.ZERO
 
 	var ally: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
 	ally.player_id = ""
-	ally.color = Faction.get_faction_color(Faction.Type.RED)
-	ally.global_position = Vector3(10, 0, 0)
 	add_child(ally)
+	ally.faction.faction = FactionStatic.Type.RED
+	ally.global_position = Vector3(10, 0, 0)
 
 	instance._apply_faction_movement(1.0)
 	# velocity should have positive x component (toward ally)
@@ -92,14 +92,14 @@ func test_faction_movement_attracts_same_faction() -> void:
 
 func test_faction_movement_repels_other_faction() -> void:
 	instance.player_id = ""
-	instance.color = Faction.get_faction_color(Faction.Type.RED)
+	instance.faction.faction = FactionStatic.Type.RED
 	instance.global_position = Vector3.ZERO
 
 	var enemy: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
 	enemy.player_id = ""
-	enemy.color = Faction.get_faction_color(Faction.Type.BLUE)
-	enemy.global_position = Vector3(10, 0, 0)
 	add_child(enemy)
+	enemy.faction.faction = FactionStatic.Type.BLUE
+	enemy.global_position = Vector3(10, 0, 0)
 
 	instance._apply_faction_movement(1.0)
 	# velocity should have negative x component (away from enemy)
@@ -108,14 +108,14 @@ func test_faction_movement_repels_other_faction() -> void:
 
 func test_separation_repels_same_faction_when_too_close() -> void:
 	instance.player_id = ""
-	instance.color = Faction.get_faction_color(Faction.Type.RED)
+	instance.faction.faction = FactionStatic.Type.RED
 	instance.global_position = Vector3.ZERO
 
 	var ally: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
 	ally.player_id = ""
-	ally.color = Faction.get_faction_color(Faction.Type.RED)
-	ally.global_position = Vector3(1, 0, 0)  # within SEPARATION_DISTANCE
 	add_child(ally)
+	ally.faction.faction = FactionStatic.Type.RED
+	ally.global_position = Vector3(1, 0, 0)  # within SEPARATION_DISTANCE
 
 	instance._apply_faction_movement(1.0)
 	# velocity should have negative x component (pushed away despite same faction)
