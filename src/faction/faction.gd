@@ -102,11 +102,11 @@ func _init_default_relations(my_faction: FactionStatic.Type) -> void:
 		if my_faction == FactionStatic.Type.NONE:
 			relations[f] = FactionRelation.new(0.0)
 		elif f == my_faction:
-			relations[f] = FactionRelation.new(1.0)
+			relations[f] = FactionRelation.new(randf_range(0.8, 1.0))
 		elif f == FactionStatic.Type.NONE:
 			relations[f] = FactionRelation.new(0.0)
 		else:
-			relations[f] =  FactionRelation.new(randf_range(-1.0, 0.5))#random relation
+			relations[f] =  FactionRelation.new(randf_range(-1.0, 0.8))#random relation
 			#relations[f] = FactionRelation.new(-1.0)  #max hostile
 
 

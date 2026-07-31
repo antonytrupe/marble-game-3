@@ -6,8 +6,10 @@ const SMOOTHING_FACTOR: float = 1.0
 const ROTATION_SMOOTHING: float = 1.0
 ## Forces below this threshold are ignored to prevent micro-jitter.
 const DEAD_ZONE: float = 1.0
-## Squared max interaction range — siblings farther than this are skipped entirely.
+## Pre-computed squared distance thresholds to avoid per-frame sqrt calls.
 const _MAX_RANGE_SQ: float = FactionRelation.ATTRACT_RANGE * FactionRelation.ATTRACT_RANGE
+const _SEPARATION_DIST_SQ: float = FactionRelation.SEPARATION_DISTANCE * FactionRelation.SEPARATION_DISTANCE
+const _REPEL_RANGE_SQ: float = FactionRelation.REPEL_RANGE * FactionRelation.REPEL_RANGE
 
 
 static func apply(character: MarbleCharacter, delta: float) -> void:
@@ -21,6 +23,7 @@ static func apply(character: MarbleCharacter, delta: float) -> void:
 	var attract_dir: Vector3 = Vector3.ZERO
 	var repel_dir: Vector3 = Vector3.ZERO
 	var my_pos: Vector3 = character.global_position
+	var my_faction: Faction = character.faction
 
 	var parent: Node = character.get_parent()
 	if not parent:
@@ -40,16 +43,20 @@ static func apply(character: MarbleCharacter, delta: float) -> void:
 		if dist_sq < 0.01 or dist_sq > _MAX_RANGE_SQ:
 			continue
 
-		var dist: float = sqrt(dist_sq)
-		var inv_dist: float = 1.0 / dist
-		var direction: Vector3 = to_other * inv_dist
-		if dist < FactionRelation.SEPARATION_DISTANCE:
-			repel_dir -= direction * inv_dist * FactionRelation.SEPARATION_STRENGTH
+		if dist_sq < _SEPARATION_DIST_SQ:
+			# Force ∝ 1/dist²: original was direction * inv_dist = to_other / dist².
+			# Avoid sqrt by computing to_other / dist_sq directly.
+			repel_dir -= to_other * (FactionRelation.SEPARATION_STRENGTH / dist_sq)
 		else:
-			var relation: float = character.faction.get_overall_relation(other.faction)
-			if relation > 0.0 and dist <= FactionRelation.ATTRACT_RANGE:
+			var relation: float = my_faction.get_overall_relation(other.faction)
+			if relation > 0.0:
+				# Already guaranteed dist <= ATTRACT_RANGE by _MAX_RANGE_SQ check.
+				var inv_dist: float = 1.0 / sqrt(dist_sq)
+				var direction: Vector3 = to_other * inv_dist
 				attract_dir += direction * inv_dist * FactionRelation.ATTRACT_STRENGTH * relation
-			elif relation < 0.0 and dist <= FactionRelation.REPEL_RANGE:
+			elif relation < 0.0 and dist_sq <= _REPEL_RANGE_SQ:
+				var inv_dist: float = 1.0 / sqrt(dist_sq)
+				var direction: Vector3 = to_other * inv_dist
 				repel_dir -= direction * inv_dist * FactionRelation.REPEL_STRENGTH * absf(relation)
 
 	var desired: Vector3 = attract_dir + repel_dir
