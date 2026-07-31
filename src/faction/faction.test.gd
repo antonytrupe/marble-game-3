@@ -8,40 +8,182 @@ extends GdUnitTestSuite
 const __source: String = 'res://src/faction/faction.gd'
 
 
-func test_get_faction_name_returns_correct_names() -> void:
-	assert_str(FactionStatic.get_faction_name(FactionStatic.Type.NONE)).is_equal("Unaligned")
-	assert_str(FactionStatic.get_faction_name(FactionStatic.Type.RED)).is_equal("Crimson Covenant")
-	assert_str(FactionStatic.get_faction_name(FactionStatic.Type.BLUE)).is_equal("Azure Alliance")
-	assert_str(FactionStatic.get_faction_name(FactionStatic.Type.GREEN)).is_equal("Emerald Dominion")
-	assert_str(FactionStatic.get_faction_name(FactionStatic.Type.YELLOW)).is_equal("Golden Order")
-	assert_str(FactionStatic.get_faction_name(FactionStatic.Type.PURPLE)).is_equal("Purple Pact")
+var faction: Faction
 
 
-func test_get_faction_color_returns_correct_colors() -> void:
-	assert_that(FactionStatic.get_faction_color(FactionStatic.Type.RED)).is_equal(Color(0.8, 0.1, 0.1, 1))
-	assert_that(FactionStatic.get_faction_color(FactionStatic.Type.BLUE)).is_equal(Color(0.1, 0.2, 0.8, 1))
+func before_test() -> void:
+	faction = auto_free(Faction.new())
 
 
-func test_from_color_matches_red() -> void:
-	assert_that(FactionStatic.from_color(Color(0.9, 0.0, 0.0, 1))).is_equal(FactionStatic.Type.RED)
+func after_test() -> void:
+	pass
 
 
-func test_from_color_matches_blue() -> void:
-	assert_that(FactionStatic.from_color(Color(0.0, 0.1, 0.9, 1))).is_equal(FactionStatic.Type.BLUE)
+# --- get_relation ---
+
+func test_get_relation_returns_zero_for_missing_faction() -> void:
+	assert_float(faction.get_relation(FactionStatic.Type.RED)).is_equal(0.0)
 
 
-func test_from_color_matches_green() -> void:
-	assert_that(FactionStatic.from_color(Color(0.0, 0.7, 0.1, 1))).is_equal(FactionStatic.Type.GREEN)
+func test_get_relation_returns_stored_value() -> void:
+	faction.relations[FactionStatic.Type.BLUE] = 0.75
+	assert_float(faction.get_relation(FactionStatic.Type.BLUE)).is_equal(0.75)
 
 
-func test_from_color_matches_yellow() -> void:
-	assert_that(FactionStatic.from_color(Color(1.0, 0.9, 0.0, 1))).is_equal(FactionStatic.Type.YELLOW)
+func test_get_relation_returns_negative_value() -> void:
+	faction.relations[FactionStatic.Type.GREEN] = -0.5
+	assert_float(faction.get_relation(FactionStatic.Type.GREEN)).is_equal(-0.5)
 
 
-func test_from_color_matches_purple() -> void:
-	assert_that(FactionStatic.from_color(Color(0.6, 0.0, 0.8, 1))).is_equal(FactionStatic.Type.PURPLE)
+# --- set_relation ---
+
+func test_set_relation_stores_value() -> void:
+	faction.set_relation(FactionStatic.Type.RED, 0.5)
+	assert_float(faction.get_relation(FactionStatic.Type.RED)).is_equal(0.5)
 
 
-func test_from_color_closest_match() -> void:
-	# A pinkish-red should still match RED
-	assert_that(FactionStatic.from_color(Color(0.7, 0.2, 0.2, 1))).is_equal(FactionStatic.Type.RED)
+func test_set_relation_clamps_above_one() -> void:
+	faction.set_relation(FactionStatic.Type.RED, 2.0)
+	assert_float(faction.get_relation(FactionStatic.Type.RED)).is_equal(1.0)
+
+
+func test_set_relation_clamps_below_negative_one() -> void:
+	faction.set_relation(FactionStatic.Type.RED, -5.0)
+	assert_float(faction.get_relation(FactionStatic.Type.RED)).is_equal(-1.0)
+
+
+func test_set_relation_allows_boundary_values() -> void:
+	faction.set_relation(FactionStatic.Type.RED, 1.0)
+	assert_float(faction.get_relation(FactionStatic.Type.RED)).is_equal(1.0)
+	faction.set_relation(FactionStatic.Type.RED, -1.0)
+	assert_float(faction.get_relation(FactionStatic.Type.RED)).is_equal(-1.0)
+
+
+func test_set_relation_overwrites_previous_value() -> void:
+	faction.set_relation(FactionStatic.Type.BLUE, 0.3)
+	faction.set_relation(FactionStatic.Type.BLUE, -0.7)
+	assert_float(faction.get_relation(FactionStatic.Type.BLUE)).is_equal(-0.7)
+
+
+# --- get_main_faction ---
+
+func test_get_main_faction_returns_none_when_empty() -> void:
+	assert_that(faction.get_main_faction()).is_equal(FactionStatic.Type.NONE)
+
+
+func test_get_main_faction_returns_none_when_only_none_relation() -> void:
+	faction.relations[FactionStatic.Type.NONE] = 1.0
+	assert_that(faction.get_main_faction()).is_equal(FactionStatic.Type.NONE)
+
+
+func test_get_main_faction_returns_highest_relation() -> void:
+	faction.set_relation(FactionStatic.Type.RED, 0.5)
+	faction.set_relation(FactionStatic.Type.BLUE, 0.9)
+	faction.set_relation(FactionStatic.Type.GREEN, 0.3)
+	assert_that(faction.get_main_faction()).is_equal(FactionStatic.Type.BLUE)
+
+
+func test_get_main_faction_ignores_none_type() -> void:
+	faction.relations[FactionStatic.Type.NONE] = 10.0
+	faction.set_relation(FactionStatic.Type.RED, 0.2)
+	assert_that(faction.get_main_faction()).is_equal(FactionStatic.Type.RED)
+
+
+func test_get_main_faction_works_with_all_negative_relations() -> void:
+	faction.set_relation(FactionStatic.Type.RED, -0.5)
+	faction.set_relation(FactionStatic.Type.BLUE, -0.2)
+	faction.set_relation(FactionStatic.Type.GREEN, -0.8)
+	assert_that(faction.get_main_faction()).is_equal(FactionStatic.Type.BLUE)
+
+
+# --- _init_default_relations ---
+
+func test_init_default_relations_none_faction_all_neutral() -> void:
+	faction._init_default_relations(FactionStatic.Type.NONE)
+	for f: FactionStatic.Type in FactionStatic.Type.values():
+		assert_float(faction.get_relation(f)).is_equal(0.0)
+
+
+func test_init_default_relations_own_faction_is_one() -> void:
+	faction._init_default_relations(FactionStatic.Type.RED)
+	assert_float(faction.get_relation(FactionStatic.Type.RED)).is_equal(1.0)
+
+
+func test_init_default_relations_none_type_is_zero() -> void:
+	faction._init_default_relations(FactionStatic.Type.RED)
+	assert_float(faction.get_relation(FactionStatic.Type.NONE)).is_equal(0.0)
+
+
+func test_init_default_relations_other_factions_in_range() -> void:
+	faction._init_default_relations(FactionStatic.Type.RED)
+	for f: FactionStatic.Type in FactionStatic.Type.values():
+		if f == FactionStatic.Type.RED or f == FactionStatic.Type.NONE:
+			continue
+		var val: float = faction.get_relation(f)
+		assert_float(val).is_less_equal(0.9)
+		assert_float(val).is_greater_equal(-1.0)
+
+
+func test_init_default_relations_clears_previous() -> void:
+	faction.set_relation(FactionStatic.Type.PURPLE, 0.99)
+	faction._init_default_relations(FactionStatic.Type.BLUE)
+	# PURPLE should no longer be 0.99 — it should be in the random range
+	assert_float(faction.get_relation(FactionStatic.Type.BLUE)).is_equal(1.0)
+
+
+# --- get_overall_relation ---
+
+func test_overall_relation_identical_factions_is_one() -> void:
+	var other: Faction = auto_free(Faction.new())
+	faction.set_relation(FactionStatic.Type.RED, 1.0)
+	faction.set_relation(FactionStatic.Type.BLUE, -0.5)
+	other.set_relation(FactionStatic.Type.RED, 1.0)
+	other.set_relation(FactionStatic.Type.BLUE, -0.5)
+	assert_float(faction.get_overall_relation(other)).is_equal(1.0)
+
+
+func test_overall_relation_opposite_factions_is_negative() -> void:
+	var other: Faction = auto_free(Faction.new())
+	# Set all factions to opposite extremes
+	for f: FactionStatic.Type in FactionStatic.Type.values():
+		if f == FactionStatic.Type.NONE:
+			continue
+		faction.set_relation(f, 1.0)
+		other.set_relation(f, -1.0)
+	var result: float = faction.get_overall_relation(other)
+	assert_float(result).is_less(0.0)
+
+
+func test_overall_relation_both_empty_returns_one() -> void:
+	var other: Faction = auto_free(Faction.new())
+	# Both have 0 for all factions, so 1 - abs(0 - 0) = 1 for each
+	assert_float(faction.get_overall_relation(other)).is_equal(1.0)
+
+
+func test_overall_relation_is_symmetric() -> void:
+	var other: Faction = auto_free(Faction.new())
+	faction.set_relation(FactionStatic.Type.RED, 0.8)
+	faction.set_relation(FactionStatic.Type.BLUE, -0.3)
+	other.set_relation(FactionStatic.Type.RED, -0.2)
+	other.set_relation(FactionStatic.Type.GREEN, 0.6)
+	var ab: float = faction.get_overall_relation(other)
+	var ba: float = other.get_overall_relation(faction)
+	assert_float(ab).is_equal(ba)
+
+
+func test_overall_relation_excludes_none_type() -> void:
+	var other: Faction = auto_free(Faction.new())
+	faction.relations[FactionStatic.Type.NONE] = 1.0
+	other.relations[FactionStatic.Type.NONE] = -1.0
+	# NONE should be skipped, so both empty non-NONE → 1.0
+	assert_float(faction.get_overall_relation(other)).is_equal(1.0)
+
+
+func test_overall_relation_partial_overlap() -> void:
+	var other: Faction = auto_free(Faction.new())
+	# Only faction has RED set, other has nothing — difference is the value
+	faction.set_relation(FactionStatic.Type.RED, 0.6)
+	var result: float = faction.get_overall_relation(other)
+	# For RED: 1 - abs(0.6 - 0) = 0.4, for others: 1 - 0 = 1.0
+	# Average of 0.4 and four 1.0s = 4.4 / 5 = 0.88
+	assert_float(result).is_equal_approx(0.88, 0.01)

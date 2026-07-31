@@ -45,7 +45,7 @@ func test_get_object_verbs_returns_empty() -> void:
 
 
 func test_default_faction_is_none() -> void:
-	assert_that(instance.faction.faction).is_equal(FactionStatic.Type.NONE)
+	assert_that(instance.faction.get_main_faction()).is_equal(FactionStatic.Type.NONE)
 
 
 func test_setting_faction_assigns_faction() -> void:
@@ -62,6 +62,60 @@ func test_faction_persisted_in_data() -> void:
 	instance.faction.faction = FactionStatic.Type.GREEN
 	var data: Dictionary = instance.get_data()
 	assert_that(data.has("faction")).is_true()
+	assert_that(data.has("faction_relations")).is_true()
+
+
+func test_default_relations_for_none_faction() -> void:
+	assert_float(instance.faction.get_relation(FactionStatic.Type.RED)).is_equal(0.0)
+	assert_float(instance.faction.get_relation(FactionStatic.Type.BLUE)).is_equal(0.0)
+
+
+func test_default_relations_for_assigned_faction() -> void:
+	var faction = FactionStatic.Type.RED
+	instance.faction._init_default_relations(faction)
+	assert_float(instance.faction.get_relation(FactionStatic.Type.RED)).is_equal(1.0)
+	assert_float(instance.faction.get_relation(FactionStatic.Type.BLUE)).is_equal(-0.5)
+	assert_float(instance.faction.get_relation(FactionStatic.Type.NONE)).is_equal(0.0)
+
+
+func test_get_main_faction_returns_highest_relation() -> void:
+	var faction = FactionStatic.Type.RED
+	instance.faction._init_default_relations(faction)
+	assert_that(instance.faction.get_main_faction()).is_equal(FactionStatic.Type.RED)
+	# Override BLUE to be higher than RED
+	instance.faction.set_relation(FactionStatic.Type.BLUE, 1.0)
+	instance.faction.set_relation(FactionStatic.Type.RED, 0.5)
+	assert_that(instance.faction.get_main_faction()).is_equal(FactionStatic.Type.BLUE)
+
+
+func test_get_main_faction_returns_none_when_no_relations() -> void:
+	assert_that(instance.faction.get_main_faction()).is_equal(FactionStatic.Type.NONE)
+
+
+func test_set_relation_clamps_value() -> void:
+	instance.faction.set_relation(FactionStatic.Type.BLUE, 2.0)
+	assert_float(instance.faction.get_relation(FactionStatic.Type.BLUE)).is_equal(1.0)
+	instance.faction.set_relation(FactionStatic.Type.BLUE, -5.0)
+	assert_float(instance.faction.get_relation(FactionStatic.Type.BLUE)).is_equal(-1.0)
+
+
+func test_custom_relation_affects_movement() -> void:
+	instance.player_id = ""
+	var faction = FactionStatic.Type.RED
+	instance.faction._init_default_relations(faction)
+	# Make RED friendly toward BLUE
+	instance.faction.set_relation(FactionStatic.Type.BLUE, 0.8)
+	instance.global_position = Vector3.ZERO
+
+	var other: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
+	other.player_id = ""
+	add_child(other)
+	other.faction.faction = FactionStatic.Type.BLUE
+	other.global_position = Vector3(10, 0, 0)
+
+	instance._apply_faction_movement(1.0)
+	# Should attract (positive x) since relation is friendly
+	assert_that(instance.velocity.x > 0).is_true()
 
 
 func test_player_controlled_skips_faction_movement() -> void:
@@ -76,7 +130,8 @@ func test_npc_is_not_player_controlled() -> void:
 
 func test_faction_movement_attracts_same_faction() -> void:
 	instance.player_id = ""
-	instance.faction.faction = FactionStatic.Type.RED
+	var faction = FactionStatic.Type.RED
+	instance.faction._init_default_relations(faction)
 	instance.global_position = Vector3.ZERO
 
 	var ally: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
@@ -92,7 +147,8 @@ func test_faction_movement_attracts_same_faction() -> void:
 
 func test_faction_movement_repels_other_faction() -> void:
 	instance.player_id = ""
-	instance.faction.faction = FactionStatic.Type.RED
+	var faction = FactionStatic.Type.RED
+	instance.faction._init_default_relations(faction)
 	instance.global_position = Vector3.ZERO
 
 	var enemy: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
@@ -108,7 +164,8 @@ func test_faction_movement_repels_other_faction() -> void:
 
 func test_separation_repels_same_faction_when_too_close() -> void:
 	instance.player_id = ""
-	instance.faction.faction = FactionStatic.Type.RED
+	var faction = FactionStatic.Type.RED
+	instance.faction._init_default_relations(faction)
 	instance.global_position = Vector3.ZERO
 
 	var ally: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())

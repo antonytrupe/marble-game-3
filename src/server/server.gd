@@ -587,7 +587,8 @@ func _create_character() -> MarbleCharacter:
 	var random_faction: FactionStatic.Type = faction_types.pick_random()
 	c.rotation.y = randf_range(0, TAU)
 	world.characters.add_child(c)
-	c.faction.faction = random_faction
+	# c.faction.faction = random_faction
+	c.faction._init_default_relations(random_faction)
 	c._apply_color()
 	Persistance.persist.emit(c)
 	return c

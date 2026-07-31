@@ -442,8 +442,7 @@ func get_data() -> Dictionary:
 		"age": age.age,
 		"turn": turn,
 		"transform": var_to_str(character.transform),
-		#"color": var_to_str(color),
-		"faction":var_to_str(faction.faction),
+		"faction_relations":var_to_str(faction.relations),
 		"left_inventory": left_inventory.name if left_inventory else StringName(""),
 		"right_inventory": right_inventory.name if right_inventory else StringName(""),
 	}
@@ -463,8 +462,8 @@ func load_post_ready(data: Dictionary) -> void:
 	if "age" in data:
 		age.age = data.age
 		
-	if "faction" in data:
-		faction.faction = str_to_var(data.faction)
+	if "faction_relations" in data:
+		faction.relations = str_to_var(data.faction_relations)
 		_apply_color()
 		_update_label()
 
@@ -509,14 +508,14 @@ func _apply_faction_movement(delta: float) -> void:
 func _apply_color() -> void:
 	if body_mesh:
 		var material: StandardMaterial3D = StandardMaterial3D.new()
-		var color=FactionStatic.get_faction_color(faction.faction)
+		var color=FactionStatic.get_faction_color(faction.get_main_faction())
 
 		material.albedo_color = color
 		body_mesh.material_override = material
 
 
 func get_faction_name() -> String:
-	return FactionStatic.get_faction_name(faction.faction)
+	return FactionStatic.get_faction_name(faction.get_main_faction())
 
 
 func _update_label() -> void:

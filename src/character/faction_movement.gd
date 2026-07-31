@@ -20,7 +20,7 @@ static func apply(character: MarbleCharacter, delta: float) -> void:
 		return
 	if character._is_player_controlled():
 		return
-	if character.faction.faction == FactionStatic.Type.NONE:
+	if character.faction.get_main_faction() == FactionStatic.Type.NONE:
 		return
 
 	var attract_dir: Vector3 = Vector3.ZERO
@@ -37,7 +37,7 @@ static func apply(character: MarbleCharacter, delta: float) -> void:
 		if not sibling is MarbleCharacter:
 			continue
 		var other: MarbleCharacter = sibling as MarbleCharacter
-		if other.faction.faction == FactionStatic.Type.NONE:
+		if other.faction.get_main_faction() == FactionStatic.Type.NONE:
 			continue
 
 		var to_other: Vector3 = other.global_position - my_pos
@@ -49,10 +49,12 @@ static func apply(character: MarbleCharacter, delta: float) -> void:
 		var direction: Vector3 = to_other / dist
 		if dist < SEPARATION_DISTANCE:
 			repel_dir -= direction * (1.0 / dist) * SEPARATION_STRENGTH
-		elif other.faction.faction == character.faction.faction and dist <= FACTION_ATTRACT_RANGE:
-			attract_dir += direction * (1.0 / dist) * FACTION_ATTRACT_STRENGTH
-		elif other.faction != character.faction and dist <= FACTION_REPEL_RANGE:
-			repel_dir -= direction * (1.0 / dist) * FACTION_REPEL_STRENGTH
+		else:
+			var relation: float = character.faction.get_overall_relation(other.faction)
+			if relation > 0.0 and dist <= FACTION_ATTRACT_RANGE:
+				attract_dir += direction * (1.0 / dist) * FACTION_ATTRACT_STRENGTH * relation
+			elif relation < 0.0 and dist <= FACTION_REPEL_RANGE:
+				repel_dir -= direction * (1.0 / dist) * FACTION_REPEL_STRENGTH * absf(relation)
 
 	var desired: Vector3 = attract_dir + repel_dir
 	if desired.length() > DEAD_ZONE:
