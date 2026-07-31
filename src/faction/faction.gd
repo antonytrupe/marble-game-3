@@ -6,21 +6,33 @@ extends Node
 ## Cleared automatically when any faction's relations change.
 var _relation_cache: Dictionary = {}
 
+## Cached result of get_main_faction(). Invalidated when relations change.
+var _main_faction_cache: FactionStatic.Type = FactionStatic.Type.NONE
+var _main_faction_dirty: bool = true
+
 ## Relation toward each faction.
 ## Missing entries default to neutral (0.0).
-var relations: Dictionary[FactionStatic.Type, FactionRelation] = {}
+var relations: Dictionary[FactionStatic.Type, FactionRelation] = {}:
+	set(value):
+		relations=value
+		_main_faction_dirty=true
 
 
 func _ready() -> void:
 	pass
 
 
-func _init(faction: FactionStatic.Type = FactionStatic.Type.NONE, initial_value: float = 0.0) -> void:
+func _init(faction: FactionStatic.Type=FactionStatic.Type.NONE, initial_value: float=0.0) -> void:
 	relations[faction] = FactionRelation.new(clampf(initial_value, -1.0, 1.0))
+	invalidate_cache()
+
 
 ## Returns the faction type with the highest relation value, excluding NONE.
 ## Returns NONE if no relations exist or all are toward NONE.
+## Result is cached and invalidated when relations change.
 func get_main_faction() -> FactionStatic.Type:
+	if not _main_faction_dirty:
+		return _main_faction_cache
 	var best_faction: FactionStatic.Type = FactionStatic.Type.NONE
 	var best_value: float = -INF
 	for f: FactionStatic.Type in relations:
@@ -29,6 +41,8 @@ func get_main_faction() -> FactionStatic.Type:
 		if relations[f].value > best_value:
 			best_value = relations[f].value
 			best_faction = f
+	_main_faction_cache = best_faction
+	_main_faction_dirty = false
 	return best_faction
 
 
@@ -55,12 +69,12 @@ func get_overall_relation(other: Faction) -> float:
 			continue
 		var my_val: float = get_relation(f)
 		var other_val: float = other.get_relation(f)
-		if my_val<0 and other_val<0:
+		if my_val < 0 and other_val < 0:
 			continue
 		# Dot-product style: same sign = agreement, opposite = disagreement
 		var s: float = sign(my_val * other_val)
 		# var sign:float = my_val * other_val
-		
+
 		total += s * (abs(my_val) + abs(other_val)) / 2
 		count += 1
 	var result: float
@@ -92,8 +106,8 @@ func _init_default_relations(my_faction: FactionStatic.Type) -> void:
 		elif f == FactionStatic.Type.NONE:
 			relations[f] = FactionRelation.new(0.0)
 		else:
-			# relations[f] = randf_range(-1.0, 0.9)#random relation
-			relations[f] = FactionRelation.new(-1.0)  #max hostile
+			relations[f] =  FactionRelation.new(randf_range(-1.0, 0.5))#random relation
+			#relations[f] = FactionRelation.new(-1.0)  #max hostile
 
 
 ## Builds a symmetric cache key from two Faction instances.
@@ -110,6 +124,7 @@ func _cache_key(other: Faction) -> int:
 ## Removes all cached relation entries that involve this Faction instance.
 func invalidate_cache() -> void:
 	_relation_cache.clear()
+	_main_faction_dirty = true
 
 
 ## Clears the entire relation cache. Call when bulk changes occur.

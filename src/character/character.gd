@@ -504,14 +504,60 @@ func _is_player_controlled() -> bool:
 func _apply_faction_movement(delta: float) -> void:
 	FactionMovement.apply(self, delta)
 	
-
+	
 func _apply_color() -> void:
-	if body_mesh:
-		var material: StandardMaterial3D = StandardMaterial3D.new()
-		var color=FactionStatic.get_faction_color(faction.get_main_faction())
+	if not body_mesh:
+		return
+		
+	if not (body_mesh.material_override is ShaderMaterial):
+		return
 
-		material.albedo_color = color
-		body_mesh.material_override = material
+	var faction_keys: Array[FactionStatic.Type] = [
+		FactionStatic.Type.NONE,
+		FactionStatic.Type.RED,
+		FactionStatic.Type.BLUE,
+		FactionStatic.Type.GREEN,
+		FactionStatic.Type.YELLOW,
+		FactionStatic.Type.PURPLE,
+	]
+	
+	var suffix_names: Array[String] = ["none", "red", "blue", "green", "yellow", "purple"]
+
+	# Create a helper array of Dictionaries so we can sort factions alongside their data
+	var active_factions: Array[Dictionary] = []
+	var total: float = 0.0
+
+	for i: int in faction_keys.size():
+		var f: FactionStatic.Type = faction_keys[i]
+		var val: float = faction.get_relation(f)
+		var positive_val: float = maxf(val, 0.0)
+		
+		total += positive_val
+		
+		active_factions.append({
+			"key_index": i,
+			"suffix": suffix_names[i],
+			"value": positive_val
+		})
+
+	# Sort the array in descending order based on the faction's value
+	# The faction with the largest value will move to index 0 (the top of the capsule)
+	active_factions.sort_custom(func(a, b): return a["value"] > b["value"])
+
+	# Fallback if there is zero positive relationship data anywhere
+	if total <= 0.0:
+		for faction_data in active_factions:
+			body_mesh.set_instance_shader_parameter("band_" + faction_data["suffix"], Vector2(0.0, 0.0))
+		return
+
+	# Calculate cutoffs based on the newly sorted order
+	var cumulative: float = 0.0
+	for faction_data in active_factions:
+		var proportion: float = faction_data["value"] / total
+		cumulative += proportion
+		
+		# Send the calculated cutoff data directly to the specific uniform name
+		body_mesh.set_instance_shader_parameter("band_" + faction_data["suffix"], Vector2(cumulative, faction_data["value"]))
 
 
 func get_faction_name() -> String:
