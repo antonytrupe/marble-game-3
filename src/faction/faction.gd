@@ -1,12 +1,19 @@
 class_name Faction
 extends Node
 
+const ATTRACT_RANGE: float = 300.0
+const REPEL_RANGE: float = 150.0
+const ATTRACT_STRENGTH: float = 4.0
+const REPEL_STRENGTH: float = 2.0
+const MOVE_SPEED: float = 1.5
+const SEPARATION_DISTANCE: float = 6.0
+const SEPARATION_STRENGTH: float = 6.0
+
 # var faction: FactionStatic.Type = FactionStatic.Type.NONE
 
-## Degree of friendliness (+) or hostility (-) toward each faction.
-## Values range from -1.0 (fully hostile) to 1.0 (fully friendly).
-## Missing entries default to 0.0 (neutral).
-var relations: Dictionary = {}
+## Relation toward each faction.
+## Missing entries default to neutral (0.0).
+var relations: Dictionary[FactionStatic.Type, FactionRelation] = {}
 
 
 func _ready() -> void:
@@ -21,8 +28,8 @@ func get_main_faction() -> FactionStatic.Type:
 	for f: FactionStatic.Type in relations:
 		if f == FactionStatic.Type.NONE:
 			continue
-		if relations[f] > best_value:
-			best_value = relations[f]
+		if relations[f].value > best_value:
+			best_value = relations[f].value
 			best_faction = f
 	return best_faction
 
@@ -31,7 +38,7 @@ func get_main_faction() -> FactionStatic.Type:
 ## Positive = friendly, negative = hostile, 0 = neutral.
 func get_relation(faction: FactionStatic.Type) -> float:
 	if faction in relations:
-		return relations[faction]
+		return relations[faction].value
 	return 0.0
 
 
@@ -61,7 +68,7 @@ func get_overall_relation(other: Faction) -> float:
 
 ## Sets the relation value toward the given faction type, clamped to [-1, 1].
 func set_relation(other_faction: FactionStatic.Type, value: float) -> void:
-	relations[other_faction] = clampf(value, -1.0, 1.0)
+	relations[other_faction] = FactionRelation.new(clampf(value, -1.0, 1.0))
 
 
 ## Initializes default relations based on the character's own faction.
@@ -71,11 +78,11 @@ func _init_default_relations(my_faction: FactionStatic.Type) -> void:
 	relations.clear()
 	for f: FactionStatic.Type in FactionStatic.Type.values():
 		if my_faction == FactionStatic.Type.NONE:
-			relations[f] = 0.0
+			relations[f] = FactionRelation.new(0.0)
 		elif f == my_faction:
-			relations[f] = 1.0
+			relations[f] = FactionRelation.new(1.0)
 		elif f == FactionStatic.Type.NONE:
-			relations[f] = 0.0
+			relations[f] = FactionRelation.new(0.0)
 		else:
 			# relations[f] = randf_range(-1.0, 0.9)#random relation
-			relations[f] = -1.0  #max hostile
+			relations[f] = FactionRelation.new(-1.0)  #max hostile

@@ -1,12 +1,5 @@
 class_name FactionMovement
 
-const FACTION_ATTRACT_RANGE: float = 300.0
-const FACTION_REPEL_RANGE: float = 150.0
-const FACTION_ATTRACT_STRENGTH: float = 4.0
-const FACTION_REPEL_STRENGTH: float = 2.0
-const FACTION_MOVE_SPEED: float = 1.5
-const SEPARATION_DISTANCE: float = 6.0
-const SEPARATION_STRENGTH: float = 6.0
 ## How quickly velocity blends toward the desired direction (lower = smoother).
 const SMOOTHING_FACTOR: float = 1.0
 ## How quickly the character rotates toward its movement direction (lower = smoother).
@@ -47,18 +40,18 @@ static func apply(character: MarbleCharacter, delta: float) -> void:
 			continue
 
 		var direction: Vector3 = to_other / dist
-		if dist < SEPARATION_DISTANCE:
-			repel_dir -= direction * (1.0 / dist) * SEPARATION_STRENGTH
+		if dist < Faction.SEPARATION_DISTANCE:
+			repel_dir -= direction * (1.0 / dist) * Faction.SEPARATION_STRENGTH
 		else:
 			var relation: float = character.faction.get_overall_relation(other.faction)
-			if relation > 0.0 and dist <= FACTION_ATTRACT_RANGE:
-				attract_dir += direction * (1.0 / dist) * FACTION_ATTRACT_STRENGTH * relation
-			elif relation < 0.0 and dist <= FACTION_REPEL_RANGE:
-				repel_dir -= direction * (1.0 / dist) * FACTION_REPEL_STRENGTH * absf(relation)
+			if relation > 0.0 and dist <= Faction.ATTRACT_RANGE:
+				attract_dir += direction * (1.0 / dist) * Faction.ATTRACT_STRENGTH * relation
+			elif relation < 0.0 and dist <= Faction.REPEL_RANGE:
+				repel_dir -= direction * (1.0 / dist) * Faction.REPEL_STRENGTH * absf(relation)
 
 	var desired: Vector3 = attract_dir + repel_dir
 	if desired.length() > DEAD_ZONE:
-		desired = desired.normalized() * FACTION_MOVE_SPEED
+		desired = desired.normalized() * Faction.MOVE_SPEED
 		var blend: float = clampf(SMOOTHING_FACTOR * delta, 0.0, 1.0)
 		character.velocity.x = lerpf(character.velocity.x, desired.x, blend)
 		character.velocity.z = lerpf(character.velocity.z, desired.z, blend)
