@@ -1,4 +1,4 @@
-﻿# GdUnit generated TestSuite
+# GdUnit generated TestSuite
 class_name FactionTest
 extends GdUnitTestSuite
 @warning_ignore('unused_parameter')
@@ -26,12 +26,12 @@ func test_get_relation_returns_zero_for_missing_faction() -> void:
 
 
 func test_get_relation_returns_stored_value() -> void:
-	faction.relations[FactionStatic.Type.BLUE] = 0.75
+	faction.relations[FactionStatic.Type.BLUE] = FactionRelation.new(0.75)
 	assert_float(faction.get_relation(FactionStatic.Type.BLUE)).is_equal(0.75)
 
 
 func test_get_relation_returns_negative_value() -> void:
-	faction.relations[FactionStatic.Type.GREEN] = -0.5
+	faction.relations[FactionStatic.Type.GREEN] = FactionRelation.new(-0.5)
 	assert_float(faction.get_relation(FactionStatic.Type.GREEN)).is_equal(-0.5)
 
 
@@ -72,7 +72,7 @@ func test_get_main_faction_returns_none_when_empty() -> void:
 
 
 func test_get_main_faction_returns_none_when_only_none_relation() -> void:
-	faction.relations[FactionStatic.Type.NONE] = 1.0
+	faction.relations[FactionStatic.Type.NONE] = FactionRelation.new(1.0)
 	assert_that(faction.get_main_faction()).is_equal(FactionStatic.Type.NONE)
 
 
@@ -84,7 +84,7 @@ func test_get_main_faction_returns_highest_relation() -> void:
 
 
 func test_get_main_faction_ignores_none_type() -> void:
-	faction.relations[FactionStatic.Type.NONE] = 10.0
+	faction.relations[FactionStatic.Type.NONE] = FactionRelation.new(10.0)
 	faction.set_relation(FactionStatic.Type.RED, 0.2)
 	assert_that(faction.get_main_faction()).is_equal(FactionStatic.Type.RED)
 
@@ -173,8 +173,8 @@ func test_overall_relation_is_symmetric() -> void:
 
 func test_overall_relation_excludes_none_type() -> void:
 	var other: Faction = auto_free(Faction.new())
-	faction.relations[FactionStatic.Type.NONE] = 1.0
-	other.relations[FactionStatic.Type.NONE] = -1.0
+	faction.relations[FactionStatic.Type.NONE] =FactionRelation.new( 1.0)
+	other.relations[FactionStatic.Type.NONE] = FactionRelation.new(-1.0)
 	# NONE should be skipped, so both empty non-NONE → 1.0
 	assert_float(faction.get_overall_relation(other)).is_equal(1.0)
 

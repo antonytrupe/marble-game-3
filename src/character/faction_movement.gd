@@ -34,24 +34,24 @@ static func apply(character: MarbleCharacter, delta: float) -> void:
 			continue
 
 		var to_other: Vector3 = other.global_position - my_pos
-		to_other.y = 0
+		#to_other.y = 0
 		var dist: float = to_other.length()
 		if dist < 0.1:
 			continue
 
 		var direction: Vector3 = to_other / dist
-		if dist < Faction.SEPARATION_DISTANCE:
-			repel_dir -= direction * (1.0 / dist) * Faction.SEPARATION_STRENGTH
+		if dist < FactionRelation.SEPARATION_DISTANCE:
+			repel_dir -= direction * (1.0 / dist) * FactionRelation.SEPARATION_STRENGTH
 		else:
 			var relation: float = character.faction.get_overall_relation(other.faction)
-			if relation > 0.0 and dist <= Faction.ATTRACT_RANGE:
-				attract_dir += direction * (1.0 / dist) * Faction.ATTRACT_STRENGTH * relation
-			elif relation < 0.0 and dist <= Faction.REPEL_RANGE:
-				repel_dir -= direction * (1.0 / dist) * Faction.REPEL_STRENGTH * absf(relation)
+			if relation > 0.0 and dist <= FactionRelation.ATTRACT_RANGE:
+				attract_dir += direction * (1.0 / dist) * FactionRelation.ATTRACT_STRENGTH * relation
+			elif relation < 0.0 and dist <= FactionRelation.REPEL_RANGE:
+				repel_dir -= direction * (1.0 / dist) * FactionRelation.REPEL_STRENGTH * absf(relation)
 
 	var desired: Vector3 = attract_dir + repel_dir
 	if desired.length() > DEAD_ZONE:
-		desired = desired.normalized() * Faction.MOVE_SPEED
+		desired = desired.normalized() * FactionRelation.MOVE_SPEED
 		var blend: float = clampf(SMOOTHING_FACTOR * delta, 0.0, 1.0)
 		character.velocity.x = lerpf(character.velocity.x, desired.x, blend)
 		character.velocity.z = lerpf(character.velocity.z, desired.z, blend)

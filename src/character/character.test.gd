@@ -49,17 +49,17 @@ func test_default_faction_is_none() -> void:
 
 
 func test_setting_faction_assigns_faction() -> void:
-	instance.faction.faction = FactionStatic.Type.RED
-	assert_that(instance.faction.faction).is_equal(FactionStatic.Type.RED)
+	instance.faction = Faction.new(FactionStatic.Type.RED)
+	assert_that(instance.faction.get_main_faction()).is_equal(FactionStatic.Type.RED)
 
 
 func test_get_faction_name() -> void:
-	instance.faction.faction = FactionStatic.Type.BLUE
+	instance.faction = Faction.new(FactionStatic.Type.BLUE)
 	assert_str(instance.get_faction_name()).is_equal("Azure Alliance")
 
 
 func test_faction_persisted_in_data() -> void:
-	instance.faction.faction = FactionStatic.Type.GREEN
+	instance.faction = Faction.new(FactionStatic.Type.GREEN)
 	var data: Dictionary = instance.get_data()
 	assert_that(data.has("faction")).is_true()
 	assert_that(data.has("faction_relations")).is_true()
@@ -110,7 +110,7 @@ func test_custom_relation_affects_movement() -> void:
 	var other: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
 	other.player_id = ""
 	add_child(other)
-	other.faction.faction = FactionStatic.Type.BLUE
+	other.faction = Faction.new(FactionStatic.Type.BLUE)
 	other.global_position = Vector3(10, 0, 0)
 
 	instance._apply_faction_movement(1.0)
@@ -137,7 +137,7 @@ func test_faction_movement_attracts_same_faction() -> void:
 	var ally: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
 	ally.player_id = ""
 	add_child(ally)
-	ally.faction.faction = FactionStatic.Type.RED
+	ally.faction = Faction.new(FactionStatic.Type.RED)
 	ally.global_position = Vector3(10, 0, 0)
 
 	instance._apply_faction_movement(1.0)
@@ -154,7 +154,7 @@ func test_faction_movement_repels_other_faction() -> void:
 	var enemy: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
 	enemy.player_id = ""
 	add_child(enemy)
-	enemy.faction.faction = FactionStatic.Type.BLUE
+	enemy.faction = Faction.new(FactionStatic.Type.BLUE)
 	enemy.global_position = Vector3(10, 0, 0)
 
 	instance._apply_faction_movement(1.0)
@@ -171,7 +171,7 @@ func test_separation_repels_same_faction_when_too_close() -> void:
 	var ally: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
 	ally.player_id = ""
 	add_child(ally)
-	ally.faction.faction = FactionStatic.Type.RED
+	ally.faction = Faction.new(FactionStatic.Type.RED)
 	ally.global_position = Vector3(1, 0, 0)  # within SEPARATION_DISTANCE
 
 	instance._apply_faction_movement(1.0)

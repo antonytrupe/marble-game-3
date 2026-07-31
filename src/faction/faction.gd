@@ -1,16 +1,6 @@
 class_name Faction
 extends Node
 
-const ATTRACT_RANGE: float = 300.0
-const REPEL_RANGE: float = 150.0
-const ATTRACT_STRENGTH: float = 4.0
-const REPEL_STRENGTH: float = 2.0
-const MOVE_SPEED: float = 1.5
-const SEPARATION_DISTANCE: float = 6.0
-const SEPARATION_STRENGTH: float = 6.0
-
-# var faction: FactionStatic.Type = FactionStatic.Type.NONE
-
 ## Relation toward each faction.
 ## Missing entries default to neutral (0.0).
 var relations: Dictionary[FactionStatic.Type, FactionRelation] = {}
@@ -19,6 +9,9 @@ var relations: Dictionary[FactionStatic.Type, FactionRelation] = {}
 func _ready() -> void:
 	pass
 
+
+func _init(faction: FactionStatic.Type = FactionStatic.Type.NONE, initial_value: float = 0.0) -> void:
+	relations[faction] = FactionRelation.new(clampf(initial_value, -1.0, 1.0))
 
 ## Returns the faction type with the highest relation value, excluding NONE.
 ## Returns NONE if no relations exist or all are toward NONE.
