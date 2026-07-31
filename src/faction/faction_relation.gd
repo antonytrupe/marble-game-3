@@ -2,11 +2,11 @@ class_name FactionRelation
 
 
 const ATTRACT_RANGE: float = 300.0
-const REPEL_RANGE: float = 150.0
-const ATTRACT_STRENGTH: float = 4.0
-const REPEL_STRENGTH: float = 2.0
+const REPEL_RANGE: float = 50.0
+const ATTRACT_STRENGTH: float = 24.0
+const REPEL_STRENGTH: float = 12.0
 const MOVE_SPEED: float = 1.5
-const SEPARATION_DISTANCE: float = 6.0
+const SEPARATION_DISTANCE: float = 4.0
 const SEPARATION_STRENGTH: float = 6.0
 
 

@@ -21,13 +21,13 @@ void fragment() {
     
     // ROTATION FIX: Shift the UV coordinate by 0.25 (90 degrees) 
     // fract() ensures the value loops perfectly between 0.0 and 1.0
-    float wrap = fract(UV.x + 0.25);   
+    float wrap = fract(UV.x + 0.0);   
     
     // DEFAULT FIX: Set fallback to your static unaligned grey color
     vec3 background_color = color_none.rgb; 
     vec3 final_color = background_color;
     
-    float lowest_valid_cutoff = 2.0;
+    float lowest_valid_cutoff = 3.0;
     float active_band_strength = 0.0;
 
     // 1. Evaluate NONE band height block
@@ -67,8 +67,10 @@ void fragment() {
         active_band_strength = band_purple.y;
     }
 
-    // Horizontal threshold check
-    if (wrap > active_band_strength) {
+    // Horizontal threshold check — center the background color to the front
+    // Remap so 1.0 is at the front (UV.x=0.0) and 0.0 is at the back (UV.x=0.5)
+    float centered = (1.0 - abs(wrap - 0.5) * 2.0);
+    if (centered > active_band_strength) {
         ALBEDO = background_color;
     } else {
         ALBEDO = final_color;
