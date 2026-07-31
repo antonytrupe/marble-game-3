@@ -12,6 +12,7 @@ signal current_character_updated(character: MarbleCharacter)
 @onready var crosshairs: ColorRect = %CrossHairs
 
 var current_character: MarbleCharacter
+var last_chat_message: String = ""
 
 var lobby_id: int
 
@@ -210,8 +211,17 @@ func _unhandled_input(event: InputEvent) -> void:
 			chat_text_edit.grab_focus()
 		else:
 			chat_text_edit.release_focus()
+			if chat_text_edit.text != "":
+				last_chat_message = chat_text_edit.text
 			server.chat.rpc_id(1, chat_text_edit.text)
 			chat_text_edit.text = ""
+
+	if Input.is_action_just_pressed("chat_last"):
+		if !chat_window.visible:
+			chat_window.visible = true
+			chat_text_edit.text = last_chat_message
+			chat_text_edit.grab_focus()
+			chat_text_edit.set_caret_column(last_chat_message.length())
 
 
 #this is for the server to tell this client who it's character is
