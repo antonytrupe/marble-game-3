@@ -1,6 +1,11 @@
 class_name Faction
 extends Node
 
+## Global cache of overall-relation results between Faction pairs.
+## Key: packed int64 built from both instance IDs (smaller first).
+## Cleared automatically when any faction's relations change.
+var _relation_cache: Dictionary = {}
+
 ## Relation toward each faction.
 ## Missing entries default to neutral (0.0).
 var relations: Dictionary[FactionStatic.Type, FactionRelation] = {}
@@ -38,7 +43,11 @@ func get_relation(faction: FactionStatic.Type) -> float:
 ## Returns an overall relation score toward another character by averaging
 ## the difference across all faction relations both characters share.
 ## Positive = similar allegiances (attract), negative = opposing (repel).
+## Results are cached globally; call invalidate_cache() if relations change.
 func get_overall_relation(other: Faction) -> float:
+	var key: int = _cache_key(other)
+	if key in _relation_cache:
+		return _relation_cache[key]
 	var total: float = 0.0
 	var count: int = 0
 	for f: FactionStatic.Type in FactionStatic.Type.values():
@@ -54,14 +63,19 @@ func get_overall_relation(other: Faction) -> float:
 		
 		total += s * (abs(my_val) + abs(other_val)) / 2
 		count += 1
+	var result: float
 	if count == 0:
-		return 0.0
-	return total / count
+		result = 0.0
+	else:
+		result = total / count
+	_relation_cache[key] = result
+	return result
 
 
 ## Sets the relation value toward the given faction type, clamped to [-1, 1].
 func set_relation(other_faction: FactionStatic.Type, value: float) -> void:
 	relations[other_faction] = FactionRelation.new(clampf(value, -1.0, 1.0))
+	invalidate_cache()
 
 
 ## Initializes default relations based on the character's own faction.
@@ -69,6 +83,7 @@ func set_relation(other_faction: FactionStatic.Type, value: float) -> void:
 ## NONE faction gets all-neutral relations.
 func _init_default_relations(my_faction: FactionStatic.Type) -> void:
 	relations.clear()
+	invalidate_cache()
 	for f: FactionStatic.Type in FactionStatic.Type.values():
 		if my_faction == FactionStatic.Type.NONE:
 			relations[f] = FactionRelation.new(0.0)
@@ -79,3 +94,24 @@ func _init_default_relations(my_faction: FactionStatic.Type) -> void:
 		else:
 			# relations[f] = randf_range(-1.0, 0.9)#random relation
 			relations[f] = FactionRelation.new(-1.0)  #max hostile
+
+
+## Builds a symmetric cache key from two Faction instances.
+func _cache_key(other: Faction) -> int:
+	var a: int = get_instance_id()
+	var b: int = other.get_instance_id()
+	if a > b:
+		var tmp: int = a
+		a = b
+		b = tmp
+	return a * 2147483647 + b
+
+
+## Removes all cached relation entries that involve this Faction instance.
+func invalidate_cache() -> void:
+	_relation_cache.clear()
+
+
+## Clears the entire relation cache. Call when bulk changes occur.
+func clear_cache() -> void:
+	_relation_cache.clear()

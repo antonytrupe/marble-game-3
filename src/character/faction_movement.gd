@@ -6,6 +6,8 @@ const SMOOTHING_FACTOR: float = 1.0
 const ROTATION_SMOOTHING: float = 1.0
 ## Forces below this threshold are ignored to prevent micro-jitter.
 const DEAD_ZONE: float = 1.0
+## Squared max interaction range — siblings farther than this are skipped entirely.
+const _MAX_RANGE_SQ: float = FactionRelation.ATTRACT_RANGE * FactionRelation.ATTRACT_RANGE
 
 
 static func apply(character: MarbleCharacter, delta: float) -> void:
@@ -34,23 +36,24 @@ static func apply(character: MarbleCharacter, delta: float) -> void:
 			continue
 
 		var to_other: Vector3 = other.global_position - my_pos
-		#to_other.y = 0
-		var dist: float = to_other.length()
-		if dist < 0.1:
+		var dist_sq: float = to_other.length_squared()
+		if dist_sq < 0.01 or dist_sq > _MAX_RANGE_SQ:
 			continue
 
-		var direction: Vector3 = to_other / dist
+		var dist: float = sqrt(dist_sq)
+		var inv_dist: float = 1.0 / dist
+		var direction: Vector3 = to_other * inv_dist
 		if dist < FactionRelation.SEPARATION_DISTANCE:
-			repel_dir -= direction * (1.0 / dist) * FactionRelation.SEPARATION_STRENGTH
+			repel_dir -= direction * inv_dist * FactionRelation.SEPARATION_STRENGTH
 		else:
 			var relation: float = character.faction.get_overall_relation(other.faction)
 			if relation > 0.0 and dist <= FactionRelation.ATTRACT_RANGE:
-				attract_dir += direction * (1.0 / dist) * FactionRelation.ATTRACT_STRENGTH * relation
+				attract_dir += direction * inv_dist * FactionRelation.ATTRACT_STRENGTH * relation
 			elif relation < 0.0 and dist <= FactionRelation.REPEL_RANGE:
-				repel_dir -= direction * (1.0 / dist) * FactionRelation.REPEL_STRENGTH * absf(relation)
+				repel_dir -= direction * inv_dist * FactionRelation.REPEL_STRENGTH * absf(relation)
 
 	var desired: Vector3 = attract_dir + repel_dir
-	if desired.length() > DEAD_ZONE:
+	if desired.length_squared() > DEAD_ZONE * DEAD_ZONE:
 		desired = desired.normalized() * FactionRelation.MOVE_SPEED
 		var blend: float = clampf(SMOOTHING_FACTOR * delta, 0.0, 1.0)
 		character.velocity.x = lerpf(character.velocity.x, desired.x, blend)
