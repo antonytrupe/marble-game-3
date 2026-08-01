@@ -35,10 +35,6 @@ func _ready() -> void:
 		fall()
 
 
-func pick_up(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
-	return [ self ]
-
-
 func _on_sleeping_state_changed() -> void:
 	# When the apple stops moving, the physics engine puts it to sleep.
 	# We can use this to freeze it and stop further physics calculations for it.
@@ -95,7 +91,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 			_is_on_floor = true
 			break
 
-
+#region interactions
 func get_subject_verbs() -> Array[Callable]:
 	return []
 
@@ -106,6 +102,10 @@ func get_object_verbs(subject_verbs: Array[String]) -> Array[Callable]:
 		verbs.append(pick_up)
 	return verbs
 
+func pick_up(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
+	return [ self ]
+	
+#endregion
 
 func calculate_warp() -> void:
 	var closest: WarpMonument = null
@@ -120,7 +120,7 @@ func calculate_warp() -> void:
 	else:
 		item.warp_speed = 1
 
-
+#region persistance
 func get_data() -> Dictionary:
 	var save_dict: Dictionary = {
 		"name": name,
@@ -157,3 +157,4 @@ func load_post_ready(data: Dictionary) -> void:
 					tree = child
 					#world.flora.child_entered_tree.disconnect(f)
 			world.flora.child_entered_tree.connect(f)
+#endregion
