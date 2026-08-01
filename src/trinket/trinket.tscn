@@ -3,17 +3,20 @@
 [ext_resource type="Script" uid="uid://b7fa048tsyf7a" path="res://src/trinket/trinket.gd" id="1_7rig5"]
 
 [sub_resource type="PrismMesh" id="PrismMesh_05ajl"]
+size = Vector3(0.2, 0.2, 0.2)
 
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_qgdn1"]
-data = PackedVector3Array(0, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0, 0.5, 0.5, 0, 0.5, -0.5, 0.5, -0.5, 0.5, 0, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, -0.5, -0.5, -0.5, 0, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_7rig5"]
+points = PackedVector3Array(0, 0.1, 0.1, 0.1, -0.1, 0.1, 0, 0.1, -0.1, -0.1, -0.1, 0.1, 0.1, -0.1, -0.1, -0.1, -0.1, -0.1)
 
-[node name="Trinket" type="StaticBody3D" unique_id=1111169677 groups=["persist"]]
+[node name="Trinket" type="RigidBody3D" unique_id=1139334463 groups=["persist"]]
+collision_layer = 32
+collision_mask = 63
 script = ExtResource("1_7rig5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1635589287]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 mesh = SubResource("PrismMesh_05ajl")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1212444264]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-shape = SubResource("ConcavePolygonShape3D_qgdn1")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2133194057]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+shape = SubResource("ConvexPolygonShape3D_7rig5")
