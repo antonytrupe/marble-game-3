@@ -230,7 +230,8 @@ func _spawn(character: MarbleCharacter, parts: Array) -> void:
 		"char": func(c: int, p: Vector3) -> void: _spawn_characters(c, p),
 		"characters": func(c: int, p: Vector3) -> void: _spawn_characters(c, p),
 		"fence":_spawn_fence,
-		"cant":_spawn_cants, "cants":_spawn_cants
+		"cant":_spawn_cants, "cants":_spawn_cants,
+		"trinket":_spawn_trinkets, "trinkets":_spawn_trinkets,
 	}
 
 	var spawn_type: String = parts[1]
@@ -581,6 +582,15 @@ func _on_peer_disconnected(peer_id: int) -> void:
 
 	connected_players.erase(peer_id)
 
+
+func _spawn_trinkets(count:int,center:Vector3)->void:
+	count = clampi(count, 1, 100)
+	for i: int in count:
+		var t: Trinket = Trinket.scene.instantiate()
+		t.name = t.name + "%010d" % randi()
+		t.position = _get_random_vector(10, center)
+		#var chunk = chunks.get_chunk(tree.global_position)
+		world.items.add_child(t)
 
 func _spawn_fence(count:int,center:Vector3)->void:
 	count = clampi(count, 1, 100)
