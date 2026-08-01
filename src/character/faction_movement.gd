@@ -29,6 +29,11 @@ static func apply(character: MarbleCharacter, delta: float) -> void:
 	if not parent:
 		return
 
+	# var space_state: PhysicsDirectSpaceState3D = character.get_world_3d().direct_space_state
+	# var query: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
+	# query.collision_mask = character.collision_mask
+	# query.exclude = [character.get_rid()]
+
 	for sibling: Node in parent.get_children():
 		if sibling == character:
 			continue
@@ -42,6 +47,13 @@ static func apply(character: MarbleCharacter, delta: float) -> void:
 		var dist_sq: float = to_other.length_squared()
 		if dist_sq < 0.01 or dist_sq > _MAX_RANGE_SQ:
 			continue
+
+		# line of sight check – skip if something blocks the view
+		# query.from = my_pos
+		# query.to = other.global_position
+		# var result: Dictionary = space_state.intersect_ray(query)
+		# if not result.is_empty() and result.collider != other:
+		# 	continue
 
 		if dist_sq < _SEPARATION_DIST_SQ:
 			# Force ∝ 1/dist²: original was direction * inv_dist = to_other / dist².
