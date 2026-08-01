@@ -3,17 +3,18 @@ extends RigidBody3D
 
 static var scene: Resource = preload("res://src/trinket/trinket.tscn")
 
+@export_range(1, 100, 1, "or_greater") var value: float = 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	pass  # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
-	
-	
+
+
 #region interactions
 func get_subject_verbs() -> Array[Callable]:
 	return []
@@ -26,8 +27,8 @@ func get_object_verbs(subject_verbs: Array[String]) -> Array[Callable]:
 	return verbs
 
 func pick_up(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
-	return [ self ]
-	
+	return [self]
+
 #endregion
 
 #region persistance functions
@@ -48,5 +49,5 @@ func load_pre_ready(data: Dictionary) -> void:
 #can reference @onready vars now
 func load_post_ready(data: Dictionary) -> void:
 	pass
-	
-#endregion
+
+	#endregion
