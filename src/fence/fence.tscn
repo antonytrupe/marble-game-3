@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://c1q6vug8ctrv0"]
+
+[ext_resource type="Script" uid="uid://cq1buh2i1gg45" path="res://src/fence/fence.gd" id="1_e30ot"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_05ajl"]
+size = Vector3(4, 1, 0.1)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_y3h2j"]
+data = PackedVector3Array(-2, 0.5, 0.049999997, 2, 0.5, 0.049999997, -2, -0.5, 0.049999997, 2, 0.5, 0.049999997, 2, -0.5, 0.049999997, -2, -0.5, 0.049999997, 2, 0.5, -0.049999997, -2, 0.5, -0.049999997, 2, -0.5, -0.049999997, -2, 0.5, -0.049999997, -2, -0.5, -0.049999997, 2, -0.5, -0.049999997, 2, 0.5, 0.049999997, 2, 0.5, -0.049999997, 2, -0.5, 0.049999997, 2, 0.5, -0.049999997, 2, -0.5, -0.049999997, 2, -0.5, 0.049999997, -2, 0.5, -0.049999997, -2, 0.5, 0.049999997, -2, -0.5, -0.049999997, -2, 0.5, 0.049999997, -2, -0.5, 0.049999997, -2, -0.5, -0.049999997, 2, 0.5, 0.049999997, -2, 0.5, 0.049999997, 2, 0.5, -0.049999997, -2, 0.5, 0.049999997, -2, 0.5, -0.049999997, 2, 0.5, -0.049999997, -2, -0.5, 0.049999997, 2, -0.5, 0.049999997, -2, -0.5, -0.049999997, 2, -0.5, 0.049999997, 2, -0.5, -0.049999997, -2, -0.5, -0.049999997)
+
+[node name="Fence" type="StaticBody3D" unique_id=2115042875 groups=["persist"]]
+collision_mask = 63
+script = ExtResource("1_e30ot")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=867084271]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_05ajl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1308716159]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("ConcavePolygonShape3D_y3h2j")

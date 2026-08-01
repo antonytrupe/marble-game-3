@@ -229,14 +229,14 @@ func _spawn(character: MarbleCharacter, parts: Array) -> void:
 		"character": func(c: int, p: Vector3) -> void: _spawn_characters(c, p),
 		"char": func(c: int, p: Vector3) -> void: _spawn_characters(c, p),
 		"characters": func(c: int, p: Vector3) -> void: _spawn_characters(c, p),
+		"fence":_spawn_fence,
+		"cant":_spawn_cants, "cants":_spawn_cants
 	}
 
 	var spawn_type: String = parts[1]
 	match spawn_type:
 		"tree", "trees":
 			_spawn_trees(count, character.position, maturity_ratio, character)
-		"cant", "cants":
-			_spawn_cants(character.position)
 		"monument", "warp":
 			_spawn_warp_monument(character.position)
 		_:
@@ -388,7 +388,7 @@ func spawn_cant(p_transform: Transform3D, _p_scale: float) -> Cant:
 	return c
 
 
-func _spawn_cants(p_position: Vector3) -> Cant:
+func _spawn_cant(p_position: Vector3) -> Cant:
 	var b: Cant = Cant.scene.instantiate()
 	b.name = b.name + "%010d" % randi()
 	b.position = p_position
@@ -400,6 +400,21 @@ func _spawn_cants(p_position: Vector3) -> Cant:
 
 	b.freeze = false
 	return b
+	
+	
+func _spawn_cants(count: int,p_position: Vector3) -> void:
+	count = clampi(count, 1, 100)
+	for i: int in count:
+		var b: Cant = Cant.scene.instantiate()
+		b.name = b.name + "%010d" % randi()
+		b.position = p_position
+		#c.log_scale = p_scale
+
+		#c.ready.connect(c.load_post_ready.bind({}))
+		#var chunk = chunks.get_chunk(tree.global_position)
+		world.flora.add_child(b)
+
+		b.freeze = false
 
 
 func _spawn_boards(p_position: Vector3, count: int) -> void:
@@ -565,6 +580,16 @@ func _on_peer_disconnected(peer_id: int) -> void:
 	c._update_label()
 
 	connected_players.erase(peer_id)
+
+
+func _spawn_fence(count:int,center:Vector3)->void:
+	count = clampi(count, 1, 100)
+	for i: int in count:
+		var l: Fence = Fence.scene.instantiate()
+		l.name = l.name + "%010d" % randi()
+		l.position = _get_random_vector(10, center)
+		#var chunk = chunks.get_chunk(tree.global_position)
+		world.terra.add_child(l)
 
 
 func _spawn_characters(count: int, center: Vector3) -> void:
