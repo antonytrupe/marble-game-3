@@ -4,7 +4,6 @@ extends Node3D
 
 static var scene: Resource = preload("res://src/bush/bush.tscn")
 
-
 #8 years
 @export var maturity: int = MarbleAge.SECONDS_IN_YEAR * 8
 
@@ -12,7 +11,6 @@ static var scene: Resource = preload("res://src/bush/bush.tscn")
 	set(value):
 		berries = value
 		setup()
-
 
 ##milliseconds
 #@export var age: float = 0
@@ -125,12 +123,12 @@ func _process(_delta: float) -> void:
 	label_3d.text = "Age:%.f\nWarp:%.f\nScale:%.2f" % [age.age, warp_speed, scale.x]
 
 
-	#if multiplayer.is_server():
-		#age += _delta * 1000 * warp_speed
-		#if berries < 9:
-			#if randi_range(0, 1000) <= 1:
-				#print("spawn a berry")
-				#berries = berries + 1
+#if multiplayer.is_server():
+#age += _delta * 1000 * warp_speed
+#if berries < 9:
+#if randi_range(0, 1000) <= 1:
+#print("spawn a berry")
+#berries = berries + 1
 
 
 func calculate_warp() -> void:
@@ -138,9 +136,9 @@ func calculate_warp() -> void:
 	#var closest_distance=0
 	for w: WarpMonument in warp_detector.warp_monuments.values():
 		var distance: float = w.position.distance_to(position)
-		if !closest or distance < closest.position.distance_to(position):
+		if ! closest or distance < closest.position.distance_to(position):
 			closest = w
-			#closest_distance=distance
+	#closest_distance=distance
 	if closest:
 		warp_speed = closest.warp_speed
 	else:

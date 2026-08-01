@@ -16,7 +16,6 @@ var scenes: Dictionary[String, Resource] = {}
 @onready var client: Client = $/root/Game/Client
 @onready var players: Node = %Players
 
-
 var lobby_id: int = 0
 var use_steam: bool = true
 
@@ -25,8 +24,8 @@ func _steam_signals() -> void:
 	if not use_steam:
 		return
 	Steam.lobby_created.connect(_on_lobby_created)
-	# just for information
-	#Steam.join_requested.connect(_on_lobby_join_requested)
+# just for information
+#Steam.join_requested.connect(_on_lobby_join_requested)
 
 
 func _multiplayer_signals() -> void:
@@ -59,7 +58,7 @@ func _load_object(object_name: String, data: Dictionary) -> void:
 		if data.has("scene_file_path"):
 			t = _get_resource_(data.scene_file_path).instantiate()
 		#elif data.has("script"):
-			#t = _get_resource(data.script).new()
+		#t = _get_resource(data.script).new()
 		t.name = object_name.validate_node_name()
 
 	if t.has_signal("ready") and t.has_method("load_post_ready"):
@@ -68,7 +67,7 @@ func _load_object(object_name: String, data: Dictionary) -> void:
 	if t.has_method("load_pre_ready"):
 		t.load_pre_ready(data)
 
-	if !t.get_parent():
+	if ! t.get_parent():
 		get_node_or_null(data.parent).add_child(t)
 
 
@@ -79,9 +78,9 @@ func _persist() -> void:
 	#Persistance.persist.emit(self)
 
 	get_tree().get_nodes_in_group('persist').all(
-		func(n: Node) -> bool:
-			Persistance.persist.emit(n)
-			return true
+			func(n: Node) -> bool:
+				Persistance.persist.emit(n)
+				return true
 	)
 
 
@@ -177,7 +176,7 @@ func chat(message: String) -> void:
 
 func command(cmd: String, _player: Player, character: MarbleCharacter) -> void:
 	print(cmd)
-	if !multiplayer.is_server():
+	if ! multiplayer.is_server():
 		print("not server")
 		return
 	var parts: PackedStringArray = cmd.replace("/", "").split(" ")
@@ -193,7 +192,7 @@ func command(cmd: String, _player: Player, character: MarbleCharacter) -> void:
 			if target:
 				print(target.name)
 				print(target)
-				#Signals.CurrentPlayer.emit(target)
+			#Signals.CurrentPlayer.emit(target)
 			else:
 				print("no target")
 		"teleport", "tele":
@@ -204,7 +203,7 @@ func command(cmd: String, _player: Player, character: MarbleCharacter) -> void:
 
 
 func _spawn(character: MarbleCharacter, parts: Array) -> void:
-	if parts.size() < 2: # must have at least /spawn <item>
+	if parts.size() < 2:  # must have at least /spawn <item>
 		return
 
 	var count: int = 1
@@ -229,9 +228,9 @@ func _spawn(character: MarbleCharacter, parts: Array) -> void:
 		"character": func(c: int, p: Vector3) -> void: _spawn_characters(c, p),
 		"char": func(c: int, p: Vector3) -> void: _spawn_characters(c, p),
 		"characters": func(c: int, p: Vector3) -> void: _spawn_characters(c, p),
-		"fence":_spawn_fence,
-		"cant":_spawn_cants, "cants":_spawn_cants,
-		"trinket":_spawn_trinkets, "trinkets":_spawn_trinkets,
+		"fence": _spawn_fence,
+		"cant": _spawn_cants, "cants": _spawn_cants,
+		"trinket": _spawn_trinkets, "trinkets": _spawn_trinkets,
 	}
 
 	var spawn_type: String = parts[1]
@@ -302,7 +301,7 @@ func _spawn_axe(count: int, center: Vector3) -> void:
 		world.items.add_child(axe)
 
 
-func _spawn_trees(count: int, center: Vector3, maturity_ratio: float = 0.0, character: MarbleCharacter = null) -> void:
+func _spawn_trees(count: int, center: Vector3, maturity_ratio: float=0.0, character: MarbleCharacter=null) -> void:
 	count = clampi(count, 1, 100)
 	var max_maturity_ratio: float = 1.0 if maturity_ratio <= 0.0 else maturity_ratio
 	var random_maturity_ratio: float = randf() * max_maturity_ratio
@@ -336,7 +335,6 @@ func _spawn_trees(count: int, center: Vector3, maturity_ratio: float = 0.0, char
 		#TODO do this more righter
 		tree.position = pos
 
-		
 		tree.ready.connect(tree.load_post_ready.bind({
 			"age": tree.maturity * random_maturity_ratio,
 			"turn": (tree.maturity * random_maturity_ratio) / MarbleAge.SECONDS_IN_TURN
@@ -363,14 +361,14 @@ func spawn_log(p_position: Vector3, p_scale: float) -> MarbleLog:
 	return l
 
 
-func spawn_stump(p_position: Vector3, maturity_ratio: float = 1.0) -> void:
+func spawn_stump(p_position: Vector3, maturity_ratio: float=1.0) -> void:
 	var stump: Stump = Stump.scene.instantiate()
 	stump.name = stump.name + "%010d" % randi()
 	stump.position = p_position
 	stump.stump_scale = maturity_ratio
 	#stump.ready.connect(func() -> void:
-		#stump.age.age = stump.maturity * maturity_ratio
-		#)
+	#stump.age.age = stump.maturity * maturity_ratio
+	#)
 	#var chunk = chunks.get_chunk(tree.global_position)
 	world.flora.add_child(stump)
 
@@ -401,9 +399,9 @@ func _spawn_cant(p_position: Vector3) -> Cant:
 
 	b.freeze = false
 	return b
-	
-	
-func _spawn_cants(count: int,p_position: Vector3) -> void:
+
+
+func _spawn_cants(count: int, p_position: Vector3) -> void:
 	count = clampi(count, 1, 100)
 	for i: int in count:
 		var b: Cant = Cant.scene.instantiate()
@@ -525,7 +523,6 @@ func _create_player(peer_id: int, player_id: String) -> Player:
 	p.current_character_id = c.name
 	#c.set_multiplayer_authority(peer_id)
 
-
 	players.add_child(p)
 	connected_players[peer_id] = p
 	Persistance.persist.emit.call_deferred(p)
@@ -534,7 +531,7 @@ func _create_player(peer_id: int, player_id: String) -> Player:
 
 
 ## peer_id from multiplayer_peer, 1 for host
-func _on_peer_connected(peer_id: int = 1) -> void:
+func _on_peer_connected(peer_id: int=1) -> void:
 	#debug("Peer connected with ID: %s" % peer_id)
 	var steam_id: int = 0
 	var friend_name: String = ""
@@ -542,7 +539,7 @@ func _on_peer_connected(peer_id: int = 1) -> void:
 		steam_id = (multiplayer.multiplayer_peer as SteamMultiplayerPeer).get_steam_id_for_peer_id(peer_id)
 		#debug("steam id: %s" % steam_id)
 		friend_name = Steam.getFriendPersonaName(steam_id)
-		#debug("friend_name: %s" % friend_name)
+	#debug("friend_name: %s" % friend_name)
 
 	var player_id: String
 	if use_steam:
@@ -558,7 +555,7 @@ func _on_peer_connected(peer_id: int = 1) -> void:
 	else:
 		#Debug.info.emit("did not find player")
 		p = _create_player(peer_id, player_id)
-		#players.add_child( p)
+	#players.add_child( p)
 
 	connected_players[peer_id] = p
 	if peer_id == 1:
@@ -583,7 +580,7 @@ func _on_peer_disconnected(peer_id: int) -> void:
 	connected_players.erase(peer_id)
 
 
-func _spawn_trinkets(count:int,center:Vector3)->void:
+func _spawn_trinkets(count: int, center: Vector3) -> void:
 	count = clampi(count, 1, 100)
 	for i: int in count:
 		var t: Trinket = Trinket.scene.instantiate()
@@ -592,7 +589,7 @@ func _spawn_trinkets(count:int,center:Vector3)->void:
 		#var chunk = chunks.get_chunk(tree.global_position)
 		world.items.add_child(t)
 
-func _spawn_fence(count:int,center:Vector3)->void:
+func _spawn_fence(count: int, center: Vector3) -> void:
 	count = clampi(count, 1, 100)
 	for i: int in count:
 		var l: Fence = Fence.scene.instantiate()
@@ -617,7 +614,7 @@ func _create_character() -> MarbleCharacter:
 	var rand_z: float = randf_range(-100, 100)
 	c.position = Vector3(rand_x, world.get_ground_y(rand_x, rand_z), rand_z)
 	var faction_types: Array = FactionStatic.COLORS.keys().filter(
-		func(t: FactionStatic.Type) -> bool: return t != FactionStatic.Type.NONE
+			func(t: FactionStatic.Type) -> bool: return t != FactionStatic.Type.NONE
 	)
 	var random_faction: FactionStatic.Type = faction_types.pick_random()
 	c.rotation.y = randf_range(0, TAU)
@@ -641,8 +638,8 @@ func get_data() -> Dictionary:
 #don't reference @onready vars
 func load_pre_ready(_data: Dictionary) -> void:
 	pass
-	#if "players" in node_data:
-		#players = str_to_var(node_data.players)
+#if "players" in node_data:
+#players = str_to_var(node_data.players)
 
 
 #can reference @onready vars now

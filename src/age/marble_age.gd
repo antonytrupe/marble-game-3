@@ -15,24 +15,25 @@ const WEEKS_IN_MONTH: int = 4
 const DAYS_IN_MONTH: int = DAYS_IN_WEEK * WEEKS_IN_MONTH
 const MONTHS_IN_YEAR: int = 10
 const MONTHS: Array = [
-	"March", # 1
-	"April", # 2
-	"May", #
-	"June", #
-	"July", #
-	"August", # 6
-	"September", # 7
-	"October", # 8
-	"November", # 9
-	"December" # 10
-	]
+	"March",  # 1
+	"April",  # 2
+	"May",  #
+	"June",  #
+	"July",  #
+	"August",  # 6
+	"September",  # 7
+	"October",  # 8
+	"November",  # 9
+	"December"  # 10
+]
 
 ## seconds since creation, taking warp bubbles into account
 @export var age: float = 0
 
 func get_month() -> int:
 	@warning_ignore("integer_division")
-	var month_of_year: int = int(age) % (MarbleAge.SECONDS_IN_HOUR * MarbleAge.HOURS_IN_DAY * MarbleAge.DAYS_IN_MONTH * MarbleAge.MONTHS_IN_YEAR) / (MarbleAge.SECONDS_IN_MONTH)
+	var month_of_year: int = int(
+			age) % (MarbleAge.SECONDS_IN_HOUR * MarbleAge.HOURS_IN_DAY * MarbleAge.DAYS_IN_MONTH * MarbleAge.MONTHS_IN_YEAR) / (MarbleAge.SECONDS_IN_MONTH)
 
 	return month_of_year
 

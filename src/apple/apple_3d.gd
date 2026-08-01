@@ -3,7 +3,6 @@ extends RigidBody3D
 
 static var scene: Resource = preload("res://src/apple/apple_3d.tscn")
 
-
 #apples take 150 days to mature
 ##days
 @export var maturity: int = MarbleAge.SECONDS_IN_DAY * 1
@@ -103,8 +102,8 @@ func get_object_verbs(subject_verbs: Array[String]) -> Array[Callable]:
 	return verbs
 
 func pick_up(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
-	return [ self ]
-	
+	return [self]
+
 #endregion
 
 func calculate_warp() -> void:
@@ -112,9 +111,9 @@ func calculate_warp() -> void:
 	#var closest_distance=0
 	for w: WarpMonument in warp_detector.warp_monuments.values():
 		var distance: float = w.position.distance_to(position)
-		if !closest or distance < closest.position.distance_to(position):
+		if ! closest or distance < closest.position.distance_to(position):
 			closest = w
-			#closest_distance=distance
+	#closest_distance=distance
 	if closest:
 		item.warp_speed = closest.warp_speed
 	else:
@@ -155,6 +154,6 @@ func load_post_ready(data: Dictionary) -> void:
 			f = func(child: Node) -> void:
 				if child.name == data.tree:
 					tree = child
-					#world.flora.child_entered_tree.disconnect(f)
+			#world.flora.child_entered_tree.disconnect(f)
 			world.flora.child_entered_tree.connect(f)
-#endregion
+			#endregion

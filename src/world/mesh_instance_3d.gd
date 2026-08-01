@@ -16,7 +16,7 @@ var st: SurfaceTool = SurfaceTool.new()
 
 func _ready() -> void:
 	randomize()
-	noise.seed = noise_seed # randi()
+	noise.seed = noise_seed  # randi()
 	noise.noise_type = FastNoiseLite.TYPE_CELLULAR
 	noise.fractal_octaves = 3
 	noise.domain_warp_fractal_lacunarity = 6.0
@@ -24,12 +24,12 @@ func _ready() -> void:
 	position.z -= size / 2.0
 	generate_map()
 
-	#var spring:Spring=SPRING_SCENE.instantiate()
-	#world.add_child(spring)
-	#spring.position.y=24
-	#await spring.ready
-	#await get_tree().physics_frame
-	#spring.generate_downhill_path(spring.global_position)
+#var spring:Spring=SPRING_SCENE.instantiate()
+#world.add_child(spring)
+#spring.position.y=24
+#await spring.ready
+#await get_tree().physics_frame
+#spring.generate_downhill_path(spring.global_position)
 
 
 func generate_map() -> void:
@@ -66,7 +66,6 @@ func generate_map() -> void:
 	var static_body: StaticBody3D = StaticBody3D.new()
 	static_body.position = position
 	static_body.set_collision_layer_value(1, true)
-
 
 	var physics_material: PhysicsMaterial = PhysicsMaterial.new()
 	physics_material.bounce = 0.0

@@ -83,7 +83,7 @@ func test_quit_without_steam_does_not_call_leave_lobby() -> void:
 	_server.world = _world
 	_server.quit()
 	remove_child(_server)
-	# If we got here without error, Steam.leaveLobby was correctly skipped
+# If we got here without error, Steam.leaveLobby was correctly skipped
 
 
 func test_on_peer_connected_enet_player_id_format() -> void:

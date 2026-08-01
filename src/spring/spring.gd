@@ -9,7 +9,7 @@ static var scene: Resource = preload("res://src/spring/spring.tscn")
 @export var max_points: int = 50
 @export var step_distance: float = .5
 @export var search_radius: float = 4.0
-@export var terrain_mask: int = 1 # Match your ground's collision layer
+@export var terrain_mask: int = 1  # Match your ground's collision layer
 
 @onready var path_3d: Path3D = %Path3D
 
@@ -90,9 +90,9 @@ func find_lowest_neighbor(origin: Vector3) -> Dictionary:
 		var ray_start: Vector3 = check_pos + Vector3.UP * 10.0
 		var ray_end: Vector3 = check_pos + Vector3.DOWN * 40.0
 		var query: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(
-			ray_start,
-			ray_end,
-			1 << (terrain_mask - 1)
+				ray_start,
+				ray_end,
+				1 << (terrain_mask - 1)
 		)
 		var result: Dictionary = space_state.intersect_ray(query)
 

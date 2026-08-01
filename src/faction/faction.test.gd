@@ -1,12 +1,11 @@
 # GdUnit generated TestSuite
 class_name FactionTest
 extends GdUnitTestSuite
+
 @warning_ignore('unused_parameter')
 @warning_ignore('return_value_discarded')
-
 # TestSuite generated from
 const __source: String = 'res://src/faction/faction.gd'
-
 
 var faction: Faction
 
@@ -173,7 +172,7 @@ func test_overall_relation_is_symmetric() -> void:
 
 func test_overall_relation_excludes_none_type() -> void:
 	var other: Faction = auto_free(Faction.new())
-	faction.relations[FactionStatic.Type.NONE] =FactionRelation.new( 1.0)
+	faction.relations[FactionStatic.Type.NONE] = FactionRelation.new(1.0)
 	other.relations[FactionStatic.Type.NONE] = FactionRelation.new(-1.0)
 	# NONE should be skipped, so both empty non-NONE → 1.0
 	assert_float(faction.get_overall_relation(other)).is_equal(1.0)

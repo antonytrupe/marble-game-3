@@ -62,7 +62,7 @@ func _on_repeat_toggled(toggled_on: bool) -> void:
 
 
 func _on_forever_toggled(toggled_on: bool) -> void:
-	count.visible = !toggled_on
+	count.visible = ! toggled_on
 	forever_toggled.emit(get_index(), toggled_on)
 
 

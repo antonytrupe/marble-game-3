@@ -7,7 +7,7 @@ static var scene: Resource = preload("res://src/axe/axe.tscn")
 
 
 func pick_up(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
-	return [ self ]
+	return [self]
 
 
 func chop(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:

@@ -14,8 +14,8 @@ var _main_faction_dirty: bool = true
 ## Missing entries default to neutral (0.0).
 var relations: Dictionary[FactionStatic.Type, FactionRelation] = {}:
 	set(value):
-		relations=value
-		_main_faction_dirty=true
+		relations = value
+		_main_faction_dirty = true
 
 
 func _ready() -> void:
@@ -106,8 +106,8 @@ func _init_default_relations(my_faction: FactionStatic.Type) -> void:
 		elif f == FactionStatic.Type.NONE:
 			relations[f] = FactionRelation.new(0.0)
 		else:
-			relations[f] =  FactionRelation.new(randf_range(-1.0, 0.8))#random relation
-			#relations[f] = FactionRelation.new(-1.0)  #max hostile
+			relations[f] = FactionRelation.new(randf_range(-1.0, 0.8))  #random relation
+#relations[f] = FactionRelation.new(-1.0)  #max hostile
 
 
 ## Builds a symmetric cache key from two Faction instances.

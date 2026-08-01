@@ -11,7 +11,8 @@ var forever: bool = false
 var count: int = 1
 
 @warning_ignore("shadowed_variable")
-func _init(hand: MarbleCharacter.INTERACT, subject: Object, subject_verb: Callable, object_verb: Callable, object: Object) -> void:
+func _init(hand: MarbleCharacter.INTERACT, subject: Object, subject_verb: Callable, object_verb: Callable,
+		object: Object) -> void:
 	#self.name = name
 	self.subject = subject
 	self.object = object
@@ -22,9 +23,9 @@ func _init(hand: MarbleCharacter.INTERACT, subject: Object, subject_verb: Callab
 
 func equals(other: Action) -> bool:
 	return self.object == other.object and \
-		self.object_verb == other.object_verb and \
-		self.subject == other.subject and \
-		self.subject_verb == other.subject_verb
+			self.object_verb == other.object_verb and \
+			self.subject == other.subject and \
+			self.subject_verb == other.subject_verb
 
 
 func do() -> bool:
