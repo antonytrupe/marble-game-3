@@ -25,6 +25,8 @@ var _is_on_floor: bool = false
 
 func _ready() -> void:
 	sleeping_state_changed.connect(_on_sleeping_state_changed)
+	contact_monitor = false
+	max_contacts_reported = 0
 	#timer.wait_time=MarbleAge.SECONDS_IN_TURN/warp_speed
 	#timer.start()
 	#timer.stop()
@@ -42,6 +44,8 @@ func _on_sleeping_state_changed() -> void:
 	# We can use this to freeze it and stop further physics calculations for it.
 	if sleeping:
 		freeze = true
+		contact_monitor = false
+		max_contacts_reported = 0
 
 
 func _set_scale(s: Vector3) -> void:
@@ -56,6 +60,8 @@ func fall() -> void:
 	set_deferred("freeze", false)
 	set_deferred("sleeping", false)
 	set_deferred("freeze_mode", RigidBody3D.FREEZE_MODE_KINEMATIC)
+	set_deferred("contact_monitor", true)
+	set_deferred("max_contacts_reported", 4)
 
 
 func is_server() -> bool:
@@ -75,7 +81,8 @@ func is_on_floor() -> bool:
 
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
-	#print('_integrate_forces')
+	if freeze:
+		return
 	_is_on_floor = false
 
 	for i: int in range(state.get_contact_count()):
@@ -86,7 +93,6 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		# Use a dot product to allow for slopes (e.g., > 0.7 for ~45 degrees).
 		if normal.dot(Vector3.UP) > 0.7:
 			_is_on_floor = true
-			#print('is on floor')
 			break
 
 
