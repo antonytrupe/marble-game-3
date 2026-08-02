@@ -17,7 +17,11 @@ func _process(delta: float) -> void:
 
 #region interactions
 func get_subject_verbs() -> Array[Callable]:
-	return []
+	return [transfer]
+
+
+func transfer(_hand: MarbleCharacter.INTERACT, _o: Array) -> bool:
+	return true
 
 
 func get_object_verbs(subject_verbs: Array[String]) -> Array[Callable]:
