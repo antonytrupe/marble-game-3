@@ -41,6 +41,7 @@ func get_data() -> Dictionary:
 		"name": name,
 		"parent": str(get_parent().get_path()) if get_parent() else "",
 		"scene_file_path": get_scene_file_path(),
+		"transform": var_to_str(transform),
 	}
 
 
