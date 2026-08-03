@@ -589,6 +589,7 @@ func _spawn_trinkets(count: int, center: Vector3) -> void:
 		#var chunk = chunks.get_chunk(tree.global_position)
 		world.items.add_child(t)
 
+
 func _spawn_fence(count: int, center: Vector3) -> void:
 	count = clampi(count, 1, 100)
 	for i: int in count:
