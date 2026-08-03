@@ -1,17 +1,20 @@
 class_name MarbleTreeTest
 extends GdUnitTestSuite
-@warning_ignore('unused_parameter')
-@warning_ignore('return_value_discarded')
-
-var tree: MarbleTree
 
 
-func before_each() -> void:
-	pass
-	#tree = partial_double(load("res://objects/tree/tree.tscn")).instantiate()
-	#stub(tree.is_server).to_return(true)
+var instance: MarbleTree
 
-
+func before_test() -> void:
+	var scene:MarbleTree = auto_free(MarbleTree.scene.instantiate())
+	add_child(scene)
+	instance = spy(scene)
+	
+	
 func test_not_null() -> void:
 	assert_bool(true)
-	#assert_not_null(tree)
+	assert_that(instance).is_not_null()
+	
+	
+func test_mock_get_data()->void:
+	do_return({"test":"test"}).on(instance).get_data()
+	assert_that(instance.get_data()).is_equal({"test":"test"})

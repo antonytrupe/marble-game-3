@@ -42,7 +42,7 @@ func test_spawn_trees_avoids_overlap() -> void:
 	# We need to capture the trees added to flora
 	# Since we can't easily capture arguments in GdUnit4 without more setup,
 	# let's just use a real Node for flora and check its children.
-	_server.world.flora = Node.new()
+	_server.world.flora = auto_free(Node.new())
 	_server.world.flora.add_child(existing_tree)
 
 	_server._spawn_trees(10, Vector3(0, 0, 0))
@@ -58,6 +58,7 @@ func test_spawn_trees_avoids_overlap() -> void:
 			assert_float(dist).is_greater_equal(4.9)  # Allow some floating point epsilon
 
 	_server.world.flora.free()
+	#collect_orphan_node_details()
 
 
 func test_spawn_single_tree_in_front_of_character() -> void:
