@@ -2,6 +2,7 @@ class_name ServerTest
 extends GdUnitTestSuite
 
 const WorldScene: PackedScene = preload("res://src/world/world.tscn")
+const ServerScene: PackedScene = preload("res://src/server/server.tscn")
 
 # The class under test
 var _server: Server
@@ -10,8 +11,8 @@ var _world: World
 
 func before_test() -> void:
 	# Create an instance of the server script
-	_server = auto_free(Server.new())
-	_world = auto_free(WorldScene.instantiate())
+	_server = auto_free(ServerScene.instantiate())
+	_world = mock("res://src/world/world.tscn",CALL_REAL_FUNC)
 	add_child(_world)
 	_server.world = _world
 
@@ -40,7 +41,7 @@ func test_spawn_spring_method_exists() -> void:
 
 func test_spawn_spring_adds_it_to_terra() -> void:
 	# Use a mock to stub get_ground_y (needs physics which isn't available in tests)
-	var mock_world: World = mock(World)
+	var mock_world: World = mock(World,CALL_REAL_FUNC)
 	_server.world = mock_world
 	mock_world.terra = _world.terra
 	do_return(0.0).on(mock_world).get_ground_y(any_float(), any_float())
@@ -94,7 +95,7 @@ func test_on_peer_connected_enet_player_id_format() -> void:
 	# Create a character from scene so @onready child nodes exist
 	var character: MarbleCharacter = auto_free(MarbleCharacter.scene.instantiate())
 	character.name = "test_char"
-	_world.characters.add_child(character)
+	_server.world.characters.add_child(character)
 
 	# Create a player with ENet naming
 	var player: Player = auto_free(Player.new())
@@ -105,7 +106,7 @@ func test_on_peer_connected_enet_player_id_format() -> void:
 
 	# Mock client
 	var mock_client: Client = auto_free(Client.new())
-	mock_client.world = _world
+	mock_client.world = _server.world
 	_server.client = mock_client
 
 	_server._on_peer_connected(1)
@@ -122,7 +123,7 @@ func test_on_peer_connected_enet_sets_friend_name() -> void:
 
 	var character: MarbleCharacter = auto_free(MarbleCharacter.scene.instantiate())
 	character.name = "test_char"
-	_world.characters.add_child(character)
+	_server.world.characters.add_child(character)
 
 	var player: Player = auto_free(Player.new())
 	player.name = "ENet_42"
@@ -131,7 +132,7 @@ func test_on_peer_connected_enet_sets_friend_name() -> void:
 	_server.players.add_child(player)
 
 	var mock_client: Client = auto_free(Client.new())
-	mock_client.world = _world
+	mock_client.world = _server.world
 	_server.client = mock_client
 
 	_server._on_peer_connected(42)
@@ -146,33 +147,41 @@ func test_on_peer_connected_steam_player_id_format() -> void:
 
 	var character: MarbleCharacter = auto_free(MarbleCharacter.scene.instantiate())
 	character.name = "test_char"
-	_world.characters.add_child(character)
+	_server.world.characters.add_child(character)
 
 	var mock_client: Client = auto_free(Client.new())
-	mock_client.world = _world
+	mock_client.world = _server.world
 
 	# Add server to scene tree so multiplayer is not null
 	add_child(_server)
 	# Re-assign after add_child since _ready overwrites @onready vars
-	_server.world = _world
+	#_server.world = _server.world
 	_server.client = mock_client
 	_server.players = auto_free(Node.new())
 
 	# Pre-create a player with Steam naming
 	var player: Player = auto_free(Player.new())
-	player.name = "Steam_0"
-	player.peer_id = 1
+	var fake_steam_id: int = 76561197960287930 # Example SteamID64
+	player.name = "Steam_" + str(fake_steam_id)
+	player.peer_id = 42
 	player.current_character_id = "test_char"
 	_server.players.add_child(player)
 
-	# Without a real SteamMultiplayerPeer, steam_id will be 0
-	# so player_id = "Steam_0"
-	_server._on_peer_connected(1)
+	# Mock a SteamMultiplayerPeer
+	var mock_peer: SteamMultiplayerPeer = mock(SteamMultiplayerPeer)
+	var target_peer_id: int = 42
+	do_return(fake_steam_id).on(mock_peer).get_steam_id_for_peer_id(target_peer_id)
+
+	_server.multiplayer.multiplayer_peer = mock_peer
+	
+	do_return(null).on(_server)._create_player(any_int(),any_string())
+
+	_server._on_peer_connected(42)
 
 	remove_child(_server)
 
-	assert_bool(_server.connected_players.has(1)).is_true()
-	assert_object(_server.connected_players[1]).is_same(player)
+	assert_bool(_server.connected_players.has(42)).is_true()
+	assert_object(_server.connected_players[42]).is_same(player)
 
 
 func test_chat_routes_to_enet_player() -> void:
@@ -181,7 +190,7 @@ func test_chat_routes_to_enet_player() -> void:
 
 	var character: MarbleCharacter = auto_free(MarbleCharacter.scene.instantiate())
 	character.name = "test_char"
-	_world.characters.add_child(character)
+	_server.world.characters.add_child(character)
 
 	var player: Player = auto_free(Player.new())
 	player.name = "ENet_1"
