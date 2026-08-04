@@ -11,7 +11,7 @@ var _world: World
 
 func before_test() -> void:
 	# Create an instance of the server script
-	_server = auto_free(ServerScene.instantiate())
+	_server = mock(Server,CALL_REAL_FUNC)
 	_world = mock("res://src/world/world.tscn",CALL_REAL_FUNC)
 	add_child(_world)
 	_server.world = _world
@@ -40,11 +40,8 @@ func test_spawn_spring_method_exists() -> void:
 
 
 func test_spawn_spring_adds_it_to_terra() -> void:
-	# Use a mock to stub get_ground_y (needs physics which isn't available in tests)
-	var mock_world: World = mock(World,CALL_REAL_FUNC)
-	_server.world = mock_world
-	mock_world.terra = _world.terra
-	do_return(0.0).on(mock_world).get_ground_y(any_float(), any_float())
+	_server.world = _world
+	do_return(0.0).on(_world).get_ground_y(any_float(), any_float())
 
 	var character: MarbleCharacter = auto_free(MarbleCharacter.new())
 	character.global_position = Vector3(0, 0, 0)
@@ -79,11 +76,13 @@ func test_quit_without_steam_does_not_call_leave_lobby() -> void:
 	# When use_steam is false, quit should skip Steam.leaveLobby
 	_server.use_steam = false
 	# Add server to the scene tree so get_tree() is not null (needed by _persist)
-	add_child(_server)
+	var s: Server = mock(Server, CALL_REAL_FUNC)
+	add_child(s)
 	# Re-assign world since add_child triggers _ready which overwrites @onready vars
-	_server.world = _world
-	_server.quit()
-	remove_child(_server)
+	s.use_steam = false
+	s.world = _world
+	s.quit()
+	remove_child(s)
 # If we got here without error, Steam.leaveLobby was correctly skipped
 
 
@@ -142,9 +141,6 @@ func test_on_peer_connected_enet_sets_friend_name() -> void:
 
 
 func test_on_peer_connected_steam_player_id_format() -> void:
-	# When use_steam is true, player_id should be "Steam_<steam_id>"
-	_server.use_steam = true
-
 	var character: MarbleCharacter = auto_free(MarbleCharacter.scene.instantiate())
 	character.name = "test_char"
 	_server.world.characters.add_child(character)
@@ -153,9 +149,10 @@ func test_on_peer_connected_steam_player_id_format() -> void:
 	mock_client.world = _server.world
 
 	# Add server to scene tree so multiplayer is not null
+	_server.use_steam = true
 	add_child(_server)
 	# Re-assign after add_child since _ready overwrites @onready vars
-	#_server.world = _server.world
+	_server.world = _world
 	_server.client = mock_client
 	_server.players = auto_free(Node.new())
 
@@ -167,14 +164,11 @@ func test_on_peer_connected_steam_player_id_format() -> void:
 	player.current_character_id = "test_char"
 	_server.players.add_child(player)
 
-	# Mock a SteamMultiplayerPeer
-	var mock_peer: SteamMultiplayerPeer = mock(SteamMultiplayerPeer)
 	var target_peer_id: int = 42
-	do_return(fake_steam_id).on(mock_peer).get_steam_id_for_peer_id(target_peer_id)
-
-	_server.multiplayer.multiplayer_peer = mock_peer
+	do_return(fake_steam_id).on(_server).get_steam_id(any())
+	assert_int(_server.get_steam_id(target_peer_id)).is_equal(fake_steam_id)
 	
-	do_return(null).on(_server)._create_player(any_int(),any_string())
+	do_return(player).on(_server)._create_player(42, "Steam_" + str(fake_steam_id))
 
 	_server._on_peer_connected(42)
 
@@ -182,6 +176,7 @@ func test_on_peer_connected_steam_player_id_format() -> void:
 
 	assert_bool(_server.connected_players.has(42)).is_true()
 	assert_object(_server.connected_players[42]).is_same(player)
+	assert_object(_server.connected_players[42].name).is_same(player.name)
 
 
 func test_chat_routes_to_enet_player() -> void:
@@ -202,6 +197,8 @@ func test_chat_routes_to_enet_player() -> void:
 	# chat() calls multiplayer.get_remote_sender_id() which returns 0 in tests
 	# so we set up connected_players[0] as well
 	_server.connected_players[0] = player
+
+	do_return(0).on(_server).get_remote_sender_id()
 
 	# Should not crash trying to access Steam API
 	_server.chat("hello")

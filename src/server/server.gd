@@ -153,11 +153,15 @@ func start() -> void:
 		_on_peer_connected(multiplayer.get_unique_id())
 
 
+func get_remote_sender_id()->int:
+	return multiplayer.get_remote_sender_id()
+
+
 @rpc("any_peer", "call_local")
 func chat(message: String) -> void:
 	debug(message)
 	#find the character that sent
-	var peer_id: int = multiplayer.get_remote_sender_id()
+	var peer_id: int = get_remote_sender_id()
 	var player: Player
 	if use_steam:
 		var steam_id: int = (multiplayer.multiplayer_peer as SteamMultiplayerPeer).get_steam_id_for_peer_id(peer_id)
@@ -530,17 +534,24 @@ func _create_player(peer_id: int, player_id: String) -> Player:
 	return p
 
 
+func get_steam_id(peer_id: int) -> int:
+	var peer: SteamMultiplayerPeer = multiplayer.multiplayer_peer as SteamMultiplayerPeer
+	if peer is SteamMultiplayerPeer:
+		return (peer as SteamMultiplayerPeer).get_steam_id_for_peer_id(peer_id)
+	return 0
+
+
 ## peer_id from multiplayer_peer, 1 for host
 func _on_peer_connected(peer_id: int=1) -> void:
 	#debug("Peer connected with ID: %s" % peer_id)
 	var steam_id: int = 0
 	var friend_name: String = ""
 	if use_steam and multiplayer.has_multiplayer_peer():
-		var peer: SteamMultiplayerPeer = multiplayer.multiplayer_peer as SteamMultiplayerPeer
-		if peer:
-			steam_id = peer.get_steam_id_for_peer_id(peer_id)
-			#debug("steam id: %s" % steam_id)
-			friend_name = Steam.getFriendPersonaName(steam_id)
+		#var peer: SteamMultiplayerPeer = multiplayer.multiplayer_peer as SteamMultiplayerPeer
+		#if peer:
+		steam_id = get_steam_id(peer_id)
+		#debug("steam id: %s" % steam_id)
+		friend_name = Steam.getFriendPersonaName(steam_id)
 	#debug("friend_name: %s" % friend_name)
 
 	var player_id: String
