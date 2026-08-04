@@ -536,9 +536,11 @@ func _on_peer_connected(peer_id: int=1) -> void:
 	var steam_id: int = 0
 	var friend_name: String = ""
 	if use_steam and multiplayer.has_multiplayer_peer():
-		steam_id = (multiplayer.multiplayer_peer as SteamMultiplayerPeer).get_steam_id_for_peer_id(peer_id)
-		#debug("steam id: %s" % steam_id)
-		friend_name = Steam.getFriendPersonaName(steam_id)
+		var peer: SteamMultiplayerPeer = multiplayer.multiplayer_peer as SteamMultiplayerPeer
+		if peer:
+			steam_id = peer.get_steam_id_for_peer_id(peer_id)
+			#debug("steam id: %s" % steam_id)
+			friend_name = Steam.getFriendPersonaName(steam_id)
 	#debug("friend_name: %s" % friend_name)
 
 	var player_id: String
