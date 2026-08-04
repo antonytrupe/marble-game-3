@@ -3,9 +3,9 @@ class_name FactionMovement
 ## How quickly velocity blends toward the desired direction (lower = smoother).
 const SMOOTHING_FACTOR: float = 1.0
 ## How quickly the character rotates toward its movement direction (lower = smoother).
-const ROTATION_SMOOTHING: float = 1.0
+const ROTATION_SMOOTHING: float = 1.5
 ## Forces below this threshold are ignored to prevent micro-jitter.
-const DEAD_ZONE: float = 1.0
+const DEAD_ZONE: float = 1.5
 ## Pre-computed squared distance thresholds to avoid per-frame sqrt calls.
 const _MAX_RANGE_SQ: float = FactionRelation.ATTRACT_RANGE * FactionRelation.ATTRACT_RANGE
 const _SEPARATION_DIST_SQ: float = FactionRelation.SEPARATION_DISTANCE * FactionRelation.SEPARATION_DISTANCE
