@@ -1,21 +1,65 @@
 class_name ServerTest
 extends GdUnitTestSuite
 
-const WorldScene: PackedScene = preload("res://src/world/world.tscn")
-const ServerScene: PackedScene = preload("res://src/server/server.tscn")
+#const WorldScene: PackedScene = preload("res://src/world/world.tscn")
+#const ServerScene: PackedScene = preload("res://src/server/server.tscn")
 
 # The class under test
 var _server: Server
 var _world: World
 
+func before()->void:
+	pass
+	#const WorldScene: PackedScene = preload("res://src/world/world.tscn")
+	#const ServerScene: PackedScene = preload("res://src/server/server.tscn")
+
+func after_test() -> void:
+	# Clean up manually created nodes
+	if is_instance_valid(_world):
+		_world.free()
+	if is_instance_valid(_server):
+		if is_instance_valid(_server.players):
+			_server.players.free()
+		_server.free()
 
 func before_test() -> void:
 	# Create an instance of the server script
-	_server = mock(Server,CALL_REAL_FUNC)
-	_world = mock("res://src/world/world.tscn",CALL_REAL_FUNC)
-	add_child(_world)
-	_server.world = _world
+	_server = mock(Server, CALL_REAL_FUNC)
+	_world = mock(World)
+	
+	# Manually create the nodes that @onready would normally create
+	_world.characters = Node.new()
+	_world.characters.name = "Characters"
+	_world.add_child(_world.characters)
+	
+	_world.terra = Node.new()
+	_world.terra.name = "Terra"
+	_world.add_child(_world.terra)
+	
+	#_world.players = Node.new()
+	#_world.players.name = "Players"
+	#_world.add_child(_world.players)
+	
+	_world.fauna = Node.new()
+	_world.fauna.name = "Fauna"
+	_world.add_child(_world.fauna)
+	
+	_world.warp_monuments = Node.new()
+	_world.warp_monuments.name = "WarpMonuments"
+	_world.add_child(_world.warp_monuments)
 
+	# add_child(_world) # Don't add to tree if we don't need physics or _ready
+	_server.world = _world
+	
+	# Mock players node on server
+	var players_node := Node.new()
+	players_node.name = "Players"
+	_server.players = players_node
+
+
+func test_takes_too_long()->void:
+	pass
+	
 
 func test_get_random_vector_within_radius_and_on_ground() -> void:
 	# Test the distance calculation algorithm used by _get_random_vector
@@ -76,13 +120,16 @@ func test_quit_without_steam_does_not_call_leave_lobby() -> void:
 	# When use_steam is false, quit should skip Steam.leaveLobby
 	_server.use_steam = false
 	# Add server to the scene tree so get_tree() is not null (needed by _persist)
-	var s: Server = mock(Server, CALL_REAL_FUNC)
-	add_child(s)
+	# var s: Server = mock(Server, CALL_REAL_FUNC)
+	# add_child(s)
 	# Re-assign world since add_child triggers _ready which overwrites @onready vars
-	s.use_steam = false
-	s.world = _world
-	s.quit()
-	remove_child(s)
+	# s.use_steam = false
+	# s.world = _world
+	do_return(null).on(_server)._persist()
+	_server.quit()
+	# s.players.free()
+	# remove_child(s)
+	# s.free()
 # If we got here without error, Steam.leaveLobby was correctly skipped
 
 
@@ -94,7 +141,7 @@ func test_on_peer_connected_enet_player_id_format() -> void:
 	# Create a character from scene so @onready child nodes exist
 	var character: MarbleCharacter = auto_free(MarbleCharacter.scene.instantiate())
 	character.name = "test_char"
-	_server.world.characters.add_child(character)
+	_world.characters.add_child(character)
 
 	# Create a player with ENet naming
 	var player: Player = auto_free(Player.new())
@@ -104,7 +151,7 @@ func test_on_peer_connected_enet_player_id_format() -> void:
 	_server.players.add_child(player)
 
 	# Mock client
-	var mock_client: Client = auto_free(Client.new())
+	var mock_client: Client = mock(Client)
 	mock_client.world = _server.world
 	_server.client = mock_client
 
@@ -143,7 +190,7 @@ func test_on_peer_connected_enet_sets_friend_name() -> void:
 func test_on_peer_connected_steam_player_id_format() -> void:
 	var character: MarbleCharacter = auto_free(MarbleCharacter.scene.instantiate())
 	character.name = "test_char"
-	_server.world.characters.add_child(character)
+	_world.characters.add_child(character)
 
 	var mock_client: Client = auto_free(Client.new())
 	mock_client.world = _server.world
@@ -185,7 +232,7 @@ func test_chat_routes_to_enet_player() -> void:
 
 	var character: MarbleCharacter = auto_free(MarbleCharacter.scene.instantiate())
 	character.name = "test_char"
-	_server.world.characters.add_child(character)
+	_world.characters.add_child(character)
 
 	var player: Player = auto_free(Player.new())
 	player.name = "ENet_1"
