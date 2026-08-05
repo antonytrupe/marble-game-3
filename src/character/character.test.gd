@@ -1,17 +1,17 @@
 # GdUnit generated TestSuite
 class_name MarbleCharacterTest
 extends GdUnitTestSuite
+
 @warning_ignore('unused_parameter')
 @warning_ignore('return_value_discarded')
-
 # TestSuite generated from
 const __source: String = 'res://src/character/character.gd'
 var MarbleCharacterScene: PackedScene = load("res://src/character/character.tscn")
 
-var instance:MarbleCharacter
+var instance: MarbleCharacter
 
 func before_test() -> void:
-	instance = mock("res://src/character/character.tscn",CALL_REAL_FUNC)
+	instance = mock("res://src/character/character.tscn", CALL_REAL_FUNC)
 	add_child(instance)
 
 func after_test() -> void:
@@ -20,8 +20,8 @@ func after_test() -> void:
 
 
 func test_vector_to_string() -> void:
-	var v:Vector3 = Vector3(1, 2, 3)
-	var s:String = var_to_str(v)
+	var v: Vector3 = Vector3(1, 2, 3)
+	var s: String = var_to_str(v)
 	assert_str(s).is_equal('Vector3(1, 2, 3)')
 
 
@@ -34,38 +34,38 @@ func test_initial_state() -> void:
 func test_get_subject_verbs_returns_pick_up() -> void:
 	var verbs: Array[Callable] = instance.get_subject_verbs()
 	assert_that(verbs.size()).is_greater(0)
-	assert_that(verbs.map(func(f:Callable)->String:return f.get_method())).contains("pick_up")
+	assert_that(verbs.map(func(f: Callable)-> String: return f.get_method())).contains("pick_up")
 
 
 func test_get_subject_verbs_returns_transfer() -> void:
 	var verbs: Array[Callable] = instance.get_subject_verbs()
-	var trinket:Trinket = auto_free(Trinket.scene.instantiate())
-	instance.right_inventory=trinket
+	var trinket: Trinket = auto_free(Trinket.scene.instantiate())
+	instance.right_inventory = trinket
 	assert_that(verbs.size()).is_greater(0)
-	assert_that(verbs.map(func(f:Callable)->String:return f.get_method())).contains("transfer")
+	assert_that(verbs.map(func(f: Callable)-> String: return f.get_method())).contains("transfer")
 
 
 func test_get_indirect_object_verbs_returns_transfer() -> void:
 	var verbs: Array[Callable] = instance.get_indirect_object_verbs()
 	assert_that(verbs.size()).is_greater(0)
-	assert_that(verbs.map(func(f:Callable)->String:return f.get_method())).contains("transfer")
+	assert_that(verbs.map(func(f: Callable)-> String: return f.get_method())).contains("transfer")
 
 
-func test_mock_is_server_true()->void:
+func test_mock_is_server_true() -> void:
 	do_return(true).on(instance).is_server()
 	assert_that(instance.is_server()).is_true()
-	
-	
-func test_mock_is_server_false()->void:
+
+
+func test_mock_is_server_false() -> void:
 	do_return(false).on(instance).is_server()
 	assert_that(instance.is_server()).is_false()
 
 
-func test_mock_raycast_is_colliding()->void:
+func test_mock_raycast_is_colliding() -> void:
 	do_return(true).on(instance).raycast_is_colliding()
 	assert_that(instance.raycast_is_colliding()).is_true()
-	
-	
+
+
 func test_pick_up_item_right_hand() -> void:
 	var trinket: Trinket = auto_free(Trinket.scene.instantiate())
 	add_child(trinket)
@@ -88,38 +88,39 @@ func test_pick_up_item_left_hand() -> void:
 	instance.interact(MarbleCharacter.INTERACT.LEFT)
 	assert_that(instance.right_inventory).is_null()
 	assert_that(instance.left_inventory).is_equal(trinket)
-	
 
-func test_pick_up_item_right_hand_rotation_alignment() -> void:
+
+func test_pick_up_trinket_right_hand_rotation_alignment() -> void:
 	var trinket: Trinket = auto_free(Trinket.scene.instantiate())
 	add_child(trinket)
 	# Set a specific rotation for the trinket
 	trinket.rotation = Vector3(1, 1, 1)
-	
+
 	do_return(true).on(instance).is_server()
 	do_return(true).on(instance).raycast_is_colliding()
 	do_return(trinket).on(instance).get_target()
 	do_return(Vector3.ZERO).on(instance).get_collision_point()
 
 	instance.interact(MarbleCharacter.INTERACT.RIGHT)
-	
+
 	# After pick_up, the trinket's rotation should match the hand marker's rotation
 	assert_that(trinket.global_transform.basis).is_equal(instance.inventory_right_marker.global_transform.basis)
 
 
-func test_transfer_item_from_character_to_character() -> void:
+func test_transfer_trinket_from_character_to_character() -> void:
 	var receiver: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
 	add_child(receiver)
 	var trinket: Trinket = auto_free(Trinket.scene.instantiate())
 	add_child(trinket)
 	instance.right_inventory = trinket
 	assert_that(instance.right_inventory).is_equal(trinket)
-	var result: bool = instance.transfer(MarbleCharacter.INTERACT.RIGHT, [trinket],receiver)
+	var result: bool = instance.transfer(MarbleCharacter.INTERACT.RIGHT, [trinket], receiver)
 	assert_that(result).is_true()
 	assert_that(instance.right_inventory).is_null()
 	assert_that(receiver.right_inventory).is_equal(trinket)
 
-func test_transfer_item_from_character_to_character_via_interact() -> void:
+
+func test_transfer_trinket_from_character_to_character_via_interact() -> void:
 	do_return(true).on(instance).is_server()
 	do_return(true).on(instance).raycast_is_colliding()
 	do_return(Vector3.ZERO).on(instance).get_collision_point()
@@ -127,18 +128,17 @@ func test_transfer_item_from_character_to_character_via_interact() -> void:
 	var receiver: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
 	add_child(receiver)
 	do_return(receiver).on(instance).get_target()
-	
+
 	var trinket: Trinket = auto_free(Trinket.scene.instantiate())
 	add_child(trinket)
 	#do_return(trinket).on(instance).get_target()
 
-
 	instance.right_inventory = trinket
 	assert_that(instance.right_inventory).is_equal(trinket)
-	
+
 	# Act
 	instance.interact(MarbleCharacter.INTERACT.RIGHT)
-	
+
 	# Assert
 	assert_that(instance.right_inventory).is_null()
 	assert_that(receiver.right_inventory).is_equal(trinket)
@@ -154,7 +154,7 @@ func test_default_faction_is_none() -> void:
 
 
 func test_setting_faction_assigns_faction() -> void:
-	instance.faction = auto_free(Faction.new(FactionStatic.Type.RED))
+	instance.faction = Faction.new(FactionStatic.Type.RED)
 	assert_that(instance.faction.get_main_faction()).is_equal(FactionStatic.Type.RED)
 
 
@@ -175,7 +175,7 @@ func test_default_relations_for_none_faction() -> void:
 
 
 func test_default_relations_for_assigned_faction() -> void:
-	var faction = FactionStatic.Type.RED
+	var faction :FactionStatic.Type= FactionStatic.Type.RED
 	instance.faction._init_default_relations(faction)
 	assert_float(instance.faction.get_relation(FactionStatic.Type.RED)).is_greater(0.8)
 	assert_float(instance.faction.get_relation(FactionStatic.Type.BLUE)).is_greater_equal(-1.0)
@@ -184,7 +184,7 @@ func test_default_relations_for_assigned_faction() -> void:
 
 
 func test_get_main_faction_returns_highest_relation() -> void:
-	var faction = FactionStatic.Type.RED
+	var faction :FactionStatic.Type= FactionStatic.Type.RED
 	instance.faction._init_default_relations(faction)
 	assert_that(instance.faction.get_main_faction()).is_equal(FactionStatic.Type.RED)
 	# Override BLUE to be higher than RED
@@ -206,7 +206,7 @@ func test_set_relation_clamps_value() -> void:
 
 func test_custom_relation_affects_movement() -> void:
 	instance.player_id = ""
-	var faction = FactionStatic.Type.RED
+	var faction:FactionStatic.Type = FactionStatic.Type.RED
 	instance.faction._init_default_relations(faction)
 	# Make RED friendly toward BLUE
 	instance.faction.set_relation(FactionStatic.Type.BLUE, 0.8)
@@ -221,7 +221,6 @@ func test_custom_relation_affects_movement() -> void:
 	instance._apply_faction_movement(1.0)
 	# Should attract (positive x) since relation is friendly
 	assert_that(instance.velocity.x).is_greater(0.0)
-	assert_that(instance.velocity.x > 0).is_true()
 
 
 func test_player_controlled_skips_faction_movement() -> void:
@@ -236,7 +235,7 @@ func test_npc_is_not_player_controlled() -> void:
 
 func test_faction_movement_attracts_same_faction() -> void:
 	instance.player_id = ""
-	var faction = FactionStatic.Type.RED
+	var faction:FactionStatic.Type = FactionStatic.Type.RED
 	instance.faction._init_default_relations(faction)
 	instance.global_position = Vector3.ZERO
 
@@ -253,7 +252,7 @@ func test_faction_movement_attracts_same_faction() -> void:
 
 func test_faction_movement_repels_other_faction() -> void:
 	instance.player_id = ""
-	var faction = FactionStatic.Type.RED
+	var faction :FactionStatic.Type= FactionStatic.Type.RED
 	instance.faction._init_default_relations(faction)
 	instance.global_position = Vector3.ZERO
 
@@ -270,7 +269,7 @@ func test_faction_movement_repels_other_faction() -> void:
 
 func test_separation_repels_same_faction_when_too_close() -> void:
 	instance.player_id = ""
-	var faction = FactionStatic.Type.RED
+	var faction :FactionStatic.Type= FactionStatic.Type.RED
 	instance.faction._init_default_relations(faction)
 	instance.global_position = Vector3.ZERO
 

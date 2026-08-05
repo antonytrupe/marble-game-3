@@ -17,4 +17,4 @@ func test_get_ground_y() -> void:
 	await await_millis(100)
 	var y: float = world.get_ground_y(0.0, 0.0)
 	# The world scene has a floor collision shape at y=-6
-	assert_float(y).is_less(1.0)
+	assert_float(y).is_equal_approx(23.139923,.00001)

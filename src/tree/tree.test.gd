@@ -5,9 +5,8 @@ extends GdUnitTestSuite
 var instance: MarbleTree
 
 func before_test() -> void:
-	var scene:MarbleTree = auto_free(MarbleTree.scene.instantiate())
-	add_child(scene)
-	instance = spy(scene)
+	instance = mock(MarbleTree,CALL_REAL_FUNC)
+	#add_child(instance)
 	
 	
 func test_not_null() -> void:
@@ -16,5 +15,6 @@ func test_not_null() -> void:
 	
 	
 func test_mock_get_data()->void:
+	#instance=mock(instance)
 	do_return({"test":"test"}).on(instance).get_data()
 	assert_that(instance.get_data()).is_equal({"test":"test"})
