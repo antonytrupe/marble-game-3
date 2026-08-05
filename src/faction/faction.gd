@@ -69,11 +69,11 @@ func get_overall_relation(other: Faction) -> float:
 			continue
 		var my_val: float = get_relation(f)
 		var other_val: float = other.get_relation(f)
-		if my_val < 0 and other_val < 0:
+		if my_val <= 0.0 and other_val <= 0.0:
 			continue
 		# Dot-product style: same sign = agreement, opposite = disagreement
-		var s: float = sign(my_val * other_val)
-		# var sign:float = my_val * other_val
+		var product: float = my_val * other_val
+		var s: float = sign(product) if product != 0 else sign(my_val + other_val)
 
 		total += s * (abs(my_val) + abs(other_val)) / 2
 		count += 1
