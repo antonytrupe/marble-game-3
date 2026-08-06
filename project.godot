@@ -53,6 +53,7 @@ settings/test/rerun_until_failure_retries=1
 [global_group]
 
 persist=""
+character=""
 
 [input]
 
