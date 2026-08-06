@@ -151,8 +151,11 @@ func _physics_process(delta: float) -> void:
 		#not on floor and flying
 		else:
 			character.velocity.y = 0
-
-	_apply_faction_movement(delta)
+	var physics_fps:float = Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS)
+	if physics_fps<1.0/30.0:
+		_apply_faction_movement(delta)
+	#else:
+		#print('skip faction movement')
 
 	character.move_and_slide()
 
