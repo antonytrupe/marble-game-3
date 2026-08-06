@@ -13,6 +13,8 @@ const _REPEL_RANGE_SQ: float = FactionRelation.REPEL_RANGE * FactionRelation.REP
 
 
 static func apply(character: MarbleCharacter, delta: float) -> void:
+	var start_time = Time.get_ticks_usec()
+
 	if not character.is_multiplayer_authority():
 		return
 	if character._is_player_controlled():
@@ -25,21 +27,9 @@ static func apply(character: MarbleCharacter, delta: float) -> void:
 	var my_pos: Vector3 = character.global_position
 	var my_faction: Faction = character.faction
 
-	var parent: Node = character.get_parent()
-	if not parent:
-		return
-
-	# var space_state: PhysicsDirectSpaceState3D = character.get_world_3d().direct_space_state
-	# var query: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
-	# query.collision_mask = character.collision_mask
-	# query.exclude = [character.get_rid()]
-
-	for sibling: Node in parent.get_children():
-		if sibling == character:
+	for other: MarbleCharacter in character.get_tree().get_nodes_in_group("character"):
+		if other == character:
 			continue
-		if not sibling is MarbleCharacter:
-			continue
-		var other: MarbleCharacter = sibling as MarbleCharacter
 		if other.faction.get_main_faction() == FactionStatic.Type.NONE:
 			continue
 
@@ -87,3 +77,4 @@ static func apply(character: MarbleCharacter, delta: float) -> void:
 		var brake: float = clampf(SMOOTHING_FACTOR * delta, 0.0, 1.0)
 		character.velocity.x = lerpf(character.velocity.x, 0.0, brake)
 		character.velocity.z = lerpf(character.velocity.z, 0.0, brake)
+	#print("faction_movement.apply: ", Time.get_ticks_usec() - start_time, " us")
