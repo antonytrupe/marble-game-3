@@ -151,11 +151,14 @@ func _physics_process(delta: float) -> void:
 		#not on floor and flying
 		else:
 			character.velocity.y = 0
-	var physics_fps:float = Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS)
-	if physics_fps<1.0/30.0:
+	# Engine.get_frames_per_second
+	# Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS)
+	var fps: float = Engine.get_frames_per_second()
+	if fps >= 50.0 or (true and fps >= 30.0 and randi() %2 == 0
+	):
 		_apply_faction_movement(delta)
 	#else:
-		#print('skip faction movement')
+	#print('skip faction movement')
 
 	character.move_and_slide()
 
@@ -502,7 +505,7 @@ func get_data() -> Dictionary:
 		"age": age.age,
 		"turn": turn,
 		"transform": var_to_str(character.transform),
-		"faction_relations": var_to_str(faction.relations),
+		"faction_relations": var_to_str(faction._relations),
 		"left_inventory": left_inventory.name if left_inventory else StringName(""),
 		"right_inventory": right_inventory.name if right_inventory else StringName(""),
 	}
@@ -523,7 +526,7 @@ func load_post_ready(data: Dictionary) -> void:
 		age.age = data.age
 
 	if "faction_relations" in data:
-		faction.relations = str_to_var(data.faction_relations)
+		faction._relations = str_to_var(data.faction_relations)
 		_apply_color()
 		_update_label()
 

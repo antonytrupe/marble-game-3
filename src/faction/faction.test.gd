@@ -19,23 +19,21 @@ func after_test() -> void:
 
 
 # --- get_relation ---
-
 func test_get_relation_returns_zero_for_missing_faction() -> void:
 	assert_float(faction.get_relation(FactionStatic.Type.RED)).is_equal(0.0)
 
 
 func test_get_relation_returns_stored_value() -> void:
-	faction.relations[FactionStatic.Type.BLUE] = FactionRelation.new(0.75)
+	faction._relations[FactionStatic.Type.BLUE] = FactionRelation.new(0.75)
 	assert_float(faction.get_relation(FactionStatic.Type.BLUE)).is_equal(0.75)
 
 
 func test_get_relation_returns_negative_value() -> void:
-	faction.relations[FactionStatic.Type.GREEN] = FactionRelation.new(-0.5)
+	faction._relations[FactionStatic.Type.GREEN] = FactionRelation.new(-0.5)
 	assert_float(faction.get_relation(FactionStatic.Type.GREEN)).is_equal(-0.5)
 
 
 # --- set_relation ---
-
 func test_set_relation_stores_value() -> void:
 	faction.set_relation(FactionStatic.Type.RED, 0.5)
 	assert_float(faction.get_relation(FactionStatic.Type.RED)).is_equal(0.5)
@@ -64,14 +62,21 @@ func test_set_relation_overwrites_previous_value() -> void:
 	assert_float(faction.get_relation(FactionStatic.Type.BLUE)).is_equal(-0.7)
 
 
-# --- get_main_faction ---
+func test_set_relation_clears_main_faction_cache()->void:
+	faction.set_relation(FactionStatic.Type.BLUE, 0.3)
+	faction.get_main_faction()
+	faction.set_relation(FactionStatic.Type.BLUE, -0.7)
+	assert_that(faction._main_faction_cache).is_equal(FactionStatic.Type.NONE)
+	assert_that(faction._main_faction_dirty).is_true()
 
+
+# --- get_main_faction ---
 func test_get_main_faction_returns_none_when_empty() -> void:
 	assert_that(faction.get_main_faction()).is_equal(FactionStatic.Type.NONE)
 
 
 func test_get_main_faction_returns_none_when_only_none_relation() -> void:
-	faction.relations[FactionStatic.Type.NONE] = FactionRelation.new(1.0)
+	faction._relations[FactionStatic.Type.NONE] = FactionRelation.new(1.0)
 	assert_that(faction.get_main_faction()).is_equal(FactionStatic.Type.NONE)
 
 
@@ -83,7 +88,7 @@ func test_get_main_faction_returns_highest_relation() -> void:
 
 
 func test_get_main_faction_ignores_none_type() -> void:
-	faction.relations[FactionStatic.Type.NONE] = FactionRelation.new(10.0)
+	faction._relations[FactionStatic.Type.NONE] = FactionRelation.new(10.0)
 	faction.set_relation(FactionStatic.Type.RED, 0.2)
 	assert_that(faction.get_main_faction()).is_equal(FactionStatic.Type.RED)
 
@@ -94,6 +99,17 @@ func test_get_main_faction_works_with_all_negative_relations() -> void:
 	faction.set_relation(FactionStatic.Type.GREEN, -0.8)
 	assert_that(faction.get_main_faction()).is_equal(FactionStatic.Type.BLUE)
 
+
+func test_get_main_faction_uses_cache() -> void:
+	# Populate cache
+	faction.set_relation(FactionStatic.Type.RED, 0.5)
+	faction.set_relation(FactionStatic.Type.BLUE, 0.9)
+	# make sure main faction cache is empty
+	assert_that(faction._main_faction_cache).is_equal(FactionStatic.Type.NONE)
+	# Get main faction
+	faction.get_main_faction()
+	# Check that cache is populated
+	assert_that(faction._main_faction_cache).is_equal(FactionStatic.Type.BLUE)
 
 # --- _init_default_relations ---
 
@@ -132,8 +148,26 @@ func test_init_default_relations_clears_previous() -> void:
 
 # --- get_overall_relation ---
 
+func test_invalidate_cache_is_selective() -> void:
+	var f1: Faction = auto_free(Faction.new())
+	var f2: Faction = auto_free(Faction.new())
+	var f3: Faction = auto_free(Faction.new())
+	
+	# Populate cache
+	f1.get_overall_relation(f2)
+	f2.get_overall_relation(f3)
+	
+	assert_int(Faction._relation_cache.size()).is_equal(2)
+	
+	# Changing f1 should only invalidate f1-f2
+	f1.set_relation(FactionStatic.Type.RED, 0.5)
+	
+	assert_int(Faction._relation_cache.size()).is_equal(1)
+	assert_bool(Faction._relation_cache.has(f2._cache_key(f3))).is_true()
+	assert_bool(Faction._relation_cache.has(f1._cache_key(f2))).is_false()
+
 func test_overall_relation_identical_factions() -> void:
-	faction.clear_cache()
+	#faction.clear_cache()
 	assert_dict(faction._relation_cache).is_empty()
 	var other: Faction = auto_free(Faction.new())
 	faction.set_relation(FactionStatic.Type.RED, 1.0)
@@ -177,8 +211,8 @@ func test_overall_relation_is_symmetric() -> void:
 
 func test_overall_relation_excludes_none_type() -> void:
 	var other: Faction = auto_free(Faction.new())
-	faction.relations[FactionStatic.Type.NONE] = FactionRelation.new(1.0)
-	other.relations[FactionStatic.Type.NONE] = FactionRelation.new(-1.0)
+	faction._relations[FactionStatic.Type.NONE] = FactionRelation.new(1.0)
+	other._relations[FactionStatic.Type.NONE] = FactionRelation.new(-1.0)
 	# NONE should be skipped, so both empty non-NONE → 1.0
 	assert_float(faction.get_overall_relation(other)).is_equal(0.0)
 
