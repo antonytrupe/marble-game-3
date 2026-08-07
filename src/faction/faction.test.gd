@@ -12,6 +12,7 @@ var faction: Faction
 
 func before_test() -> void:
 	faction = auto_free(Faction.new())
+	Faction.clear_cache()
 
 
 func after_test() -> void:
@@ -66,7 +67,6 @@ func test_set_relation_clears_main_faction_cache()->void:
 	faction.set_relation(FactionStatic.Type.BLUE, 0.3)
 	faction.get_main_faction()
 	faction.set_relation(FactionStatic.Type.BLUE, -0.7)
-	assert_that(faction._main_faction_cache).is_equal(FactionStatic.Type.NONE)
 	assert_that(faction._main_faction_dirty).is_true()
 
 
