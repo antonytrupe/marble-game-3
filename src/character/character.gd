@@ -7,16 +7,16 @@ static var scene: Resource = preload("res://src/character/character.tscn")
 enum INTERACT {RIGHT, LEFT}
 
 enum MODE {
-	##half the walk distance
-	##usually 15ft/round
+##half the walk distance
+##usually 15ft/round
 	CROUCH = 1,
-	##single move action
-	##usually 30ft/round
+##single move action
+##usually 30ft/round
 	WALK = 2,
-	##this is the double move action
-	##usually 60ft/round
+##this is the double move action
+##usually 60ft/round
 	HUSTLE = 4,
-	##not used?
+##not used?
 	RUN = 6,
 }
 
@@ -30,6 +30,7 @@ const STRINGS: Dictionary[MODE, String] = {
 const SPEED_MULTIPLIER: float = 1.0 / 24.0
 const JUMP_VELOCITY: float = 5.0
 const MAX_CONTROLLED_WARP: int = 10
+
 #endregion
 
 #region turn actions flags
@@ -51,7 +52,7 @@ const MAX_CONTROLLED_WARP: int = 10
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
-var mode: MODE = MODE.WALK # :
+var mode: MODE = MODE.WALK  # :
 
 var speed: float = 30.0
 
@@ -77,10 +78,12 @@ var actions: Array[Action]
 @onready var world: World = $/root/Game/World
 @onready var warp_detector: WarpDetector = %WarpDetector
 @onready var age: MarbleAge = %Age
+@onready var faction: Faction = %Faction
 @onready var raycast: RayCast3D = %RayCast3D
 @onready var inventory_right_marker: Generic6DOFJoint3D = %InventoryRightMarker
 @onready var inventory_left_marker: Generic6DOFJoint3D = %InventoryLeftMarker
 @onready var character: MarbleCharacter = $"."
+@onready var body_mesh: MeshInstance3D = %BodyMesh
 #endregion
 
 
@@ -102,7 +105,7 @@ func action_add(action: Action) -> void:
 
 
 #@rpc("any_peer","call_local")
-func action_remove(index: int = 0) -> void:
+func action_remove(index: int=0) -> void:
 	actions.remove_at(index)
 	client.actions.update_actions()
 
@@ -128,6 +131,7 @@ func action_count_changed(index: int, count: int) -> void:
 
 
 func _ready() -> void:
+	_apply_color()
 	_update_label()
 
 
@@ -140,7 +144,6 @@ func _physics_process(delta: float) -> void:
 		_start_turn(range(self.turn + 1, new_turn + 1))
 		self.turn = new_turn
 
-
 	if not character.is_on_floor():
 		if not flying:
 			var w_speed: float = min(warp_speed, MAX_CONTROLLED_WARP)
@@ -148,6 +151,14 @@ func _physics_process(delta: float) -> void:
 		#not on floor and flying
 		else:
 			character.velocity.y = 0
+	# Engine.get_frames_per_second
+	# Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS)
+	var fps: float = Engine.get_frames_per_second()
+	if fps >= 50.0 or (true and fps >= 30.0 and randi() %2 == 0
+	):
+		_apply_faction_movement(delta)
+	#else:
+	#print('skip faction movement')
 
 	character.move_and_slide()
 
@@ -161,14 +172,54 @@ func get_target() -> Object:
 	return entity
 
 
+#region interactions
+func get_collision_point() -> Vector3:
+	return raycast.get_collision_point()
+
+
 ##verbs the character can do
 func get_subject_verbs() -> Array[Callable]:
-	return [pick_up]
+	return [pick_up, transfer]
+
+
+func get_indirect_object_verbs() -> Array[Callable]:
+	return [transfer]
 
 
 ##verbs that can be done to the character
-func get_object_verbs(_subject_verbs: Array[String]) -> Array[Callable]:
-	return []
+func get_object_verbs(subject_verbs: Array[String]) -> Array[Callable]:
+	var verbs: Array[Callable] = []
+	if subject_verbs.has("transfer"):
+		verbs.append(transfer)
+	return verbs
+
+
+func transfer(hand: INTERACT, items: Array, receiver: MarbleCharacter) -> bool:
+	_handle_drop(hand)
+	for item in items:
+		receiver.receive_item(item)
+	return true
+
+
+func receive_item(item: Node3D) -> void:
+	if item is RigidBody3D:
+		item.freeze = false
+
+	# Place received item in the first free hand (right preferred)
+	if not right_inventory:
+		right_inventory = item
+		right_inventory.global_position = inventory_right_marker.global_position
+		inventory_right_marker.set_deferred("node_b", right_inventory.get_path())
+		raycast.add_exception(right_inventory)
+	elif not left_inventory:
+		left_inventory = item
+		left_inventory.global_position = inventory_left_marker.global_position
+		inventory_left_marker.set_deferred("node_b", left_inventory.get_path())
+		raycast.add_exception(left_inventory)
+	else:
+		# Both hands full — drop the item nearby
+		pass
+		#item.global_position = character.global_position + character.transform.basis.z * -1.0
 
 
 func pick_up(hand: INTERACT, entities: Array, collision_point: Vector3) -> bool:
@@ -178,39 +229,49 @@ func pick_up(hand: INTERACT, entities: Array, collision_point: Vector3) -> bool:
 			if entity is RigidBody3D:
 				entity.freeze = false
 
+			var hand_marker: Generic6DOFJoint3D
 			if hand == INTERACT.RIGHT:
 				right_inventory = entity
-				# Move the object so the point of collision is at the hand marker, preserving object rotation
-				right_inventory.global_position += inventory_right_marker.global_position - collision_point
-				inventory_right_marker.node_b = right_inventory.get_path()
-				raycast.add_exception(right_inventory)
+				hand_marker = inventory_right_marker
 			else:
 				left_inventory = entity
-				# Move the object so the point of collision is at the hand marker, and align rotation with hand
-				var local_collision_point: Vector3 = left_inventory.to_local(collision_point)
-				var target_transform := inventory_left_marker.global_transform
-				var world_offset: Vector3 = target_transform.basis * local_collision_point
-				target_transform.origin = inventory_left_marker.global_position - world_offset
-				left_inventory.global_transform = target_transform
-				inventory_left_marker.node_b = left_inventory.get_path()
-				raycast.add_exception(left_inventory)
+				hand_marker = inventory_left_marker
+
+			# Move the object so the point of collision is at the hand marker, and align rotation with hand
+			var local_collision_point: Vector3 = entity.to_local(collision_point)
+			var target_transform: Transform3D = hand_marker.global_transform
+			var world_offset: Vector3 = target_transform.basis * local_collision_point
+			target_transform.origin = hand_marker.global_position - world_offset
+			entity.global_transform = target_transform
+			# Delay setting node_b to ensure transform is applied
+			hand_marker.set_deferred("node_b", entity.get_path())
+			raycast.add_exception(entity)
 
 			return true
 	return false
 
+
+func force_raycast_update() -> void:
+	raycast.force_raycast_update()
+
+
+func raycast_is_colliding() -> bool:
+	return raycast.is_colliding()
+
+
 ## client calls this. it does not run locally
 @rpc("any_peer")
-func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
-	if !is_server():
+func interact(hand: INTERACT=INTERACT.RIGHT) -> void:
+	if ! is_server():
 		return
 
 	# Perform the raycast once at the start of interaction.
-	raycast.force_raycast_update()
+	force_raycast_update()
 
 	var did_action: bool = false
 	# 1. Check for interaction targets first
-	if raycast.is_colliding():
-		var collision_point := raycast.get_collision_point()
+	if raycast_is_colliding():
+		var collision_point: Vector3 = get_collision_point()
 		var object: Object = get_target()
 
 		if object.has_method("get_object_verbs"):
@@ -226,20 +287,29 @@ func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
 				var subject_verbs: Array[Callable] = subject.get_subject_verbs()
 
 				var object_verbs: Array = object.get_object_verbs(Array(subject_verbs.map(
-					func(c: Callable) -> String:
-						return c.get_method()
+						func(c: Callable) -> String:
+							return c.get_method()
 				), TYPE_STRING, "", null))
 
 				did_action = object_verbs.any(func(object_verb: Callable) -> bool:
 					#print(object_verb.get_method())
-					return subject_verbs.any(func(subject_verb: Callable) -> bool:						#print(subject_verb.get_method())
+					return subject_verbs.any(func(subject_verb: Callable) -> bool:  #print(subject_verb.get_method())
 						if object_verb.get_method() == subject_verb.get_method():
 							if subject_verb.get_method() == "pick_up":
 								# Directly call pick_up with collision info, bypassing action queue for this specific case
 								pick_up(hand, [object], collision_point)
 								standard_action = false
+							elif subject_verb.get_method() == "transfer":
+								transfer(hand, [subject], object)
+								standard_action = false
 							else:
-								action_add(Action.new(hand, subject, subject_verb, object_verb, object))
+								print(subject_verb.get_method())
+								var indirect_object: Object
+								var indirect_object_verb: Callable
+								action_add(Action.new(hand,
+										subject, subject_verb,
+										object, object_verb,
+										indirect_object, indirect_object_verb))
 								do_actions()
 							return true
 						return false
@@ -254,7 +324,7 @@ func _handle_drop(hand: INTERACT) -> void:
 	if hand == INTERACT.RIGHT and right_inventory:
 		if right_inventory is RigidBody3D:
 			right_inventory.freeze = false
-			#remove_collision_exception_with(right_inventory)
+		#remove_collision_exception_with(right_inventory)
 		raycast.remove_exception(right_inventory)
 		right_inventory = null
 		inventory_right_marker.node_b = NodePath()
@@ -265,14 +335,14 @@ func _handle_drop(hand: INTERACT) -> void:
 	elif hand == INTERACT.LEFT and left_inventory:
 		if left_inventory is RigidBody3D:
 			left_inventory.freeze = false
-			#remove_collision_exception_with(left_inventory)
+		#remove_collision_exception_with(left_inventory)
 		raycast.remove_exception(left_inventory)
 		left_inventory = null
 		inventory_left_marker.node_b = NodePath()
 		inventory_left_marker.set_param_x(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, 0)
 		inventory_left_marker.set_param_y(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, 0)
 		inventory_left_marker.set_param_z(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, 0)
-
+#endregion
 
 func _set_turn(value: int) -> void:
 	if label and value != turn:
@@ -303,7 +373,7 @@ func calculate_warp() -> void:
 @rpc("any_peer", "call_local")
 func server_jump() -> void:
 	#if !is_server():
-		#return
+	#return
 	if character.is_on_floor() and warp_speed <= MAX_CONTROLLED_WARP:
 		character.velocity.y = JUMP_VELOCITY * min(warp_speed, MAX_CONTROLLED_WARP)
 	elif flying:
@@ -313,7 +383,7 @@ func server_jump() -> void:
 @rpc("any_peer", "call_local")
 func server_fly() -> void:
 	#if !is_server():
-		#return
+	#return
 	#stop flying
 	if flying:
 		flying = false
@@ -323,7 +393,7 @@ func server_fly() -> void:
 		if not flying:
 			flying = true
 
-		#velocity.y = JUMP_VELOCITY * warp_speed
+#velocity.y = JUMP_VELOCITY * warp_speed
 
 
 #this the function that runs on all the peers that only the server can call
@@ -351,7 +421,6 @@ func do_actions() -> void:
 		if not a.forever:
 			a.count -= 1
 
-
 		if a.count <= 0:
 			action_remove(0)
 
@@ -369,7 +438,7 @@ func server_set_mode(new_mode: int) -> void:
 @rpc("any_peer", "call_local")
 func server_move(d: Vector2) -> void:
 	#if !is_server():
-		#return
+	#return
 	var direction: Vector3 = (character.transform.basis.x * d.x + character.transform.basis.z * d.y).normalized()
 	var min_warp_speed: int = min(warp_speed, MAX_CONTROLLED_WARP)
 	var move_speed: float = mode * SPEED_MULTIPLIER * speed * min_warp_speed
@@ -380,22 +449,22 @@ func server_move(d: Vector2) -> void:
 	else:
 		character.velocity.x = move_toward(character.velocity.x, 0, move_speed)
 		character.velocity.z = move_toward(character.velocity.z, 0, move_speed)
-	#if !is_zero_approx(velocity.x) or !is_zero_approx(velocity.z):
-	#set_action({"move": mode})
-	#play_animation.rpc("walking")
-	#if mode in [MODE.HUSTLE, MODE.RUN]:
-	#set_action({"action": STRINGS[mode]})
-	#else:
-	#TODO animation state machine so that walk and crouch can play at the same time
-	#play_animation.rpc("RESET")
+#if !is_zero_approx(velocity.x) or !is_zero_approx(velocity.z):
+#set_action({"move": mode})
+#play_animation.rpc("walking")
+#if mode in [MODE.HUSTLE, MODE.RUN]:
+#set_action({"action": STRINGS[mode]})
+#else:
+#TODO animation state machine so that walk and crouch can play at the same time
+#play_animation.rpc("RESET")
 
 
 @rpc("any_peer")
 func server_warp(value: int) -> void:
-	if !is_server():
+	if ! is_server():
 		return
 	warp_speed = value
-	Persistance.persist.emit("MarbleCharacter", self )
+	Persistance.persist.emit("MarbleCharacter", self)
 
 
 func _set_warp_speed(w: int) -> void:
@@ -406,7 +475,7 @@ func _set_warp_speed(w: int) -> void:
 @rpc("any_peer", "call_local")
 func server_turn(value: Vector2) -> void:
 	#if !is_server():
-		#return
+	#return
 	character.rotate_y(-value.x * .005)
 	_rotate_camera(value)
 
@@ -414,7 +483,7 @@ func server_turn(value: Vector2) -> void:
 @rpc("any_peer", "call_local")
 func server_camera_zoom(scroll_amount: float) -> void:
 	#if !is_server():
-		#return
+	#return
 	var direction: Vector3 = camera.transform.basis.z
 	camera.position += direction * scroll_amount * .1
 	camera.position.z = max(camera.position.z, 0)
@@ -436,6 +505,7 @@ func get_data() -> Dictionary:
 		"age": age.age,
 		"turn": turn,
 		"transform": var_to_str(character.transform),
+		"faction_relations": var_to_str(faction._relations),
 		"left_inventory": left_inventory.name if left_inventory else StringName(""),
 		"right_inventory": right_inventory.name if right_inventory else StringName(""),
 	}
@@ -446,11 +516,19 @@ func load_pre_ready(data: Dictionary) -> void:
 	if "transform" in data:
 		transform = str_to_var(data.transform)
 
+	if "player_id" in data:
+		player_id = data.player_id
+
 
 #can reference @onready vars now
 func load_post_ready(data: Dictionary) -> void:
 	if "age" in data:
 		age.age = data.age
+
+	if "faction_relations" in data:
+		faction._relations = str_to_var(data.faction_relations)
+		_apply_color()
+		_update_label()
 
 	if "left_inventory" in data and data.left_inventory:
 		var f: Callable = func(child: Node) -> void:
@@ -459,7 +537,7 @@ func load_post_ready(data: Dictionary) -> void:
 				#add_collision_exception_with(left_inventory)
 				raycast.add_exception(left_inventory)
 				inventory_left_marker.node_b = left_inventory.get_path()
-				#world.items.child_entered_tree.disconnect(f)
+		#world.items.child_entered_tree.disconnect(f)
 
 		var l: Node = world.find_child(data.left_inventory, true, false)
 
@@ -473,7 +551,7 @@ func load_post_ready(data: Dictionary) -> void:
 				#add_collision_exception_with(right_inventory)
 				raycast.add_exception(right_inventory)
 				inventory_right_marker.node_b = right_inventory.get_path()
-				#world.items.child_entered_tree.disconnect(f)
+		#world.items.child_entered_tree.disconnect(f)
 
 		var r: Node = world.find_child(data.right_inventory, true, false)
 
@@ -481,6 +559,75 @@ func load_post_ready(data: Dictionary) -> void:
 		else: world.items.child_entered_tree.connect(f)
 #endregion
 
+
+func _is_player_controlled() -> bool:
+	return player_id != "" and player_id != null
+
+
+func _apply_faction_movement(delta: float) -> void:
+	FactionMovement.apply(self, delta)
+
+
+func _apply_color() -> void:
+	if not body_mesh:
+		return
+
+	if not (body_mesh.material_override is ShaderMaterial):
+		return
+
+	var faction_keys: Array[FactionStatic.Type] = [
+		FactionStatic.Type.NONE,
+		FactionStatic.Type.RED,
+		FactionStatic.Type.BLUE,
+		FactionStatic.Type.GREEN,
+		FactionStatic.Type.YELLOW,
+		FactionStatic.Type.PURPLE,
+	]
+
+	var suffix_names: Array[String] = ["none", "red", "blue", "green", "yellow", "purple"]
+
+	# Create a helper array of Dictionaries so we can sort factions alongside their data
+	var active_factions: Array[Dictionary] = []
+	var total: float = 0.0
+
+	for i: int in faction_keys.size():
+		var f: FactionStatic.Type = faction_keys[i]
+		var val: float = faction.get_relation(f)
+		var positive_val: float = maxf(val, 0.0)
+
+		total += positive_val
+
+		active_factions.append({
+			"key_index": i,
+			"suffix": suffix_names[i],
+			"value": positive_val
+		})
+
+	# Sort the array in descending order based on the faction's value
+	# The faction with the largest value will move to index 0 (the top of the capsule)
+	active_factions.sort_custom(func(a, b): return a["value"] > b["value"])
+
+	# Fallback if there is zero positive relationship data anywhere
+	if total <= 0.0:
+		for faction_data in active_factions:
+			body_mesh.set_instance_shader_parameter("band_" + faction_data["suffix"], Vector2(0.0, 0.0))
+		return
+
+	# Calculate cutoffs based on the newly sorted order
+	var cumulative: float = 0.0
+	for faction_data in active_factions:
+		var proportion: float = faction_data["value"] / total
+		cumulative += proportion
+
+		# Send the calculated cutoff data directly to the specific uniform name
+		body_mesh.set_instance_shader_parameter("band_" + faction_data["suffix"],
+				Vector2(cumulative, faction_data["value"]))
+
+
+func get_faction_name() -> String:
+	return FactionStatic.get_faction_name(faction.get_main_faction())
+
+
 func _update_label() -> void:
 	if label:
-		label.text = "%s (x%.f)\n turn %.f" % [player_name, warp_speed, turn]
+		label.text = "%s [%s] (x%.f)\n turn %.f" % [player_name, get_faction_name(), warp_speed, turn]

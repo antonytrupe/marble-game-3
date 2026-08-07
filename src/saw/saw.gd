@@ -16,7 +16,7 @@ func get_subject_verbs() -> Array[Callable]:
 
 
 func pick_up(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
-	return [ self ]
+	return [self]
 
 
 func saw(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:

@@ -51,7 +51,6 @@ func _init_db() -> void:
 
 	_get_tables()
 
-
 	if not persist.is_connected(_persist):
 		persist.connect(_persist)
 
@@ -75,11 +74,11 @@ func _persist(o: Object) -> void:
 		_create_table(clazz_name)
 	#Debug.debug.emit("persisting %s:%s" % [clazz_name, o.name])
 	_db.query_with_bindings(
-		(
-			"INSERT INTO %s (name, data) VALUES (?, ? ) ON CONFLICT (name) DO update set data=excluded.data"
-			% [clazz_name]
-		),
-		[str(o.name), JSON.stringify(o.get_data())]
+			(
+					"INSERT INTO %s (name, data) VALUES (?, ? ) ON CONFLICT (name) DO update set data=excluded.data"
+					% [clazz_name]
+			),
+			[str(o.name), JSON.stringify(o.get_data())]
 	)
 
 

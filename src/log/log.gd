@@ -50,14 +50,14 @@ func get_object_verbs(subject_verbs: Array[String]) -> Array[Callable]:
 
 
 func pick_up(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
-	return [ self ]
+	return [self]
 
 
 func saw(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
 	debug('log saw')
 	server.spawn_cant(transform, scale.x)
 	queue_free()
-	Persistance.delete.emit(self )
+	Persistance.delete.emit(self)
 	return []
 
 
@@ -86,4 +86,4 @@ func load_pre_ready(data: Dictionary) -> void:
 func load_post_ready(_data: Dictionary) -> void:
 	pass
 	#if "age" in data:
-		#age.age = data.age
+	#age.age = data.age

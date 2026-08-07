@@ -1,11 +1,16 @@
 ﻿# Default ignored files
 /shelf/
 /workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
 # Rider ignored files
 /contentModel.xml
 /modules.xml
+/contentModel.xml
 /projectSettingsUpdater.xml
 /.idea.Marble Game 3.iml
+# Ignored default folder with query files
+/queries/
 # Editor-based HTTP Client requests
 /httpRequests/
 # Datasource local storage ignored files

@@ -35,10 +35,10 @@ func get_friends_in_game() -> Array:
 			if game_info["id"] == app_id:
 				var friend_name: String = Steam.getFriendPersonaName(steam_id)
 				friends_playing_this_game.append(
-					{"name": friend_name,
-					 "id": steam_id,
-					 "lobby_id": game_info.get("lobby", 0) # Get lobby ID if available
-					})
+						{"name": friend_name,
+							"id": steam_id,
+							"lobby_id": game_info.get("lobby", 0)  # Get lobby ID if available
+						})
 
 	#debug(friends_playing_this_game)
 	return friends_playing_this_game

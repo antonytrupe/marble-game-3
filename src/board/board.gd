@@ -14,7 +14,7 @@ func get_object_verbs(subject_verbs: Array) -> Array[Callable]:
 
 
 func pick_up(_hand: MarbleCharacter.INTERACT, _o: Array) -> Array:
-	return [ self ]
+	return [self]
 
 
 func load_pre_ready(data: Dictionary) -> void:

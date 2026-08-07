@@ -12,6 +12,7 @@ signal current_character_updated(character: MarbleCharacter)
 @onready var crosshairs: ColorRect = %CrossHairs
 
 var current_character: MarbleCharacter
+var last_chat_message: String = ""
 
 var lobby_id: int
 
@@ -34,7 +35,7 @@ func join_lobby(lobby_id: int) -> void:
 	#debug("Attempting to join lobby %s" % lobby_id)
 	# Make the lobby join request to Steam
 	Steam.joinLobby(lobby_id)
-	#ui.visible=true
+#ui.visible=true
 
 
 @warning_ignore("shadowed_variable")
@@ -45,10 +46,9 @@ func _on_lobby_joined(lobby_id: int, _permissions: int, _locked: bool, _response
 		#debug('this is us')
 		return
 
-
 	# But if we're joining
 	var peer: SteamMultiplayerPeer = SteamMultiplayerPeer.new()
-	peer.debug_level = SteamMultiplayerPeer.DEBUG_LEVEL_PEER # <- optional, adds info to log
+	peer.debug_level = SteamMultiplayerPeer.DEBUG_LEVEL_PEER  # <- optional, adds info to log
 	peer.connect_to_lobby(lobby_id)
 	multiplayer.multiplayer_peer = peer
 	self.lobby_id = lobby_id
@@ -62,15 +62,15 @@ func _input(event: InputEvent) -> void:
 	if current_character:
 		if event is InputEventMouseMotion:
 			if (
-				Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
-				or Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE)
+					Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
+					or Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE)
 			):
 				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 				if is_server():
 					current_character.server_turn(event.relative)
 				else:
 					current_character.server_turn.rpc_id(1, event.relative)
-					#current_character.server_turn(event.relative)
+			#current_character.server_turn(event.relative)
 			else:
 				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -78,7 +78,7 @@ func _input(event: InputEvent) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if current_character:
 		#only if we're not typing
-		if !chat_window.visible:
+		if ! chat_window.visible:
 			#interact
 			if Input.is_action_just_pressed("interact_right"):
 				if is_server():
@@ -93,12 +93,12 @@ func _unhandled_input(event: InputEvent) -> void:
 
 			# Jump
 			if Input.is_action_just_pressed("jump") or \
-			current_character.flying and Input.is_action_pressed("jump"):
+					current_character.flying and Input.is_action_pressed("jump"):
 				if is_server():
 					current_character.server_jump()
 				else:
 					current_character.server_jump.rpc_id(1)
-					#current_character.server_jump()
+			#current_character.server_jump()
 
 			#fly
 			if Input.is_action_pressed("fly"):
@@ -106,12 +106,13 @@ func _unhandled_input(event: InputEvent) -> void:
 					current_character.server_fly()
 				else:
 					current_character.server_fly.rpc_id(1)
-					#current_character.server_fly()
+			#current_character.server_fly()
 
 			#moving
 			var input_dir: Vector2 = Input.get_vector("left", "right", "forward", "backward")
 			if input_dir != Vector2.ZERO:
-				var desired_mode: int = MarbleCharacter.MODE.HUSTLE if Input.is_action_pressed("sprint") else MarbleCharacter.MODE.WALK
+				var desired_mode: int = MarbleCharacter.MODE.HUSTLE if Input.is_action_pressed(
+						"sprint") else MarbleCharacter.MODE.WALK
 				if is_server():
 					current_character.server_set_mode(desired_mode)
 				else:
@@ -121,8 +122,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				current_character.server_move(input_dir)
 			else:
 				current_character.server_move.rpc_id(1, input_dir)
-				#current_character.server_move(input_dir)
-
+			#current_character.server_move(input_dir)
 
 			#rotate right hand inventory
 			if Input.is_key_pressed(KEY_ALT) and current_character.right_inventory:
@@ -134,17 +134,26 @@ func _unhandled_input(event: InputEvent) -> void:
 					elif (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN)):
 						scroll_amount = event.factor if event.factor else 1.0
 					# SPIN: Update the Y equilibrium point
-					var current_y: float = current_character.inventory_right_marker.get_param_y(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
-					current_character.inventory_right_marker.set_param_y(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, current_y + (scroll_amount * 0.3))
+					var current_y: float = current_character.inventory_right_marker.get_param_y(
+							Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
+					current_character.inventory_right_marker.set_param_y(
+							Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT,
+							current_y + (scroll_amount * 0.3))
 
 				if event is InputEventMouseMotion:
-	   				# SIDE-TO-SIDE: Update the Z equilibrium point (Forward axis)
-					var current_z: float = current_character.inventory_right_marker.get_param_z(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
-					current_character.inventory_right_marker.set_param_z(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, current_z + (event.relative.x * 0.005))
+					# SIDE-TO-SIDE: Update the Z equilibrium point (Forward axis)
+					var current_z: float = current_character.inventory_right_marker.get_param_z(
+							Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
+					current_character.inventory_right_marker.set_param_z(
+							Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT,
+							current_z + (event.relative.x * 0.005))
 
 					# FRONT-TO-BACK: Update the X equilibrium point (Right axis)
-					var current_x: float = current_character.inventory_right_marker.get_param_x(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
-					current_character.inventory_right_marker.set_param_x(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, current_x + (-event.relative.y * 0.005))
+					var current_x: float = current_character.inventory_right_marker.get_param_x(
+							Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
+					current_character.inventory_right_marker.set_param_x(
+							Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT,
+							current_x + (-event.relative.y * 0.005))
 
 			#rotate left hand inventory
 			elif Input.is_key_pressed(KEY_CTRL) and current_character.left_inventory:
@@ -155,17 +164,26 @@ func _unhandled_input(event: InputEvent) -> void:
 					elif (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN)):
 						scroll_amount = event.factor if event.factor else 1.0
 					# SPIN: Update the Y equilibrium point
-					var current_y: float = current_character.inventory_left_marker.get_param_y(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
-					current_character.inventory_left_marker.set_param_y(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, current_y + (scroll_amount * 0.1))
+					var current_y: float = current_character.inventory_left_marker.get_param_y(
+							Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
+					current_character.inventory_left_marker.set_param_y(
+							Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT,
+							current_y + (scroll_amount * 0.1))
 
 				if event is InputEventMouseMotion:
 					# SIDE-TO-SIDE: Update the Z equilibrium point (Forward axis)
-					var current_z: float = current_character.inventory_left_marker.get_param_z(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
-					current_character.inventory_left_marker.set_param_z(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, current_z + (event.relative.x * 0.005))
+					var current_z: float = current_character.inventory_left_marker.get_param_z(
+							Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
+					current_character.inventory_left_marker.set_param_z(
+							Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT,
+							current_z + (event.relative.x * 0.005))
 
 					# FRONT-TO-BACK: Update the X equilibrium point (Right axis)
-					var current_x: float = current_character.inventory_left_marker.get_param_x(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
-					current_character.inventory_left_marker.set_param_x(Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT, current_x + (event.relative.y * 0.005))
+					var current_x: float = current_character.inventory_left_marker.get_param_x(
+							Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT)
+					current_character.inventory_left_marker.set_param_x(
+							Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT,
+							current_x + (event.relative.y * 0.005))
 
 			else:
 				#handle moving the camera forward
@@ -175,7 +193,7 @@ func _unhandled_input(event: InputEvent) -> void:
 						current_character.server_camera_zoom(scroll_amount)
 					else:
 						current_character.server_camera_zoom.rpc_id(1, scroll_amount)
-						#current_character.server_camera_zoom(scroll_amount)
+				#current_character.server_camera_zoom(scroll_amount)
 
 				#handle moving the camera backwards
 				if (Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN)):
@@ -184,16 +202,15 @@ func _unhandled_input(event: InputEvent) -> void:
 						current_character.server_camera_zoom(scroll_amount)
 					else:
 						current_character.server_camera_zoom.rpc_id(1, scroll_amount)
-						#current_character.server_camera_zoom(scroll_amount)
-
+	#current_character.server_camera_zoom(scroll_amount)
 
 	if Input.is_action_just_pressed("escape"):
 		#show the menu
-		main_menu.visible = !main_menu.visible
-		crosshairs.visible = !crosshairs.visible
+		main_menu.visible = ! main_menu.visible
+		crosshairs.visible = ! crosshairs.visible
 
 	if Input.is_action_just_pressed("command"):
-		chat_window.visible = !chat_window.visible
+		chat_window.visible = ! chat_window.visible
 		#chat_mode = !chat_mode
 
 		if chat_window.visible:
@@ -204,14 +221,23 @@ func _unhandled_input(event: InputEvent) -> void:
 			chat_text_edit.release_focus()
 
 	if Input.is_action_just_pressed("chat"):
-		chat_window.visible = !chat_window.visible
+		chat_window.visible = ! chat_window.visible
 		#chat_mode = !chat_mode
 		if chat_window.visible:
 			chat_text_edit.grab_focus()
 		else:
 			chat_text_edit.release_focus()
+			if chat_text_edit.text != "":
+				last_chat_message = chat_text_edit.text
 			server.chat.rpc_id(1, chat_text_edit.text)
 			chat_text_edit.text = ""
+
+	if Input.is_action_just_pressed("chat_last"):
+		if ! chat_window.visible:
+			chat_window.visible = true
+			chat_text_edit.text = last_chat_message
+			chat_text_edit.grab_focus()
+			chat_text_edit.set_caret_column(last_chat_message.length())
 
 
 #this is for the server to tell this client who it's character is
@@ -228,10 +254,10 @@ func _on_connected_to_server() -> void:
 	visible = true
 	world.visible = true
 
-	#debug("_on_connected_to_server")
-	# var steam_id = Steam.getSteamID()
-	#return "steam:"+str(steam_id)
-	#server.set_client_player_id.rpc_id(1,"steam:"+str(steam_id))
+#debug("_on_connected_to_server")
+# var steam_id = Steam.getSteamID()
+#return "steam:"+str(steam_id)
+#server.set_client_player_id.rpc_id(1,"steam:"+str(steam_id))
 
 
 func _server_disconnected() -> void:

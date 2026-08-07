@@ -152,28 +152,39 @@ func load_suite(script: GDScript, tests: Array[GdUnitTestCase]) -> GdUnitTestSui
 			_handle_test_suite_arguments(test_suite, script, fd)
 			continue
 
-		# Build test attributes from test method
+		# Build test attributes and test parameter resolver from test function descriptor
 		var test_attribute := _build_test_attribute(script, fd)
+		var parameter_resolver := GdParameterSetResolverFactory.create(fd, test_suite)
+
 		# Create test from descriptor and given attributes
 		var test_group: Array = grouped_by_test[fd.name()]
 		for test: GdUnitTestCase in test_group:
 			# We need a copy, because of mutable state
 			var attribute: TestCaseAttribute = test_attribute.clone()
-			test_suite.add_child(_TestCase.new(test, attribute, fd))
+			test_suite.add_child(_TestCase.new(test, attribute, parameter_resolver))
 	return test_suite
 
 
 func _build_test_attribute(script: GDScript, fd: GdFunctionDescriptor) -> TestCaseAttribute:
 	var collected_unknown_aruments := PackedStringArray()
+	var seen_config_arguments := PackedStringArray()
 	var attribute := TestCaseAttribute.new()
 
 	# Collect test attributes
 	for arg: GdFunctionArgument in fd.args():
 		if arg.type() == GdObjects.TYPE_FUZZER:
+			if not seen_config_arguments.is_empty():
+				attribute.is_skipped = true
+				attribute.skip_reason = (
+					"Fuzzer argument '%s' must be declared before the test config argument(s) %s."
+					% [arg.name(), seen_config_arguments])
+				return attribute
 			attribute.fuzzers.append(arg)
 		else:
 			# We allow underscore as prefix to prevent unused argument warnings
-			match arg.name().trim_prefix("_"):
+			var arg_name := arg.name().trim_prefix("_")
+			seen_config_arguments.append(arg_name)
+			match arg_name:
 				ARGUMENT_TIMEOUT:
 					attribute.timeout = type_convert(arg.default(), TYPE_INT)
 				ARGUMENT_SKIP:
@@ -237,13 +248,11 @@ static func is_test_suite(script: Script) -> bool:
 
 static func _is_script_format_supported(resource_path: String) -> bool:
 	var ext := resource_path.get_extension()
-	return ext == "gd" or ext == "cs"
+	return ext == "gd" or (ext == "cs" and ClassDB.class_exists("CSharpScript"))
 
 
 static func parse_test_suite_name(script: Script) -> String:
-	var file_name := script.resource_path.get_file().replace(".gd", "")  # "apple_3d.test"
-	var source_name := file_name.replace(".test", "")  # Remove .test suffix to get "apple_3d"
-	return _to_naming_convention(source_name)  # Apply naming convention to get the expected class name
+	return script.resource_path.get_file().replace(".gd", "")
 
 
 func _handle_test_suite_arguments(test_suite: GdUnitTestSuite, script: GDScript, fd: GdFunctionDescriptor) -> void:
@@ -267,7 +276,8 @@ static func _to_naming_convention(file_name: String) -> String:
 	var nc :int = GdUnitSettings.get_setting(GdUnitSettings.TEST_SUITE_NAMING_CONVENTION, 0)
 	match nc:
 		GdUnitSettings.NAMING_CONVENTIONS.AUTO_DETECT:
-			# Always use PascalCase for test class names to match class naming conventions
+			if GdObjects.is_snake_case(file_name):
+				return GdObjects.to_snake_case(file_name + "Test")
 			return GdObjects.to_pascal_case(file_name + "Test")
 		GdUnitSettings.NAMING_CONVENTIONS.SNAKE_CASE:
 			return GdObjects.to_snake_case(file_name + "Test")

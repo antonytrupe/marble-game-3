@@ -3,7 +3,9 @@
 [ext_resource type="Script" uid="uid://chjly557ici3u" path="res://src/character/character.gd" id="1_glpr6"]
 [ext_resource type="PackedScene" uid="uid://dk5qlc1gglu2f" path="res://src/warp_detector_3d/warp_detector.tscn" id="2_2p3op"]
 [ext_resource type="Script" uid="uid://cv7le154j7bfo" path="res://src/character/ray_cast_3d.gd" id="2_8mo58"]
+[ext_resource type="Shader" uid="uid://bbdwj4dx1ios5" path="res://src/character/factions.gdshader" id="2_56uj1"]
 [ext_resource type="PackedScene" uid="uid://d4h758w873o1j" path="res://src/age/marble_age.tscn" id="4_k8eue"]
+[ext_resource type="PackedScene" uid="uid://bjhxd5e1usgtm" path="res://src/faction/faction.tscn" id="5_tntuy"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vu45j"]
 resource_local_to_scene = true
@@ -34,6 +36,13 @@ properties/6/replication_mode = 2
 properties/7/path = NodePath(".:turn")
 properties/7/spawn = true
 properties/7/replication_mode = 2
+properties/8/path = NodePath(".:color")
+properties/8/spawn = true
+properties/8/replication_mode = 2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ywp1v"]
+render_priority = 0
+shader = ExtResource("2_56uj1")
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_glpr6"]
 height = 1.8
@@ -48,7 +57,7 @@ height = 0.7
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_k8eue"]
 
-[node name="Character" type="CharacterBody3D" unique_id=959185743 groups=["persist"]]
+[node name="Character" type="CharacterBody3D" unique_id=959185743 groups=["character", "persist"]]
 collision_layer = 2
 collision_mask = 63
 script = ExtResource("1_glpr6")
@@ -62,7 +71,9 @@ debug_fill = false
 replication_config = SubResource("SceneReplicationConfig_glpr6")
 
 [node name="BodyMesh" type="MeshInstance3D" parent="." unique_id=1233194481]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+material_override = SubResource("ShaderMaterial_ywp1v")
 mesh = SubResource("CapsuleMesh_glpr6")
 
 [node name="LeftEyeMesh" type="MeshInstance3D" parent="BodyMesh" unique_id=2105364078]
@@ -147,6 +158,9 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
 [node name="Age" parent="." unique_id=781584009 instance=ExtResource("4_k8eue")]
+unique_name_in_owner = true
+
+[node name="Faction" parent="." unique_id=1829302401 instance=ExtResource("5_tntuy")]
 unique_name_in_owner = true
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1774699100]

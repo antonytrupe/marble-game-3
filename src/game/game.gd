@@ -15,7 +15,7 @@ func debug(...args: Array) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		print("game quit")
-		get_tree().quit() # default behavior
+		get_tree().quit()  # default behavior
 
 
 func _ready() -> void:
@@ -25,14 +25,13 @@ func _ready() -> void:
 	else:
 		debug("steam is not running")
 
-	var build_number_path: String = "res://build_number.txt" # The path to your file in the Godot project
+	var build_number_path: String = "res://build_number.txt"  # The path to your file in the Godot project
 	var build_number: String = read_text_file(build_number_path)
 
 	if build_number != "":
 		debug("Build Version: " + build_number)
 
-
-	var commit_number_path: String = "res://commit_number.txt" # The path to your file in the Godot project
+	var commit_number_path: String = "res://commit_number.txt"  # The path to your file in the Godot project
 	var commit_number: String = read_text_file(commit_number_path)
 
 	if commit_number != "":
@@ -59,4 +58,4 @@ func read_text_file(path: String) -> String:
 
 	var content: String = file.get_as_text()
 	file.close()
-	return content.strip_edges() # Use strip_edges() to remove any extra newlines or whitespace
+	return content.strip_edges()  # Use strip_edges() to remove any extra newlines or whitespace
