@@ -13,7 +13,7 @@ const _REPEL_RANGE_SQ: float = FactionRelation.REPEL_RANGE * FactionRelation.REP
 
 
 static func apply(character: MarbleCharacter, delta: float) -> void:
-	var start_time = Time.get_ticks_usec()
+	#var start_time = Time.get_ticks_usec()
 
 	if not character.is_multiplayer_authority():
 		return
