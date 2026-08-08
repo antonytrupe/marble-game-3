@@ -46,7 +46,6 @@ enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg", "res://addons/godot
 
 settings/test/test_lookup_folder="src"
 ui/toolbar/run_overall=true
-settings/test/test_suite_naming_convention=3
 settings/test/flaky_max_retries=0
 settings/test/rerun_until_failure_retries=1
 

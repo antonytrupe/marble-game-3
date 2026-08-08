@@ -3,12 +3,20 @@
 # Setup environment and directories
 SCRIPT_PATH=$(readlink -f "$0")
 SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
-cd "$SCRIPT_DIR"
+cd "$SCRIPT_DIR" || exit
 
 # Global settings
 # scoop install godot-mono
 # scoop update godot-mono
-GODOT_BIN="godot-mono"
+GODOT_BIN=${GODOT_BIN:-"godot-mono"}
+
+# Resolve GODOT_BIN to a full path if it's just a command name
+if ! [ -f "$GODOT_BIN" ]; then
+    GODOT_BIN_PATH=$(which "$GODOT_BIN" 2>/dev/null || command -v "$GODOT_BIN" 2>/dev/null)
+    if [ -n "$GODOT_BIN_PATH" ]; then
+        GODOT_BIN="$GODOT_BIN_PATH"
+    fi
+fi
 
 # Generic Godot build function
 # Usage: build_godot "Export Name" "directory_path" "binary_name"
@@ -24,7 +32,7 @@ build_godot() {
     echo "🚀 Starting Godot $EXPORT_NAME export..."
     
     # Execute Godot export command
-    $GODOT_BIN --path ../ --quiet --headless --export-release "$EXPORT_NAME" "$OUTPUT_PATH"
+    "$GODOT_BIN" --path ../ --quiet --headless --export-release "$EXPORT_NAME" "$OUTPUT_PATH"
 
     if [ $? -eq 0 ]; then
         echo "✅ Godot $EXPORT_NAME build SUCCEEDED!"
@@ -44,6 +52,11 @@ build_steam() {
     local APP_VDF=$(realpath "./steam/playtest_app.vdf")
 
     # STEAMCMD must be defined in your environment
+    if [ -z "$STEAMCMD" ]; then
+        echo "❌ STEAMCMD environment variable is not set!"
+        exit 1
+    fi
+
     "$STEAMCMD" +login marble_game_developer +run_app_build "$APP_VDF" +quit
 
     if [ $? -eq 0 ]; then
@@ -55,14 +68,22 @@ build_steam() {
 }
 
 # --- MAIN EXECUTION ---
+echo "running tests"
+(cd .. && ./addons/gdUnit4/runtest.sh --godot_binary "$GODOT_BIN" -a res://src/apple)
+TEST_EXIT_CODE=$?
+if [ $TEST_EXIT_CODE -ne 0 ] && [ $TEST_EXIT_CODE -ne 101 ]; then
+    echo "❌ Tests FAILED with exit code $TEST_EXIT_CODE!"
+    exit 1
+fi
+echo "✅ Tests Passed"
 
 # Build each platform
-build_godot "Windows Desktop" "./godot/exports/win-64" "marblegame.exe"
-build_godot "Linux" "./godot/exports/linux-x64" "marblegame.x86_64"
-build_godot "macOS" "./godot/exports/macOS" "marblegame.app"
+#build_godot "Windows Desktop" "./godot/exports/win-64" "marblegame.exe"
+#build_godot "Linux" "./godot/exports/linux-x64" "marblegame.x86_64"
+#build_godot "macOS" "./godot/exports/macOS" "marblegame.app"
 
 # Finalize with Steam
-build_steam
+#build_steam
 
 echo "------------------------------------------------"
 echo "🎉 All builds completed successfully!"
