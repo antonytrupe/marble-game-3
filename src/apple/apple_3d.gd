@@ -52,11 +52,11 @@ func _set_scale(s: Vector3) -> void:
 
 
 func fall() -> void:
-	set_deferred("freeze", false)
-	set_deferred("sleeping", false)
-	set_deferred("freeze_mode", RigidBody3D.FREEZE_MODE_KINEMATIC)
-	set_deferred("contact_monitor", true)
-	set_deferred("max_contacts_reported", 4)
+	freeze = false
+	sleeping = false
+	freeze_mode = RigidBody3D.FREEZE_MODE_KINEMATIC
+	contact_monitor = true
+	max_contacts_reported = 4
 
 
 func is_server() -> bool:
