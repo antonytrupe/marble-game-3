@@ -144,6 +144,30 @@ func test_transfer_trinket_from_character_to_character_via_interact() -> void:
 	assert_that(receiver.right_inventory).is_equal(trinket)
 
 
+func test_transfer_axe_from_character_to_character_via_interact() -> void:
+	do_return(true).on(instance).is_server()
+	do_return(true).on(instance).raycast_is_colliding()
+	do_return(Vector3.ZERO).on(instance).get_collision_point()
+
+	var receiver: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
+	add_child(receiver)
+	do_return(receiver).on(instance).get_target()
+
+	var axe: Axe = auto_free(Axe.scene.instantiate())
+	add_child(axe)
+	#do_return(trinket).on(instance).get_target()
+
+	instance.right_inventory = axe
+	assert_that(instance.right_inventory).is_equal(axe)
+
+	# Act
+	instance.interact(MarbleCharacter.INTERACT.RIGHT)
+
+	# Assert
+	assert_that(instance.right_inventory).is_null()
+	assert_that(receiver.right_inventory).is_equal(axe)
+
+
 func test_get_object_verbs_returns_empty() -> void:
 	var verbs: Array[Callable] = instance.get_object_verbs([])
 	assert_that(verbs).is_empty()
