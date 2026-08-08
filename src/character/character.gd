@@ -201,18 +201,21 @@ func transfer(hand: INTERACT, items: Array, receiver: MarbleCharacter) -> bool:
 	return true
 
 
-func receive_item(item: Node3D) -> void:
-	if item is RigidBody3D:
-		item.freeze = false
+func receive_item(item: Node) -> void:
+	var item_3d: Node3D = item as Node3D
+	if not item_3d:
+		return
+	if item_3d is RigidBody3D:
+		item_3d.freeze = false
 
 	# Place received item in the first free hand (right preferred)
 	if not right_inventory:
-		right_inventory = item
+		right_inventory = item_3d
 		right_inventory.global_position = inventory_right_marker.global_position
 		inventory_right_marker.set_deferred("node_b", right_inventory.get_path())
 		raycast.add_exception(right_inventory)
 	elif not left_inventory:
-		left_inventory = item
+		left_inventory = item_3d
 		left_inventory.global_position = inventory_left_marker.global_position
 		inventory_left_marker.set_deferred("node_b", left_inventory.get_path())
 		raycast.add_exception(left_inventory)
@@ -304,7 +307,7 @@ func interact(hand: INTERACT=INTERACT.RIGHT) -> void:
 								standard_action = false
 							else:
 								print(subject_verb.get_method())
-								var indirect_object: Object
+								var indirect_object: Object=null
 								var indirect_object_verb: Callable
 								action_add(Action.new(hand,
 										subject, subject_verb,
@@ -484,8 +487,11 @@ func server_turn(value: Vector2) -> void:
 func server_camera_zoom(scroll_amount: float) -> void:
 	#if !is_server():
 	#return
+
+	var distance:float=max(camera.position.length(),.1)
 	var direction: Vector3 = camera.transform.basis.z
-	camera.position += direction * scroll_amount * .1
+	camera.position += direction * scroll_amount * .1 *distance
+	# make sure camera doesn't go in front of character
 	camera.position.z = max(camera.position.z, 0)
 
 
@@ -493,7 +499,7 @@ func _rotate_camera(value: Vector2) -> void:
 	camera_pivot.rotate_x(-value.y * .005)
 	camera_pivot.rotation.x = clamp(camera_pivot.rotation.x, -PI / 2, PI / 2)
 
-#region persistance functions
+#region persistence functions
 func get_data() -> Dictionary:
 	return {
 		"name": name,
@@ -605,17 +611,17 @@ func _apply_color() -> void:
 
 	# Sort the array in descending order based on the faction's value
 	# The faction with the largest value will move to index 0 (the top of the capsule)
-	active_factions.sort_custom(func(a, b): return a["value"] > b["value"])
+	active_factions.sort_custom(func(a, b)->bool: return a["value"] > b["value"])
 
 	# Fallback if there is zero positive relationship data anywhere
 	if total <= 0.0:
-		for faction_data in active_factions:
+		for faction_data:Dictionary in active_factions:
 			body_mesh.set_instance_shader_parameter("band_" + faction_data["suffix"], Vector2(0.0, 0.0))
 		return
 
 	# Calculate cutoffs based on the newly sorted order
 	var cumulative: float = 0.0
-	for faction_data in active_factions:
+	for faction_data:Dictionary in active_factions:
 		var proportion: float = faction_data["value"] / total
 		cumulative += proportion
 

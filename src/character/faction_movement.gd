@@ -63,18 +63,18 @@ static func apply(character: MarbleCharacter, delta: float) -> void:
 
 	var desired: Vector3 = attract_dir + repel_dir
 	if desired.length_squared() > DEAD_ZONE * DEAD_ZONE:
-		desired = desired.normalized() * FactionRelation.MOVE_SPEED
-		var blend: float = clampf(SMOOTHING_FACTOR * delta, 0.0, 1.0)
+		desired = desired.normalized() * (FactionRelation.MOVE_SPEED * character.warp_speed)
+		var blend: float = clampf(SMOOTHING_FACTOR * delta * character.warp_speed, 0.0, 1.0)
 		character.velocity.x = lerpf(character.velocity.x, desired.x, blend)
 		character.velocity.z = lerpf(character.velocity.z, desired.z, blend)
 		# smoothly rotate toward movement direction
 		var look_target: Vector3 = my_pos + Vector3(desired.x, 0, desired.z)
 		if my_pos.distance_to(look_target) > 0.01:
 			var target_transform: Transform3D = character.global_transform.looking_at(look_target, Vector3.UP)
-			var rot_blend: float = clampf(ROTATION_SMOOTHING * delta, 0.0, 1.0)
+			var rot_blend: float = clampf(ROTATION_SMOOTHING * delta * character.warp_speed, 0.0, 1.0)
 			character.global_transform.basis = character.global_transform.basis.slerp(target_transform.basis, rot_blend)
 	else:
-		var brake: float = clampf(SMOOTHING_FACTOR * delta, 0.0, 1.0)
+		var brake: float = clampf(SMOOTHING_FACTOR * delta * character.warp_speed, 0.0, 1.0)
 		character.velocity.x = lerpf(character.velocity.x, 0.0, brake)
 		character.velocity.z = lerpf(character.velocity.z, 0.0, brake)
 	#print("faction_movement.apply: ", Time.get_ticks_usec() - start_time, " us")
