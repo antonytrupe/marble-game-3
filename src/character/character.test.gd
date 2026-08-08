@@ -5,7 +5,7 @@ extends GdUnitTestSuite
 @warning_ignore('unused_parameter')
 @warning_ignore('return_value_discarded')
 # TestSuite generated from
-const __source: String = 'res://src/character/character.gd'
+#const __source: String = 'res://src/character/character.gd'
 var MarbleCharacterScene: PackedScene = load("res://src/character/character.tscn")
 
 var instance: MarbleCharacter
@@ -204,7 +204,7 @@ func test_set_relation_clamps_value() -> void:
 	assert_float(instance.faction.get_relation(FactionStatic.Type.BLUE)).is_equal(-1.0)
 
 
-func test_custom_relation_affects_movement(_do_skip := true) -> void:
+func test_custom_relation_affects_movement(_do_skip :bool= true) -> void:
 	instance.player_id = ""
 	#var faction:FactionStatic.Type = FactionStatic.Type.RED
 	instance.faction._init_default_relations(FactionStatic.Type.RED)
@@ -233,7 +233,7 @@ func test_npc_is_not_player_controlled() -> void:
 	assert_that(instance._is_player_controlled()).is_false()
 
 
-func test_faction_movement_attracts_same_faction(_do_skip := true) -> void:
+func test_faction_movement_attracts_same_faction(_do_skip :bool= true) -> void:
 	instance.player_id = ""
 	var faction:FactionStatic.Type = FactionStatic.Type.RED
 	instance.faction._init_default_relations(faction)
@@ -250,7 +250,7 @@ func test_faction_movement_attracts_same_faction(_do_skip := true) -> void:
 	assert_that(instance.velocity.x > 0).is_true()
 
 
-func test_faction_movement_repels_other_faction(_do_skip := true) -> void:
+func test_faction_movement_repels_other_faction(_do_skip :bool= true) -> void:
 	instance.player_id = ""
 	var faction :FactionStatic.Type= FactionStatic.Type.RED
 	instance.faction._init_default_relations(faction)
