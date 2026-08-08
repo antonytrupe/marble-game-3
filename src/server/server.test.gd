@@ -2,7 +2,7 @@ class_name ServerTest
 extends GdUnitTestSuite
 
 #const WorldScene: PackedScene = preload("res://src/world/world.tscn")
-#const ServerScene: PackedScene = preload("res://src/server/server.tscn")
+const ServerScene: PackedScene = preload("res://src/server/server.tscn")
 
 # The class under test
 var _server: Server
@@ -26,31 +26,31 @@ func before_test() -> void:
 	# Create an instance of the server script
 	_server = mock(Server, CALL_REAL_FUNC)
 	_world = mock(World)
-	
+
 	# Manually create the nodes that @onready would normally create
 	_world.characters = Node.new()
 	_world.characters.name = "Characters"
 	_world.add_child(_world.characters)
-	
+
 	_world.terra = Node.new()
 	_world.terra.name = "Terra"
 	_world.add_child(_world.terra)
-	
+
 	#_world.players = Node.new()
 	#_world.players.name = "Players"
 	#_world.add_child(_world.players)
-	
+
 	_world.fauna = Node.new()
 	_world.fauna.name = "Fauna"
 	_world.add_child(_world.fauna)
-	
+
 	_world.warp_monuments = Node.new()
 	_world.warp_monuments.name = "WarpMonuments"
 	_world.add_child(_world.warp_monuments)
 
 	# add_child(_world) # Don't add to tree if we don't need physics or _ready
 	_server.world = _world
-	
+
 	# Mock players node on server
 	var players_node := Node.new()
 	players_node.name = "Players"
@@ -59,7 +59,7 @@ func before_test() -> void:
 
 func test_takes_too_long()->void:
 	pass
-	
+
 
 func test_get_random_vector_within_radius_and_on_ground() -> void:
 	# Test the distance calculation algorithm used by _get_random_vector
@@ -214,7 +214,7 @@ func test_on_peer_connected_steam_player_id_format() -> void:
 	var target_peer_id: int = 42
 	do_return(fake_steam_id).on(_server).get_steam_id(any())
 	assert_int(_server.get_steam_id(target_peer_id)).is_equal(fake_steam_id)
-	
+
 	do_return(player).on(_server)._create_player(42, "Steam_" + str(fake_steam_id))
 
 	_server._on_peer_connected(42)
