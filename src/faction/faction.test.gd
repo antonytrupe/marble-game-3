@@ -192,7 +192,7 @@ func test_overall_relation_opposite_factions_is_negative() -> void:
 	assert_float(result).is_less(0.0)
 
 
-func test_overall_relation_both_empty_returns_onezero() -> void:
+func test_overall_relation_both_empty_returns_zero() -> void:
 	var other: Faction = auto_free(Faction.new())
 	# Both have 0 for all factions, so 1 - abs(0 - 0) = 1 for each
 	assert_float(faction.get_overall_relation(other)).is_equal(0.0)
