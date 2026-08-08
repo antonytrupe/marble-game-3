@@ -69,7 +69,7 @@ build_steam() {
 
 # --- MAIN EXECUTION ---
 echo "running tests"
-(cd .. && ./addons/gdUnit4/runtest.sh --godot_binary "$GODOT_BIN" -a res://src/apple)
+(cd .. && ./addons/gdUnit4/runtest.sh --godot_binary "$GODOT_BIN" -a res://src)
 TEST_EXIT_CODE=$?
 if [ $TEST_EXIT_CODE -ne 0 ] && [ $TEST_EXIT_CODE -ne 101 ]; then
     echo "❌ Tests FAILED with exit code $TEST_EXIT_CODE!"
@@ -78,12 +78,12 @@ fi
 echo "✅ Tests Passed"
 
 # Build each platform
-#build_godot "Windows Desktop" "./godot/exports/win-64" "marblegame.exe"
-#build_godot "Linux" "./godot/exports/linux-x64" "marblegame.x86_64"
-#build_godot "macOS" "./godot/exports/macOS" "marblegame.app"
+build_godot "Windows Desktop" "./godot/exports/win-64" "marblegame.exe"
+build_godot "Linux" "./godot/exports/linux-x64" "marblegame.x86_64"
+build_godot "macOS" "./godot/exports/macOS" "marblegame.app"
 
 # Finalize with Steam
-#build_steam
+build_steam
 
 echo "------------------------------------------------"
 echo "🎉 All builds completed successfully!"
