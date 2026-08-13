@@ -10,41 +10,41 @@ func before_test() -> void:
 	_mock_game_root = Node.new()
 	_mock_game_root.name = "Game"
 
-	var mock_world = World.new()
+	var mock_world: World = World.new()
 	mock_world.name = "World"
 
 	# Add children that World expects as unique names
-	var characters = Node.new()
+	var characters: Node = Node.new()
 	characters.name = "Characters"
 	mock_world.add_child(characters)
 	characters.owner = mock_world
 	characters.unique_name_in_owner = true
 
-	var flora = Node.new()
+	var flora: Node = Node.new()
 	flora.name = "Flora"
 	mock_world.add_child(flora)
 	flora.owner = mock_world
 	flora.unique_name_in_owner = true
 
-	var fauna = Node.new()
+	var fauna: Node = Node.new()
 	fauna.name = "Fauna"
 	mock_world.add_child(fauna)
 	fauna.owner = mock_world
 	fauna.unique_name_in_owner = true
 
-	var terra = Node.new()
+	var terra: Node = Node.new()
 	terra.name = "Terra"
 	mock_world.add_child(terra)
 	terra.owner = mock_world
 	terra.unique_name_in_owner = true
 
-	var warp_monuments = Node.new()
+	var warp_monuments: Node = Node.new()
 	warp_monuments.name = "WarpMonuments"
 	mock_world.add_child(warp_monuments)
 	warp_monuments.owner = mock_world
 	warp_monuments.unique_name_in_owner = true
 
-	var items = Node3D.new()
+	var items: Node = Node3D.new()
 	items.name = "Items"
 	mock_world.add_child(items)
 
@@ -86,9 +86,9 @@ func test_collision_and_sleeping_state() -> void:
 	var apple: Apple3D = _runner.scene() as Apple3D
 
 	# 1. Create a physical floor for the apple to fall onto
-	var floor_body = StaticBody3D.new()
-	var floor_shape = CollisionShape3D.new()
-	var box_shape = BoxShape3D.new()
+	var floor_body: StaticBody3D = StaticBody3D.new()
+	var floor_shape: CollisionShape3D = CollisionShape3D.new()
+	var box_shape: BoxShape3D = BoxShape3D.new()
 
 	box_shape.size = Vector3(10, 1, 10)
 	floor_shape.shape = box_shape
@@ -106,11 +106,11 @@ func test_collision_and_sleeping_state() -> void:
 	# 3. Simulate frames to let the apple fall, collide, and come to a rest.
 	# Physics engines can take a moment to settle into a "sleeping" state.
 	# We simulate roughly 2-3 seconds of game time (120-180 frames).
-	await _runner.simulate_frames(180)
+	_runner.simulate_frames(180)
 
 	# 4. Verify that the apple's internal physics slept and triggered your script's logic
 	assert_bool(apple.sleeping).is_true()
-	assert_bool(apple.freeze).is_true()  # Verified: _on_sleeping_state_changed() set freeze to true
+	assert_bool(apple.freeze).is_true() # Verified: _on_sleeping_state_changed() set freeze to true
 	assert_bool(apple.is_on_floor()).is_true() # Verified: _integrate_forces set _is_on_floor
 
 	# Clean up the runtime floor node
