@@ -52,7 +52,7 @@ const MAX_CONTROLLED_WARP: int = 10
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
-var mode: MODE = MODE.WALK  # :
+var mode: MODE = MODE.WALK # :
 
 var speed: float = 30.0
 
@@ -63,7 +63,14 @@ var speed: float = 30.0
 ##allowed minimum warp speed
 #var min_warp_speed: int = 1
 
-var player_id: String
+var _player_id: String = ""
+var player_id: String:
+	get:
+		return _player_id
+	set(value):
+		_player_id = value
+		if is_node_ready():
+			_update_raycast_state()
 
 var right_inventory: Node3D
 var left_inventory: Node3D
@@ -79,7 +86,7 @@ var actions: Array[Action]
 @onready var warp_detector: WarpDetector = %WarpDetector
 @onready var age: MarbleAge = %Age
 @onready var faction: Faction = %Faction
-@onready var raycast: RayCast3D = %RayCast3D
+@onready var raycast: CharacterRayCast = %RayCast3D
 @onready var inventory_right_marker: Generic6DOFJoint3D = %InventoryRightMarker
 @onready var inventory_left_marker: Generic6DOFJoint3D = %InventoryLeftMarker
 @onready var character: MarbleCharacter = $"."
@@ -105,7 +112,7 @@ func action_add(action: Action) -> void:
 
 
 #@rpc("any_peer","call_local")
-func action_remove(index: int=0) -> void:
+func action_remove(index: int = 0) -> void:
 	actions.remove_at(index)
 	client.actions.update_actions()
 
@@ -133,6 +140,7 @@ func action_count_changed(index: int, count: int) -> void:
 func _ready() -> void:
 	_apply_color()
 	_update_label()
+	_update_raycast_state()
 
 
 func _physics_process(delta: float) -> void:
@@ -151,15 +159,6 @@ func _physics_process(delta: float) -> void:
 		#not on floor and flying
 		else:
 			character.velocity.y = 0
-	# Engine.get_frames_per_second
-	# Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS)
-	var fps: float = Engine.get_frames_per_second()
-	if fps >= 50.0 or (true and fps >= 30.0 and randi() %2 == 0
-	):
-		_apply_faction_movement(delta)
-	#else:
-	#print('skip faction movement')
-
 	character.move_and_slide()
 
 
@@ -262,13 +261,30 @@ func raycast_is_colliding() -> bool:
 	return raycast.is_colliding()
 
 
+## Player characters raycast continuously for target highlighting. NPCs only
+## enable their raycast for the synchronous interaction query below.
+func _update_raycast_state() -> void:
+	raycast.set_raycast_active(is_player_controlled())
+
+
+## Allows an NPC system to explicitly enable or disable continuous raycasting.
+## Player-controlled characters remain enabled regardless of this argument.
+func set_nonplayer_raycast_active(active: bool) -> void:
+	if not is_player_controlled():
+		raycast.set_raycast_active(active)
+
+
 ## client calls this. it does not run locally
 @rpc("any_peer")
-func interact(hand: INTERACT=INTERACT.RIGHT) -> void:
-	if ! is_server():
+func interact(hand: INTERACT = INTERACT.RIGHT) -> void:
+	if !is_server():
 		return
 
-	# Perform the raycast once at the start of interaction.
+	# NPC raycasts are normally disabled. Enable one only long enough to query
+	# the interaction target, then return it to its previous state.
+	var raycast_was_active: bool = raycast.enabled
+	if not raycast_was_active:
+		raycast.enabled = true
 	force_raycast_update()
 
 	var did_action: bool = false
@@ -296,7 +312,7 @@ func interact(hand: INTERACT=INTERACT.RIGHT) -> void:
 
 				did_action = object_verbs.any(func(object_verb: Callable) -> bool:
 					#print(object_verb.get_method())
-					return subject_verbs.any(func(subject_verb: Callable) -> bool:  #print(subject_verb.get_method())
+					return subject_verbs.any(func(subject_verb: Callable) -> bool: # print(subject_verb.get_method())
 						if object_verb.get_method() == subject_verb.get_method():
 							if subject_verb.get_method() == "pick_up":
 								# Directly call pick_up with collision info, bypassing action queue for this specific case
@@ -307,7 +323,7 @@ func interact(hand: INTERACT=INTERACT.RIGHT) -> void:
 								standard_action = false
 							else:
 								print(subject_verb.get_method())
-								var indirect_object: Object=null
+								var indirect_object: Object = null
 								var indirect_object_verb: Callable
 								action_add(Action.new(hand,
 										subject, subject_verb,
@@ -321,6 +337,9 @@ func interact(hand: INTERACT=INTERACT.RIGHT) -> void:
 
 	if not did_action:
 		_handle_drop(hand)
+
+	if not raycast_was_active:
+		raycast.enabled = false
 
 
 func _handle_drop(hand: INTERACT) -> void:
@@ -464,7 +483,7 @@ func server_move(d: Vector2) -> void:
 
 @rpc("any_peer")
 func server_warp(value: int) -> void:
-	if ! is_server():
+	if !is_server():
 		return
 	warp_speed = value
 	Persistance.persist.emit("MarbleCharacter", self)
@@ -487,10 +506,9 @@ func server_turn(value: Vector2) -> void:
 func server_camera_zoom(scroll_amount: float) -> void:
 	#if !is_server():
 	#return
-
-	var distance:float=max(camera.position.length(),.1)
+	var distance: float = max(camera.position.length(), .1)
 	var direction: Vector3 = camera.transform.basis.z
-	camera.position += direction * scroll_amount * .1 *distance
+	camera.position += direction * scroll_amount * .1 * distance
 	# make sure camera doesn't go in front of character
 	camera.position.z = max(camera.position.z, 0)
 
@@ -566,7 +584,7 @@ func load_post_ready(data: Dictionary) -> void:
 #endregion
 
 
-func _is_player_controlled() -> bool:
+func is_player_controlled() -> bool:
 	return player_id != "" and player_id != null
 
 
@@ -611,17 +629,17 @@ func _apply_color() -> void:
 
 	# Sort the array in descending order based on the faction's value
 	# The faction with the largest value will move to index 0 (the top of the capsule)
-	active_factions.sort_custom(func(a, b)->bool: return a["value"] > b["value"])
+	active_factions.sort_custom(func(a, b) -> bool: return a["value"] > b["value"])
 
 	# Fallback if there is zero positive relationship data anywhere
 	if total <= 0.0:
-		for faction_data:Dictionary in active_factions:
+		for faction_data: Dictionary in active_factions:
 			body_mesh.set_instance_shader_parameter("band_" + faction_data["suffix"], Vector2(0.0, 0.0))
 		return
 
 	# Calculate cutoffs based on the newly sorted order
 	var cumulative: float = 0.0
-	for faction_data:Dictionary in active_factions:
+	for faction_data: Dictionary in active_factions:
 		var proportion: float = faction_data["value"] / total
 		cumulative += proportion
 

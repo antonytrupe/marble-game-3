@@ -56,7 +56,7 @@ func get_relation(faction: FactionStatic.Type) -> float:
 ## Positive = similar allegiances (attract), negative = opposing (repel).
 ## Results are cached globally; call invalidate_cache() if relations change.
 func get_overall_relation(other: Faction) -> float:
-	var start_time = Time.get_ticks_usec()
+	var start_time :int= Time.get_ticks_usec()
 	var key: int = _cache_key(other)
 	if key in _relation_cache:
 		return _relation_cache[key]

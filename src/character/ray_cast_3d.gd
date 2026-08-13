@@ -1,3 +1,4 @@
+class_name CharacterRayCast
 extends RayCast3D
 
 var last_target: MeshInstance3D = null
@@ -7,7 +8,6 @@ var last_target: MeshInstance3D = null
 
 
 func _process(_delta: float) -> void:
-	#client.current_character and client.current_character==character and
 	if is_colliding():
 		var collider: Object = get_collider()
 		# Find the MeshInstance3D child if the collider is a PhysicsBody
@@ -24,6 +24,14 @@ func _process(_delta: float) -> void:
 		else:
 			_clear_highlight()
 	else:
+		_clear_highlight()
+
+
+## Disables both the physics query and this node's per-frame highlight work.
+func set_raycast_active(active: bool) -> void:
+	enabled = active
+	set_process(active)
+	if not active:
 		_clear_highlight()
 
 

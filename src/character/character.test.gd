@@ -29,6 +29,24 @@ func test_initial_state() -> void:
 	assert_that(instance.standard_action).is_true()
 	assert_that(instance.mode).is_equal(MarbleCharacter.MODE.WALK)
 	assert_that(instance.actions).is_empty()
+	assert_bool(instance.raycast.enabled).is_false()
+	assert_bool(instance.raycast.is_processing()).is_false()
+
+
+func test_player_control_enables_continuous_raycast() -> void:
+	instance.player_id = "Steam_123"
+	assert_bool(instance.raycast.enabled).is_true()
+	assert_bool(instance.raycast.is_processing()).is_true()
+
+
+func test_nonplayer_raycast_can_be_explicitly_toggled() -> void:
+	instance.set_nonplayer_raycast_active(true)
+	assert_bool(instance.raycast.enabled).is_true()
+	assert_bool(instance.raycast.is_processing()).is_true()
+
+	instance.set_nonplayer_raycast_active(false)
+	assert_bool(instance.raycast.enabled).is_false()
+	assert_bool(instance.raycast.is_processing()).is_false()
 
 
 func test_get_subject_verbs_returns_pick_up() -> void:
@@ -249,12 +267,12 @@ func test_custom_relation_affects_movement(_do_skip :bool= true) -> void:
 
 func test_player_controlled_skips_faction_movement() -> void:
 	instance.player_id = "Steam_123"
-	assert_that(instance._is_player_controlled()).is_true()
+	assert_that(instance.is_player_controlled()).is_true()
 
 
 func test_npc_is_not_player_controlled() -> void:
 	instance.player_id = ""
-	assert_that(instance._is_player_controlled()).is_false()
+	assert_that(instance.is_player_controlled()).is_false()
 
 
 func test_faction_movement_attracts_same_faction(_do_skip :bool= true) -> void:
@@ -306,3 +324,22 @@ func test_separation_repels_same_faction_when_too_close() -> void:
 	instance._apply_faction_movement(1.0)
 	# velocity should have negative x component (pushed away despite same faction)
 	assert_that(instance.velocity.x < 0).is_true()
+
+
+func test_faction_manager_applies_a_pair_force_to_both_npcs() -> void:
+	instance.player_id = ""
+	instance.faction._init_default_relations(FactionStatic.Type.RED)
+	instance.global_position = Vector3.ZERO
+
+	var ally: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
+	ally.player_id = ""
+	add_child(ally)
+	ally.faction._init_default_relations(FactionStatic.Type.RED)
+	ally.global_position = Vector3(10, 0, 0)
+
+	var manager: FactionMovementManager = auto_free(FactionMovementManager.new())
+	manager._forces = {instance: Vector3.ZERO, ally: Vector3.ZERO}
+	manager._accumulate_pair(instance, ally)
+
+	assert_that(manager._forces[instance].x).is_greater(0.0)
+	assert_float(manager._forces[instance].x).is_equal_approx(-manager._forces[ally].x, 0.0001)

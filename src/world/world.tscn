@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bod6lvq43qjsc" path="res://src/world/world.gd" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://bga3y3kuercqk" path="res://src/world/mesh_instance_3d.gd" id="2_bsf3i"]
+[ext_resource type="Script" path="res://src/character/faction_movement_manager.gd" id="3_faction_movement_manager"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f3sb7"]
 properties/0/path = NodePath("Terrain:noise_seed")
@@ -55,6 +56,9 @@ debug_fill = false
 
 [node name="Characters" type="Node3D" parent="." unique_id=1765580770]
 unique_name_in_owner = true
+
+[node name="FactionMovementManager" type="Node" parent="."]
+script = ExtResource("3_faction_movement_manager")
 
 [node name="CharacterSpawner" type="MultiplayerSpawner" parent="." unique_id=677995604]
 _spawnable_scenes = PackedStringArray("uid://b4f3nuk5vp4rc")
