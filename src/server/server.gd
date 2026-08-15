@@ -617,7 +617,7 @@ func _spawn_characters(count: int, center: Vector3) -> void:
 	count = maxi(count, 1)
 	for i: int in count:
 		var c: MarbleCharacter = _create_character()
-		c.position = _get_random_vector(10, center)
+		c.position = _get_random_vector(1*count, center)
 
 
 func _create_character() -> MarbleCharacter:

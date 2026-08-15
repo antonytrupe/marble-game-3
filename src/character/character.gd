@@ -33,6 +33,11 @@ const MAX_CONTROLLED_WARP: int = 10
 
 #endregion
 
+## Emitted whenever the character's current health changes.
+signal health_changed(previous_health: float, current_health: float)
+## Emitted once when health reaches zero.
+signal died
+
 #region turn actions flags
 #@export var move_action: bool = true
 @export var standard_action: bool = true
@@ -48,6 +53,12 @@ const MAX_CONTROLLED_WARP: int = 10
 @export var flying: bool = false
 @export var turn: int = 0:
 	set = _set_turn
+## The largest amount of damage this character can sustain.
+@export_range(1.0, 10000.0, 1.0) var max_health: float = 10.0:
+	set = _set_max_health
+## Current damage capacity. It is always kept between zero and max_health.
+@export_range(0.0, 10000.0, 1.0) var health: float = 10.0:
+	set = _set_health
 #endregion
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -372,6 +383,45 @@ func _set_turn(value: int) -> void:
 	turn = value
 
 
+func _set_max_health(value: float) -> void:
+	max_health = maxf(value, 1.0)
+	if health > max_health:
+		health = max_health
+
+
+func _set_health(value: float) -> void:
+	var previous_health: float = health
+	health = clampf(value, 0.0, max_health)
+	if is_equal_approx(previous_health, health):
+		return
+
+	health_changed.emit(previous_health, health)
+	if previous_health > 0.0 and is_zero_approx(health):
+		died.emit()
+
+
+## Applies a non-negative amount of damage and returns the damage actually dealt.
+func take_damage(amount: float) -> float:
+	if amount <= 0.0 or not is_alive():
+		return 0.0
+	var previous_health: float = health
+	health -= amount
+	return previous_health - health
+
+
+## Restores a non-negative amount of health and returns the health actually restored.
+func heal(amount: float) -> float:
+	if amount <= 0.0 or not is_alive():
+		return 0.0
+	var previous_health: float = health
+	health += amount
+	return health - previous_health
+
+
+func is_alive() -> bool:
+	return health > 0.0
+
+
 func calculate_warp() -> void:
 	var closest: WarpMonument = null
 	var closest_dist_sq: float = INF
@@ -526,6 +576,8 @@ func get_data() -> Dictionary:
 		"player_id": player_id,
 		"player_name": player_name,
 		"warp_speed": warp_speed,
+		"max_health": max_health,
+		"health": health,
 		"age": age.age,
 		"turn": turn,
 		"transform": var_to_str(character.transform),
@@ -542,6 +594,11 @@ func load_pre_ready(data: Dictionary) -> void:
 
 	if "player_id" in data:
 		player_id = data.player_id
+
+	if "max_health" in data:
+		max_health = data.max_health
+	if "health" in data:
+		health = data.health
 
 
 #can reference @onready vars now

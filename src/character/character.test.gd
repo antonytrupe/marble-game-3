@@ -28,9 +28,34 @@ func test_vector_to_string() -> void:
 func test_initial_state() -> void:
 	assert_that(instance.standard_action).is_true()
 	assert_that(instance.mode).is_equal(MarbleCharacter.MODE.WALK)
+	assert_float(instance.max_health).is_equal(10.0)
+	assert_float(instance.health).is_equal(10.0)
+	assert_that(instance.is_alive()).is_true()
 	assert_that(instance.actions).is_empty()
 	assert_bool(instance.raycast.enabled).is_false()
 	assert_bool(instance.raycast.is_processing()).is_false()
+
+
+func test_damage_reduces_health_without_going_below_zero() -> void:
+	assert_float(instance.take_damage(30.0)).is_equal(30.0)
+	assert_float(instance.health).is_equal(70.0)
+	assert_float(instance.take_damage(100.0)).is_equal(70.0)
+	assert_float(instance.health).is_equal(0.0)
+	assert_that(instance.is_alive()).is_false()
+
+
+func test_healing_is_limited_by_max_health() -> void:
+	instance.health = 40.0
+	assert_float(instance.heal(30.0)).is_equal(30.0)
+	assert_float(instance.health).is_equal(70.0)
+	assert_float(instance.heal(100.0)).is_equal(30.0)
+	assert_float(instance.health).is_equal(instance.max_health)
+
+
+func test_lowering_max_health_clamps_current_health() -> void:
+	instance.max_health = 60.0
+	assert_float(instance.max_health).is_equal(60.0)
+	assert_float(instance.health).is_equal(60.0)
 
 
 func test_player_control_enables_continuous_raycast() -> void:
