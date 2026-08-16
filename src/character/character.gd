@@ -556,7 +556,7 @@ func server_turn(value: Vector2) -> void:
 func server_camera_zoom(scroll_amount: float) -> void:
 	#if !is_server():
 	#return
-	var distance: float = max(camera.position.length(), .1)
+	var distance: float = max(camera.position.length(), 2.0)
 	var direction: Vector3 = camera.transform.basis.z
 	camera.position += direction * scroll_amount * .1 * distance
 	# make sure camera doesn't go in front of character

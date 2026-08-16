@@ -368,3 +368,24 @@ func test_faction_manager_applies_a_pair_force_to_both_npcs() -> void:
 
 	assert_that(manager._forces[instance].x).is_greater(0.0)
 	assert_float(manager._forces[instance].x).is_equal_approx(-manager._forces[ally].x, 0.0001)
+
+
+func test_faction_manager_caps_dense_cell_pair_evaluation() -> void:
+	var manager: FactionMovementManager = auto_free(FactionMovementManager.new())
+	var world_node: World = auto_free(World.new())
+	var characters_root: Node3D = auto_free(Node3D.new())
+	world_node.characters = characters_root
+	world_node.add_child(characters_root)
+	manager.world = world_node
+
+	var faction: FactionStatic.Type = FactionStatic.Type.RED
+	for i: int in range(80):
+		var c: MarbleCharacter = auto_free(MarbleCharacterScene.instantiate())
+		c.player_id = ""
+		c.faction._init_default_relations(faction)
+		c.global_position = Vector3(i * 0.5, 0.0, 0.0)
+		characters_root.add_child(c)
+
+	manager._rebuild_forces()
+	assert_int(FactionMovementManager.MAX_PAIRS_PER_CELL).is_greater(0)
+	assert_int(manager._forces.size()).is_less_or_equal(80)
