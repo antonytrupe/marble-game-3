@@ -136,7 +136,7 @@ text = "PlayerName (x6)"
 
 [node name="CameraPivot" type="Node3D" parent="." unique_id=2078229616]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, -0.52)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8934824, -0.3450668)
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot" unique_id=1590937061]
 unique_name_in_owner = true
